@@ -1,0 +1,10 @@
+<resources>
+    <!-- General -->
+    <string name="app_name">Spend Wise</string>
+    <string name="app_creators">Fabio Augusto Weck, Hugo Camargo, Lorenzo Liwanag, Uyara Martins Montovaneli</string>
+    <string name="app_ver">1.00</string>
+
+    <!-- Hard Code Here -->
+    <string name="app_greetings">Welcome to Spend Wise App</string>
+
+</resources>
