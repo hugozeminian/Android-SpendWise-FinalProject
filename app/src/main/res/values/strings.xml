@@ -7,4 +7,8 @@
     <!-- Hard Code Here -->
     <string name="app_greetings">Welcome to Spend Wise App</string>
 
+    <!-- LoginPage -->
+    <string name="app_title">SpendWise</string>
+    <string name="app_subtitle">Smarter spending starts here! </string>
+
 </resources>
