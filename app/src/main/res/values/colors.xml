@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="light_inversePrimary">#FF9DCAFF</color>
+    <color name="light_primaryContainer">#FFD1E4FF</color>
+    <color name="dark_inverseSurface">#FFE2E2E6</color>
+    <color name="light_onprimaryContainer">#FF001D36</color>
+    <color name="light_secondaryContainer">#FFFFDCC2</color>
+    <color name="edit_text_border">#03A9F4</color>
+    <color name="edit_text_background">#f6fbff</color>
+
 </resources>

@@ -2,4 +2,8 @@
 <resources>
 
     <style name="Theme.SpendWise" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <!--Primary brand color-->
+    <item name="colorPrimary" type="color">#FF9DCAFF</item>
+
 </resources>
