@@ -1,5 +1,6 @@
 package com.example.spendwise
 
+import android.content.Intent
 import android.hardware.lights.Light
 import android.os.Bundle
 import android.view.View
@@ -32,25 +33,21 @@ class MainActivity : ComponentActivity() {
 
         binding.loginButton.setOnClickListener(View.OnClickListener {
             if (binding.username.text.toString() == "user" && binding.password.text.toString() == "1234") {
-                Toast.makeText(this, "Login Successfull", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Login Successfull", Toast.LENGTH_SHORT).show()
+                val activity = Intent(this, WelcomeActivity::class.java)
+                startActivity(activity)
+
             } else {
                 Toast.makeText(this, "Login Fail", Toast.LENGTH_SHORT).show()
             }
         })
 
-        setContentView(binding.root)
+        binding.txtCreateAccount.setOnClickListener {
+            val activity = Intent(this, CreateAccount::class.java)
+            startActivity(activity)
+        }
 
-//        setContent {
-//            SpendWiseTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colorScheme.background
-//                ) {
-//                    SpendWiseMainApp()
-//                }
-//            }
-//        }
+        setContentView(binding.root)
     }
 
     @Preview
