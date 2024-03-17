@@ -1,0 +1,23 @@
+<resources>
+    <!-- General -->
+    <string name="app_name">Spend Wise</string>
+    <string name="app_creators">Fabio Augusto Weck, Hugo Camargo, Lorenzo Liwanag, Uyara Martins Montovaneli</string>
+    <string name="app_ver">1.00</string>
+
+    <!-- Hard Code Here -->
+    <string name="app_greetings">Welcome to Spend Wise App</string>
+
+    <!-- LoginPage -->
+    <string name="app_title">SpendWise</string>
+    <string name="app_subtitle">Smarter spending starts here! </string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+
+    <!-- Create Account Page -->
+    <string name="create_an_account">Create an Account</string>
+    <string name="ca_username">Username</string>
+    <string name="ca_password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+
+    <!-- Welcome Page -->
+</resources>
