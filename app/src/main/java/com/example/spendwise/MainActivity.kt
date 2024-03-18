@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -48,35 +49,41 @@ class MainActivity : ComponentActivity() {
         }
 
         setContentView(binding.root)
+//        setContent {
+//            SpendWiseMainApp()
+//        }
     }
+//
+//    @Preview
+//    @Composable
+//    fun LightThemePreview() {
+//        SpendWiseTheme(darkTheme = false) {
+//            SpendWiseMainApp()
+//        }
+//    }
+//
+//    @Preview
+//    @Composable
+//    fun DarkThemePreview() {
+//        SpendWiseTheme(darkTheme = true) {
+//            SpendWiseMainApp()
+//        }
+//    }
+//
+//    @Preview(showBackground = true)
+//    @Composable
+//    fun GreetingPreview() {
+//        SpendWiseTheme {
+//            SpendWiseMainApp()
+//        }
+//    }
+//
+//    @Composable
+//    fun SpendWiseMainApp(modifier: Modifier = Modifier) {
+//        Text(
+//            text = stringResource(id = R.string.app_greetings),
+//            modifier = modifier
+//        )
+//    }
+}
 
-    @Preview
-    @Composable
-    fun LightThemePreview() {
-        SpendWiseTheme(darkTheme = false) {
-            SpendWiseMainApp()
-        }
-    }
-
-    @Preview
-    @Composable
-    fun DarkThemePreview() {
-        SpendWiseTheme(darkTheme = true) {
-            SpendWiseMainApp()
-        }
-    }
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        SpendWiseTheme {
-            SpendWiseMainApp()
-        }
-    }
-
-    @Composable
-    fun SpendWiseMainApp(modifier: Modifier = Modifier) {
-        Text(
-            text = stringResource(id = R.string.app_greetings),
-            modifier = modifier
-        )
-    }}

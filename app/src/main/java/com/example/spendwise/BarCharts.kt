@@ -222,25 +222,25 @@ fun HorizontalBarsChart(
     }
 }
 
-@Preview
-@Composable
-fun DisplayChart()
-{
-    Column {
-        VerticalBarsChart(
-            data = mapOf(
-                Pair("Groceries", 520),
-                Pair("Takeout", 500),
-                Pair("Utilities", 300),
-                Pair("Entertainment", 200),
-                Pair("Emergency", 600)
-            ))
-        HorizontalBarsChart(
-            data = mapOf(
-                Pair("Income", 4000),
-                Pair("Budget", 3200),
-                Pair("Spendings", 2400),
-            )
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun DisplayChart()
+//{
+//    Column {
+//        VerticalBarsChart(
+//            data = mapOf(
+//                Pair("Groceries", 520),
+//                Pair("Takeout", 500),
+//                Pair("Utilities", 300),
+//                Pair("Entertainment", 200),
+//                Pair("Emergency", 600)
+//            ))
+//        HorizontalBarsChart(
+//            data = mapOf(
+//                Pair("Income", 4000),
+//                Pair("Budget", 3200),
+//                Pair("Spendings", 2400),
+//            )
+//        )
+//    }
+//}

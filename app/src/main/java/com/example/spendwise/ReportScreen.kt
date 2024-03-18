@@ -145,8 +145,8 @@ fun MonthProjectionReport(
     }
 }
 
-@Preview
-@Composable
-fun ShowGraph() {
-    ExpensesReportLayout({})
-}
+//@Preview
+//@Composable
+//fun ShowGraph() {
+//    ExpensesReportLayout({})
+//}
