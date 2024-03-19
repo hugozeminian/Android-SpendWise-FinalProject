@@ -37,12 +37,11 @@ fun ReportScreen(
 fun ExpensesReportLayout(){
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val scrollState = rememberScrollState()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
     ) {
         WeeklyReport(screenWidth)
         Spacer(modifier = Modifier.height(25.dp))

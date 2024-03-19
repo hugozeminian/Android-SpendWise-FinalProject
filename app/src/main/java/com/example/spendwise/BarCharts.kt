@@ -104,7 +104,7 @@ fun VerticalBarsChart(
                         modifier = Modifier
                             .width(barGraphWidth)
                             .fillMaxHeight(it.value/maxValue.toFloat())
-                            .background(color = Color.Blue)
+                            .background(color = MaterialTheme.colorScheme.primary)
                             .clickable {
                                 Toast
                                     .makeText(context, "${it.key.toString()}: \$${it.value.toString()}", Toast.LENGTH_SHORT)
@@ -119,7 +119,7 @@ fun VerticalBarsChart(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
-                .background(Color.Black)
+                .background(MaterialTheme.colorScheme.onBackground)
         )
 
         // Scale X-Axis
@@ -198,7 +198,7 @@ fun HorizontalBarsChart(
                                 modifier = Modifier
                                     .height(20.dp)
                                     .fillMaxWidth(it.value/maxValue.toFloat())
-                                    .background(color = Color.Blue)
+                                    .background(color = MaterialTheme.colorScheme.primary)
                             )
                         }
                     }
@@ -232,8 +232,7 @@ fun DisplayChart()
                 Pair("Groceries", 520),
                 Pair("Takeout", 500),
                 Pair("Utilities", 300),
-                Pair("Entertainment", 200),
-                Pair("Emergency", 600)
+                Pair("Entertainment", 200)
             ))
         HorizontalBarsChart(
             data = mapOf(
