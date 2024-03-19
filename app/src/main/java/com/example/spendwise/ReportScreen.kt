@@ -27,48 +27,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-enum class CurrentScreen() {
-    Start,
-    Report,
-    NewScreen,
-    XmlScreen
-}
-
 @Composable
 fun ReportScreen(
-    navController: NavHostController = rememberNavController()
 ){
-    NavHost(navController = navController, startDestination = CurrentScreen.Start.name){
-
-        //
-        composable(route = CurrentScreen.Start.name){
-            ExpensesReportLayout({navController.navigate(CurrentScreen.NewScreen.name)})
-        }
-
-        composable(route = CurrentScreen.NewScreen.name){
-            //NewScreenLayout({navController.navigate(CurrentScreen.XmlScreen.name)})
-        }
-
-        composable(route = CurrentScreen.XmlScreen.name) {
-            XMLLayoutScreen()
-        }
-    }
+    ExpensesReportLayout()
 }
 
 @Composable
-fun XMLLayoutScreen() {
-//    val context = LocalContext.current
-
-    AndroidView(factory = {
-            context ->  LayoutInflater.from(context).inflate(R.layout.activity_welcome, null)
-    },
-        modifier = Modifier.fillMaxSize())
-}
-
-@Composable
-fun ExpensesReportLayout(
-    onNextClick: () -> Unit,
-){
+fun ExpensesReportLayout(){
 
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val scrollState = rememberScrollState()
@@ -80,7 +46,7 @@ fun ExpensesReportLayout(
     ) {
         WeeklyReport(screenWidth)
         Spacer(modifier = Modifier.height(25.dp))
-        MonthProjectionReport(screenWidth, onNextClick)
+        MonthProjectionReport(screenWidth)
     }
 }
 
@@ -117,8 +83,7 @@ fun WeeklyReport(screenWidth: Dp)
 
 @Composable
 fun MonthProjectionReport(
-    screenWidth: Dp,
-    onNextClick: () -> Unit){
+    screenWidth: Dp){
     HorizontalBarsChart(data = mapOf(
         Pair("Income", 2800),
         Pair("Budget", 2000),
@@ -138,15 +103,10 @@ fun MonthProjectionReport(
     )
     Text("Of your monthly income")
     Spacer(modifier = Modifier.height(50.dp))
-    Button(
-        onClick = onNextClick
-    ){
-        Text("Next")
-    }
 }
 
 @Preview
 @Composable
 fun ShowGraph() {
-    ExpensesReportLayout({})
+    ExpensesReportLayout()
 }
