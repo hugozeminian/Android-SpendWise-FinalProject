@@ -32,7 +32,7 @@ fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
 
 @Composable
 fun VerticalBarsChart(
-    data: Map<String, Int>
+    data: Map<String, Int>,
 ) {
 
     val context = LocalContext.current
@@ -186,12 +186,15 @@ fun HorizontalBarsChart(
                     }
                 }
                 Box(
+                    modifier = Modifier
+                        .height(120.dp)
+                        .padding(start = 8.dp)
                 ){
                     Column(
                         verticalArrangement = Arrangement.SpaceBetween,
                         modifier = Modifier
                             .height(120.dp)
-                            .padding(start = 8.dp, end = 16.dp)
+                            .padding(end = 16.dp)
                     ){
                         sortedData.forEach{
                             Box(
@@ -215,7 +218,7 @@ fun HorizontalBarsChart(
                     // Code to be executed in each iteration
                     Text((i * range).toString(),
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.width(36.dp))
+                        modifier = Modifier.width(40.dp))
                 }
             }
         }

@@ -42,6 +42,7 @@ fun ExpensesReportLayout(){
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
     ) {
         WeeklyReport(screenWidth)
         Spacer(modifier = Modifier.height(25.dp))

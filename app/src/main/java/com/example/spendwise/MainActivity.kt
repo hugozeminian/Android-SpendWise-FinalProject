@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -26,9 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +34,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.navItems
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.SpendWiseTheme
-import com.example.spendwise.ui.theme.SpendingsScreen
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -65,6 +59,7 @@ fun MainScreen(
     viewModel: AppViewModel = viewModel(),
     navController: NavHostController = rememberNavController()
 ){
+
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
@@ -108,10 +103,7 @@ fun MainScreen(
         NavHost(
             navController = navController,
             startDestination = "Home",
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(innerPadding)){
+            modifier = Modifier.padding(innerPadding)){
 
             //====== Each composable will call the functions inside its scope base on the route given ======
             composable(route = "Home"){
@@ -136,7 +128,7 @@ fun MainScreen(
             }
 
             composable(route = "Spendings"){
-                SpendingsScreen(viewModel = viewModel)
+                SpendingsScreen(viewModel)
             }
 
             composable(route = "Report"){
