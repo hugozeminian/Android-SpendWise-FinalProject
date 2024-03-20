@@ -9,26 +9,13 @@ data class AppUiState(
     //Main page counter - test
     val counter: Int = 0,
 
-    //Dropwdown category list
-    val list: List<String> = listOf("Add item 0", "Add item 1", "Add item 2"),
-    val isExpanded: Boolean = false,
-    var selectedText: String = list[0],
-
-    //Dropwdown transaction list
-    val transactionList: List<String> = listOf("Add item 0", "Add item 1", "Add item 2"),
-    val transactionIsExpanded: Boolean = false,
-    var transactionSelectedText: String = transactionList[0],
-
-    //Dropwdown spending recap
-    val recapList: List<String> = listOf("Weekly", "Monthly"),
-    val recapIsExpanded: Boolean = false,
-    var recapSelectedText: String = recapList[0],
-
     //Sample list to show items in "Spendings" screen - first list
     val breakDownListSample: List<Spending> = listOf(
-        Spending("Walmart", "Feb 18, 2024", 54.98F),
-        Spending("Walmart", "Feb 15, 2024", 34.55F),
-        Spending("Costco", "Feb 12, 2024", 56.12F),
-        Spending("Safeway - Pharmacy", "Feb 12, 2024", 54.98F),
+        Spending("Groceries","Walmart", "Feb 18, 2024", 54F),
+        Spending("Groceries","Costco", "Feb 12, 2024", 56.12F),
+        Spending("Groceries","Safeway - Pharmacy", "Feb 12, 2024", 54.98F),
+        Spending("Utilities","Enmax", "Feb 6, 2024", 114.99F),
+        Spending("Utilities","Telus", "Feb 9, 2024", 69.5F),
+        Spending("Entertainment","Skate park", "Feb 25, 2024", 75.30F)
     )
 )

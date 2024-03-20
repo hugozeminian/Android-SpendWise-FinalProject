@@ -1,6 +1,5 @@
 package com.example.spendwise
 
-import android.view.RoundedCorner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,11 +38,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spendwise.data.AddTransactionDropdownMenu
 import com.example.spendwise.data.AppUiState
-import com.example.spendwise.data.CategoryDropdownMenu
-import com.example.spendwise.data.SpendingDropdownMenu
-import com.example.spendwise.model.CategoryWeekly
+import com.example.spendwise.data.CustomDropdownMenu
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
 
@@ -54,6 +49,15 @@ fun SpendingsScreen(
     modifier: Modifier = Modifier
 ){
     val uiState by viewModel.uiState.collectAsState()
+
+    var breakdownCategory by remember {
+        mutableStateOf("") }
+    
+    var categories by remember {
+        mutableStateOf(listOf(""))
+    }
+
+    categories = viewModel.GetCategories()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -72,14 +76,14 @@ fun SpendingsScreen(
             modifier = Modifier.fillMaxWidth()
         ){
             Text("Select category:")
-            CategoryDropdownMenu(viewModel)
+            breakdownCategory = CustomDropdownMenu(categories)
         }
 
-        BreakDownList(uiState)
-        Spacer(modifier = Modifier.height(16.dp))
+        BreakDownList(uiState, breakdownCategory)
+        Spacer(modifier = Modifier.height(40.dp))
 
         AddTransactionCard(viewModel)
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(60.dp))
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -87,10 +91,11 @@ fun SpendingsScreen(
             modifier = Modifier.fillMaxWidth()
         ){
             Text("Spending recap:")
-            SpendingDropdownMenu(viewModel)
+            CustomDropdownMenu(categories)
         }
         Spacer(modifier = Modifier.height(8.dp))
-        SpendingRecapList()
+        SpendingRecapList(viewModel)
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
@@ -98,13 +103,14 @@ fun SpendingsScreen(
 @Composable
 fun BreakDownList(
     uiState: AppUiState,
+    category: String,
     modifier: Modifier = Modifier
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         uiState.breakDownListSample.forEach(){
-            ItemList(spending = it)
+            if(it.category == category) ItemList(spending = it)
         }
     }
 }
@@ -149,6 +155,7 @@ fun AddTransactionCard(
     var amount by remember {mutableStateOf("")}
     var date by remember {mutableStateOf("")}
     var description by remember {mutableStateOf("")}
+    var category by remember {mutableStateOf("")}
 
     Card{
         Column(
@@ -185,12 +192,14 @@ fun AddTransactionCard(
                     modifier = Modifier.width(100.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
-                AddTransactionDropdownMenu(viewModel)
+                category = CustomDropdownMenu(
+                    listOf("Groceries", "Utilities", "Entertainment")
+                )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {viewModel.AddNewTransaction(Spending(description, date, amount.toFloat()))},
+                onClick = {viewModel.AddNewTransaction(Spending(category, description, date, amount.toFloat()))},
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text("Add transaction")
@@ -201,30 +210,29 @@ fun AddTransactionCard(
 
 @Composable
 fun SpendingRecapList(
-
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier
 ){
 
-    val list: List<CategoryWeekly> = listOf(
-        CategoryWeekly("Groceries", 150.25F, 207F),
-        CategoryWeekly("Entertainment", 250F, 207F),
-        CategoryWeekly("Utilities", 197.56F, 207F)
-    )
+    val list: Map<String, Float> = viewModel.GetTotalCategory()
 
     Column(
     ) {
         list.forEach {
-            SpendingRecapItem(category = it)
+            SpendingRecapItem(
+                category = Pair(it.key, it.value), limit = 200F)
         }
     }
 }
 
 @Composable
 fun SpendingRecapItem(
-    category: CategoryWeekly
+    category: Pair<String, Float>,
+    limit: Float
 ){
 
-    val displaValue: String = if(category.spent < category.limit) "$${category.spent.toString()}"
-                        else "($${category.spent - category.limit} over limit) - $${category.spent.toString()}"
+    val displaValue: String = if(category.second < limit) "$${String.format("%.2f", category.second)}"
+                        else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -238,19 +246,19 @@ fun SpendingRecapItem(
                 imageVector = Icons.Filled.CheckCircle,
                 contentDescription = ""
             )
-            Text(category.description)
+            Text(category.first)
         }
         Column(){
             Text(displaValue,
                 textAlign = TextAlign.End,
                 color =
-                if(category.spent > category.limit){
+                if(category.second > limit){
                     Color.Red }
                 else{
                     MaterialTheme.colorScheme.primary
                 },
                 modifier = Modifier.fillMaxWidth())
-            Text("Weekly limit: \$" + category.limit.toString(),
+            Text("Weekly limit: \$" + limit.toString(),
                 textAlign = TextAlign.End,
                 modifier = Modifier.fillMaxWidth())
         }

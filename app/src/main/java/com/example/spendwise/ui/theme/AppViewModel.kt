@@ -7,6 +7,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.roundToInt
 
 class AppViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
@@ -32,68 +33,6 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    //CommonUi dropdown menu function - isExpanded variable
-    fun SetCategoryIsExpanded(
-        isExpanded: Boolean
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                isExpanded = isExpanded
-            )
-        }
-    }
-
-    //CommonUi dropdown menu function - selectedText variable
-    fun SetCategorySelectedText(
-        selectedText: String
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                selectedText = selectedText
-            )
-        }
-    }
-
-    fun SetRecapIsExpanded(
-        isExpanded: Boolean
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                recapIsExpanded = isExpanded
-            )
-        }
-    }
-
-    fun SetRecapSelectedText(
-        selectedText: String
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                recapSelectedText = selectedText
-            )
-        }
-    }
-
-    fun SetTransactionIsExpanded(
-        isExpanded: Boolean
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                transactionIsExpanded = isExpanded
-            )
-        }
-    }
-
-    fun SetTransactionSelectedText(
-        selectedText: String
-    ){
-        _uiState.update { currentState ->
-            currentState.copy(
-                transactionSelectedText = selectedText
-            )
-        }
-    }
-
     fun AddNewTransaction(
         newSpending: Spending
     ){
@@ -101,5 +40,21 @@ class AppViewModel: ViewModel(){
         currentState.copy(
             breakDownListSample = uiState.value.breakDownListSample + newSpending)
         }
+    }
+
+    fun GetTotalCategory(): Map<String, Float>{
+
+        val sumByCategory = mutableMapOf<String, Float>()
+        for (spending in _uiState.value.breakDownListSample) {
+            val category = spending.category
+            val amount = spending.amount
+            sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+        }
+        return sumByCategory
+    }
+
+    fun GetCategories(): List<String>{
+        val listOfCategories: List<String> = _uiState.value.breakDownListSample.map { it.category }.distinct()
+        return listOfCategories
     }
 }
