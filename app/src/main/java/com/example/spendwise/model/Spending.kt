@@ -3,6 +3,7 @@ package com.example.spendwise.model
 import java.util.Date
 
 data class Spending(
+    val category: String,
     val description: String,
     val date: String,
     val amount: Float
