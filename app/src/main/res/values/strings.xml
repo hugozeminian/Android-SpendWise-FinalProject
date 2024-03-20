@@ -14,9 +14,16 @@
     <string name="password">Password</string>
     <string name="btn_login">Login</string>
     <string name="text_register">Not a member? Register Here!</string>
+    <string name="login_success">Login Successful</string>
+    <string name="login_fail">Invalid Credentials</string>
 
     <!-- Create Account Page -->
 
+    <string name="register_Username">Username</string>
+    <string name="register_Password">Password</string>
+    <string name="register_Email">Email</string>
+    <string name="register_ConfirmPassword">Confirm Password</string>
+    <string name="btn_createAccount">Create Account</string>
 
     <!-- Welcome Page -->
 </resources>

@@ -31,7 +31,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
@@ -55,13 +58,17 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "SpendWise",
-            style = TextStyle(fontSize = 28.sp, fontWeight = FontWeight.Bold),
+            text = stringResource(id= R.string.title),
+            style = TextStyle(fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 40.sp,
+                fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "Smarter spending starts here",
-            style = TextStyle(fontSize = 16.sp, color = Color.Gray),
+            text = stringResource(id= R.string.subtitle),
+            style = TextStyle(fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 20.sp,
+                color = Color.Gray),
             modifier = Modifier.padding(bottom = 24.dp)
         )
         Card(
@@ -75,19 +82,19 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 OutlinedTextField(
                     value = username,
                     onValueChange = { username = it },
-                    label = { Text(text = "Username") },
+                    label = { Text(text = stringResource(id = R.string.register_Username)) },
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.Red,
-                        focusedIndicatorColor = Color.Red,
-                        unfocusedIndicatorColor = Color.Red
+                        focusedLabelColor = Color(0xFF006A68),
+                        unfocusedLabelColor = Color(0xFF006A68),
+                        focusedIndicatorColor = Color(0xFF006A68),
+                        unfocusedIndicatorColor = Color(0xFF006A68)
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Username",
-                            tint = Color.Red
+                            tint = Color(0xFF006A68)
                         )
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -96,19 +103,19 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text(text = "Email") },
+                    label = { Text(stringResource(id = R.string.register_Email)) },
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.Red,
-                        focusedIndicatorColor = Color.Red,
-                        unfocusedIndicatorColor = Color.Red
+                        focusedLabelColor = Color(0xFF006A68),
+                        unfocusedLabelColor = Color(0xFF006A68),
+                        focusedIndicatorColor = Color(0xFF006A68),
+                        unfocusedIndicatorColor = Color(0xFF006A68)
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
                             contentDescription = "EMail",
-                            tint = Color.Red
+                            tint = Color(0xFF006A68)
                         )
                     },
                     modifier = Modifier.fillMaxWidth()
@@ -117,19 +124,19 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text(text = "Password") },
+                    label = { Text(stringResource(id = R.string.register_Password)) },
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.Red,
-                        focusedIndicatorColor = Color.Red,
-                        unfocusedIndicatorColor = Color.Red
+                        focusedLabelColor = Color(0xFF006A68),
+                        unfocusedLabelColor = Color(0xFF006A68),
+                        focusedIndicatorColor = Color(0xFF006A68),
+                        unfocusedIndicatorColor = Color(0xFF006A68)
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Password",
-                            tint = Color.Red
+                            tint = Color(0xFF006A68)
                         )
                     },
                     visualTransformation = PasswordVisualTransformation(),
@@ -139,19 +146,19 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text(text = "Confirm Password") },
+                    label = { Text(stringResource(id = R.string.register_ConfirmPassword))},
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedLabelColor = Color.Red,
-                        unfocusedLabelColor = Color.Red,
-                        focusedIndicatorColor = Color.Red,
-                        unfocusedIndicatorColor = Color.Red
+                        focusedLabelColor = Color(0xFF006A68),
+                        unfocusedLabelColor = Color(0xFF006A68),
+                        focusedIndicatorColor = Color(0xFF006A68),
+                        unfocusedIndicatorColor = Color(0xFF006A68)
                     ),
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
                             contentDescription = "Confirm Password",
-                            tint = Color.Red
+                            tint = Color(0xFF006A68)
                         )
                     },
                     visualTransformation = PasswordVisualTransformation(),
@@ -159,15 +166,15 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 )
                 Button(
                     onClick = {
-                        if (authenticate(username, password, confirmPassword, email)) {
+                        val errorMessage = authenticate(username, password, confirmPassword, email)
+                        if (errorMessage == null) {
                             onCreatingAccount()
                             Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
-
                         } else {
-                            Toast.makeText(context, "Invalid input. Please check all fields.", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(Color.Red),
+                    colors = ButtonDefaults.buttonColors(Color(0xFF006A68)),
                     contentPadding = PaddingValues(
                         start = 60.dp,
                         end = 60.dp,
@@ -178,29 +185,30 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 24.dp)
                 ) {
-                    Text(text = "Create Account", fontSize = 22.sp)
+                    Text(text = stringResource(id = R.string.btn_createAccount), fontSize = 22.sp)
                 }
             }
         }
     }
 }
 
-private fun authenticate(username: String, password: String, confirmPassword: String, email: String): Boolean {
+private fun authenticate(username: String, password: String, confirmPassword: String, email: String): String? {
+
     val validUsername = "user"
     val validPassword = "1234"
 
     if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || email.isEmpty()) {
-        return false
+        return "Fields are required"
     }
 
     if (password != confirmPassword) {
-        return false
+        return "Passwords do not match"
     }
 
     val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
     if (!email.matches(emailRegex.toRegex())) {
-        return false
+        return "Email is in the wrong format"
     }
 
-    return username == validUsername && password == validPassword
+    return null
 }
