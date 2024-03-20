@@ -115,20 +115,22 @@ fun MainScreen(
 
             //====== Each composable will call the functions inside its scope base on the route given ======
             composable(route = "Home"){
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text("I am the main/first/start screen")
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
-                    Button(onClick = {
-                        viewModel.ChangeVariable()
-                        }) {
-                        Text("Counter")
-                        }
-                    Text("Counter: " + uiState.counter)
-                }
+                LoginPage(onLoginSuccess = {
+                    navController.navigate("home")
+                },
+                    onNavigateToRegister = {
+                        navController.navigate("registerPage")
+                    }
+                )
+            }
+            composable("home") {
+                HomePage()
+            }
+
+            composable("registerPage") {
+                RegisterPage(onCreatingAccount = {
+                    navController.navigate(("home"))
+                })
             }
 
             composable(route = "Budget"){
@@ -143,8 +145,8 @@ fun MainScreen(
                 ReportScreen()
             }
 
-            composable(route = "Logout"){
-                Text("Logout page goes here")
+            composable(route = "Settings"){
+                SettingPage()
             }
         }
     }

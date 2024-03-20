@@ -8,16 +8,15 @@
     <string name="app_greetings">Welcome to Spend Wise App</string>
 
     <!-- LoginPage -->
-    <string name="app_title">SpendWise</string>
-    <string name="app_subtitle">Smarter spending starts here! </string>
+    <string name="title">SpendWise</string>
+    <string name="subtitle">Smarter spending starts here</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="text_register">Not a member? Register Here!</string>
 
     <!-- Create Account Page -->
-    <string name="create_an_account">Create an Account</string>
-    <string name="ca_username">Username</string>
-    <string name="ca_password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
+
 
     <!-- Welcome Page -->
 </resources>
