@@ -7,6 +7,9 @@
     <!-- Hard Code Here -->
     <string name="app_greetings">Welcome to Spend Wise App</string>
 
+    <!-- User -->
+    <string name="user">Jonh Doe</string>
+
     <!-- LoginPage -->
     <string name="title">SpendWise</string>
     <string name="subtitle">Smarter spending starts here</string>
@@ -26,4 +29,13 @@
     <string name="btn_createAccount">Create Account</string>
 
     <!-- Welcome Page -->
+
+    <!-- Setting Page -->
+
+    <string name="edit_info">Edit your information and click Save</string>
+    <string name="edit_Username">Username</string>
+    <string name="edit_Password">Password</string>
+    <string name="edit_ConfirmPassword">Confirm Password</string>
+    <string name="btn_editAccount">Save</string>
+
 </resources>
