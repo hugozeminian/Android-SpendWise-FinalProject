@@ -34,6 +34,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.navItems
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.SpendWiseTheme
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
@@ -69,6 +72,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
