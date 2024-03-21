@@ -5,11 +5,13 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -46,9 +48,9 @@ val navItems = listOf<BottomNavigationItem>(
         hasNews = false,
     ),
     BottomNavigationItem(
-        title = "Logout",
-        selectedIcon = Icons.Filled.ExitToApp,
-        unselectedIcon = Icons.Outlined.ExitToApp,
+        title = "Settings",
+        selectedIcon = Icons.Filled.Settings,
+        unselectedIcon = Icons.Outlined.Settings,
         hasNews = false,
     )
 )
