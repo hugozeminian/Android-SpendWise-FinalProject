@@ -157,7 +157,9 @@ fun MainScreen(
             }
 
             composable(route = "Budget"){
-                Text("Budget page goes here")
+//                Text("Budget page goes here")
+
+                BudgetInformation()
             }
 
             composable(route = "Spendings"){
