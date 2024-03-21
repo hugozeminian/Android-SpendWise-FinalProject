@@ -33,9 +33,11 @@
     <!-- Setting Page -->
 
     <string name="edit_info">Edit your information and click Save</string>
+    <string name="edit_darkMode">Active Dark Mode</string>
     <string name="edit_Username">Username</string>
     <string name="edit_Password">Password</string>
     <string name="edit_ConfirmPassword">Confirm Password</string>
     <string name="btn_editAccount">Save</string>
+    <string name="Logout">Logout</string>
 
 </resources>

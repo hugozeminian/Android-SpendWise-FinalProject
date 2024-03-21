@@ -1,5 +1,8 @@
 package com.example.spendwise
 
+import android.content.SharedPreferences
+import android.preference.PreferenceActivity
+import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,7 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun LoginPage(onLoginSuccess: () -> Unit, onNavigateToRegister: () -> Unit) {
+fun LoginPage(onLoginSuccess: () -> Unit,
+              onNavigateToRegister: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current.applicationContext
