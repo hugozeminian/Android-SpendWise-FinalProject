@@ -24,6 +24,16 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    fun SetIsLogged(
+        isLogged: Boolean
+    ){
+        _uiState.update { currentState ->
+            currentState.copy(
+                isLogged = isLogged
+            )
+        }
+    }
+
     //Navbar icon set
     fun SetIconIndex(index: Int){
         _uiState.update { currentState ->
@@ -31,6 +41,15 @@ class AppViewModel: ViewModel(){
                 selectedIconIndex = index
             )
         }
+    }
+
+    fun SetDarkMode(
+        isDark: Boolean
+    ){
+        _uiState.update { currentState ->
+            currentState.copy(
+                darkMode = isDark
+        )}
     }
 
     fun AddNewTransaction(

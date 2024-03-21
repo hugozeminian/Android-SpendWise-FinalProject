@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,17 +33,22 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.spendwise.ui.theme.AppViewModel
 
 
 @Composable
-fun SettingPage(onClickDark: () -> Unit,
+fun SettingPage(viewModel: AppViewModel,
+                onClickDark: () -> Unit,
                 onClickLight: () -> Unit,
                 onLogout: () -> Unit) {
+
+    val uiState by viewModel.uiState.collectAsState()
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     val context = LocalContext.current.applicationContext
-    var darkMode by remember {mutableStateOf (true)}
+    var darkMode by remember {mutableStateOf(uiState.darkMode)}
 
     Column(
         modifier = Modifier
@@ -75,11 +81,14 @@ fun SettingPage(onClickDark: () -> Unit,
                 Spacer(modifier = Modifier.weight(1f))
 
                 Switch(checked = darkMode, onCheckedChange = {
+
+                    viewModel.SetDarkMode(it)
+
                     darkMode = it
                     if(!it){
-                        onClickDark.invoke()
-                    } else{
                         onClickLight.invoke()
+                    } else{
+                        onClickDark.invoke()
                     }
                 })
             }

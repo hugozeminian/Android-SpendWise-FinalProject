@@ -1,8 +1,17 @@
 package com.example.spendwise.data
 
+import androidx.compose.ui.platform.LocalConfiguration
 import com.example.spendwise.model.Spending
+import android.content.res.Configuration
 
 data class AppUiState(
+
+    //Check if login was successful
+    val isLogged: Boolean = false,
+
+    //Set dark mode
+    val darkMode: Boolean = false,
+
     //Navbar icons state
     val selectedIconIndex: Int = 0,
 

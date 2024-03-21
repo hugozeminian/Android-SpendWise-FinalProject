@@ -38,21 +38,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
 
-class MainActivity : ComponentActivity() {
+class MainActivity: ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         var darkMode by mutableStateOf(false)
-        var logged by mutableStateOf(false)
+
         setContent {
-            SpendWiseTheme (darkTheme = darkMode) {
+
+            val viewModel:AppViewModel = viewModel()
+            val uiState by viewModel.uiState.collectAsState()
+
+            SpendWiseTheme (darkTheme = uiState.darkMode) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+
                     MainScreen(
+                        viewModel,
                         onClickDark = {
                             darkMode = true
                         },
@@ -60,11 +66,10 @@ class MainActivity : ComponentActivity() {
                             darkMode = false
                         },
                         onLogin = {
-                            logged = true
+                            viewModel.SetIsLogged(true)
                         },
-                        isLogged = logged,
                         onLogout = {
-                            logged = false
+                            viewModel.SetIsLogged(false)
                         },
                     )
                 }
@@ -77,12 +82,11 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    viewModel: AppViewModel = viewModel(),
+    viewModel: AppViewModel,
     navController: NavHostController = rememberNavController(),
     onClickDark: () -> Unit,
     onClickLight: () -> Unit,
     onLogin: () -> Unit,
-    isLogged: Boolean,
     onLogout: () -> Unit
 ){
 
@@ -90,8 +94,8 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
+            if(uiState.isLogged){
             NavigationBar {
-                if(isLogged){
                     navItems.forEachIndexed { index, item ->
                         NavigationBarItem(
                             selected = uiState.selectedIconIndex == index,
@@ -122,8 +126,8 @@ fun MainScreen(
                                     )
                                 }
                             })
-                    }
-                }
+
+                    }}
             }
         }
     ) { innerPadding ->
@@ -134,7 +138,7 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding)){
 
             //====== Each composable will call the functions inside its scope base on the route given ======
-            if(!isLogged) {
+            if(!uiState.isLogged) {
                 composable(route = "Home") {
                     LoginPage(onLoginSuccess = {
                         onLogin.invoke()
@@ -146,6 +150,7 @@ fun MainScreen(
                     )
                 }
             }
+
             composable("home") {
                 HomePage()
             }
@@ -171,7 +176,7 @@ fun MainScreen(
             }
 
             composable(route = "Settings"){
-                SettingPage(onClickDark, onClickLight, onLogout = {
+                SettingPage(viewModel, onClickDark, onClickLight, onLogout = {
                     onLogout.invoke()
                     navController.navigate("Home")
                 })
@@ -184,9 +189,8 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     SpendWiseTheme(darkTheme = false) {
-        MainScreen(onClickDark = {}, onClickLight = {},
+        MainScreen(AppViewModel(),onClickDark = {}, onClickLight = {},
             onLogin = {},
-            isLogged = false,
             onLogout = {})
     }
 }
