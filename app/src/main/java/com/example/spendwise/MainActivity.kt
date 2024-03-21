@@ -39,14 +39,31 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        var darkMode by mutableStateOf(false)
+        var logged by mutableStateOf(false)
         setContent {
-            SpendWiseTheme {
+            SpendWiseTheme (darkTheme = darkMode) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MainScreen()
+                    MainScreen(
+                        onClickDark = {
+                            darkMode = true
+                        },
+                        onClickLight = {
+                            darkMode = false
+                        },
+                        onLogin = {
+                            logged = true
+                        },
+                        isLogged = logged,
+                        onLogout = {
+                            logged = false
+                        },
+                    )
                 }
             }
         }
@@ -57,7 +74,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreen(
     viewModel: AppViewModel = viewModel(),
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onClickDark: () -> Unit,
+    onClickLight: () -> Unit,
+    onLogin: () -> Unit,
+    isLogged: Boolean,
+    onLogout: () -> Unit
 ){
 
     val uiState by viewModel.uiState.collectAsState()
@@ -65,36 +87,38 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             NavigationBar {
-                navItems.forEachIndexed { index, item ->
-                    NavigationBarItem(
-                        selected = uiState.selectedIconIndex == index,
-                        onClick = {
-                            viewModel.SetIconIndex(index)
-                            navController.navigate(item.title)
-                        },
-                        label = {
-                            Text(item.title)
-                        },
-                        icon = {
-                            BadgedBox(badge = {
-                                if(item.badgeCount != null)
-                                {
-                                    Badge {
-                                        Text(text = item.badgeCount.toString())
+                if(isLogged){
+                    navItems.forEachIndexed { index, item ->
+                        NavigationBarItem(
+                            selected = uiState.selectedIconIndex == index,
+                            onClick = {
+                                viewModel.SetIconIndex(index)
+                                navController.navigate(item.title)
+                            },
+                            label = {
+                                Text(item.title)
+                            },
+                            icon = {
+                                BadgedBox(badge = {
+                                    if(item.badgeCount != null)
+                                    {
+                                        Badge {
+                                            Text(text = item.badgeCount.toString())
+                                        }
                                     }
+                                    else if(item.hasNews){
+                                        Badge()
+                                    }
+                                }) {
+                                    Icon(
+                                        imageVector = if(index == uiState.selectedIconIndex){
+                                            item.selectedIcon
+                                        } else item.unselectedIcon,
+                                        contentDescription = item.title
+                                    )
                                 }
-                                else if(item.hasNews){
-                                    Badge()
-                                }
-                            }) {
-                                Icon(
-                                    imageVector = if(index == uiState.selectedIconIndex){
-                                        item.selectedIcon
-                                    } else item.unselectedIcon,
-                                    contentDescription = item.title
-                                )
-                            }
-                        })
+                            })
+                    }
                 }
             }
         }
@@ -106,21 +130,26 @@ fun MainScreen(
             modifier = Modifier.padding(innerPadding)){
 
             //====== Each composable will call the functions inside its scope base on the route given ======
-            composable(route = "Home"){
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    Text("I am the main/first/start screen")
-                    Icon(imageVector = Icons.Filled.Home, contentDescription = "Home")
-                    Button(onClick = {
-                        viewModel.ChangeVariable()
-                        }) {
-                        Text("Counter")
+            if(!isLogged) {
+                composable(route = "Home") {
+                    LoginPage(onLoginSuccess = {
+                        onLogin.invoke()
+                        navController.navigate("home")
+                    },
+                        onNavigateToRegister = {
+                            navController.navigate("registerPage")
                         }
-                    Text("Counter: " + uiState.counter)
+                    )
                 }
+            }
+            composable("home") {
+                HomePage()
+            }
+
+            composable("registerPage") {
+                RegisterPage(onCreatingAccount = {
+                    navController.navigate(("home"))
+                })
             }
 
             composable(route = "Budget"){
@@ -135,8 +164,11 @@ fun MainScreen(
                 ReportScreen()
             }
 
-            composable(route = "Logout"){
-                Text("Logout page goes here")
+            composable(route = "Settings"){
+                SettingPage(onClickDark, onClickLight, onLogout = {
+                    onLogout.invoke()
+                    navController.navigate("Home")
+                })
             }
         }
     }
@@ -146,7 +178,10 @@ fun MainScreen(
 @Composable
 fun MainScreenPreview() {
     SpendWiseTheme(darkTheme = false) {
-        MainScreen()
+        MainScreen(onClickDark = {}, onClickLight = {},
+            onLogin = {},
+            isLogged = false,
+            onLogout = {})
     }
 }
 

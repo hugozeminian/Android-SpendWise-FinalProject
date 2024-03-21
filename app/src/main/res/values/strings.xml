@@ -7,17 +7,37 @@
     <!-- Hard Code Here -->
     <string name="app_greetings">Welcome to Spend Wise App</string>
 
+    <!-- User -->
+    <string name="user">Jonh Doe</string>
+
     <!-- LoginPage -->
-    <string name="app_title">SpendWise</string>
-    <string name="app_subtitle">Smarter spending starts here! </string>
+    <string name="title">SpendWise</string>
+    <string name="subtitle">Smarter spending starts here</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="text_register">Not a member? Register Here!</string>
+    <string name="login_success">Login Successful</string>
+    <string name="login_fail">Invalid Credentials</string>
 
     <!-- Create Account Page -->
-    <string name="create_an_account">Create an Account</string>
-    <string name="ca_username">Username</string>
-    <string name="ca_password">Password</string>
-    <string name="confirm_password">Confirm Password</string>
+
+    <string name="register_Username">Username</string>
+    <string name="register_Password">Password</string>
+    <string name="register_Email">Email</string>
+    <string name="register_ConfirmPassword">Confirm Password</string>
+    <string name="btn_createAccount">Create Account</string>
 
     <!-- Welcome Page -->
+
+    <!-- Setting Page -->
+
+    <string name="edit_info">Edit your information and click Save</string>
+    <string name="edit_darkMode">Active Dark Mode</string>
+    <string name="edit_Username">Username</string>
+    <string name="edit_Password">Password</string>
+    <string name="edit_ConfirmPassword">Confirm Password</string>
+    <string name="btn_editAccount">Save</string>
+    <string name="Logout">Logout</string>
+
 </resources>
