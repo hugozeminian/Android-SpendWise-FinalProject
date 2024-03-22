@@ -91,6 +91,12 @@ class AppViewModel: ViewModel(){
         SetLoggedUser(GetLoggedUser().copy(username = userName))
     }
 
+    fun SetLoggedUser(isLogged: Boolean){
+        _uiState.update { currentState ->
+            currentState.copy(isLogged = isLogged)
+        }
+    }
+
     fun toggleDarkMode(darkMode: Boolean) {
         _uiState.update { currentState ->
             currentState.copy(isDarkMode = darkMode)
