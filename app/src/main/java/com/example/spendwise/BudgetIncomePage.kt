@@ -384,7 +384,8 @@ fun RewardsInfo() {
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier
                                 .weight(0.5f)
-                                .padding(top = 8.dp, end = 16.dp)
+                                .padding(top = 8.dp, end = 16.dp),
+
                         )
                         IconButton(
                             onClick = {
