@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
         var darkMode by mutableStateOf(false)
         var logged by mutableStateOf(false)
         setContent {
-            SpendWiseTheme (darkTheme = darkMode) {
+            SpendWiseTheme(darkTheme = darkMode) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -84,14 +84,14 @@ fun MainScreen(
     onLogin: () -> Unit,
     isLogged: Boolean,
     onLogout: () -> Unit
-){
+) {
 
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
-                if(isLogged){
+                if (isLogged) {
                     navItems.forEachIndexed { index, item ->
                         NavigationBarItem(
                             selected = uiState.selectedIconIndex == index,
@@ -104,18 +104,16 @@ fun MainScreen(
                             },
                             icon = {
                                 BadgedBox(badge = {
-                                    if(item.badgeCount != null)
-                                    {
+                                    if (item.badgeCount != null) {
                                         Badge {
                                             Text(text = item.badgeCount.toString())
                                         }
-                                    }
-                                    else if(item.hasNews){
+                                    } else if (item.hasNews) {
                                         Badge()
                                     }
                                 }) {
                                     Icon(
-                                        imageVector = if(index == uiState.selectedIconIndex){
+                                        imageVector = if (index == uiState.selectedIconIndex) {
                                             item.selectedIcon
                                         } else item.unselectedIcon,
                                         contentDescription = item.title
@@ -131,10 +129,11 @@ fun MainScreen(
         NavHost(
             navController = navController,
             startDestination = "Home",
-            modifier = Modifier.padding(innerPadding)){
+            modifier = Modifier.padding(innerPadding)
+        ) {
 
             //====== Each composable will call the functions inside its scope base on the route given ======
-            if(!isLogged) {
+            if (!isLogged) {
                 composable(route = "Home") {
                     LoginPage(onLoginSuccess = {
                         onLogin.invoke()
@@ -142,7 +141,8 @@ fun MainScreen(
                     },
                         onNavigateToRegister = {
                             navController.navigate("registerPage")
-                        }
+                        },
+                        viewModel=viewModel
                     )
                 }
             }
@@ -152,29 +152,30 @@ fun MainScreen(
 
             composable("registerPage") {
                 RegisterPage(onCreatingAccount = {
-                    navController.navigate(("home"))
-                })
+                    navController.navigate(("Home"))
+                }, viewModel = viewModel)
             }
 
-            composable(route = "Budget"){
-//                Text("Budget page goes here")
-
+            composable(route = "Budget") {
                 BudgetInformation()
             }
 
-            composable(route = "Spendings"){
+            composable(route = "Spendings") {
                 SpendingsScreen(viewModel)
             }
 
-            composable(route = "Report"){
+            composable(route = "Report") {
                 ReportScreen()
             }
 
-            composable(route = "Settings"){
-                SettingPage(onClickDark, onClickLight, onLogout = {
-                    onLogout.invoke()
-                    navController.navigate("Home")
-                })
+            composable(route = "Settings") {
+                SettingPage(onClickDark = onClickDark,
+                    onClickLight = onClickLight,
+                    onLogout = {
+                        onLogout.invoke()
+                        navController.navigate("Home")
+                    },
+                    viewModel=viewModel)
             }
         }
     }

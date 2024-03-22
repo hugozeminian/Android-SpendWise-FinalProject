@@ -3,6 +3,7 @@ package com.example.spendwise.ui.theme
 import androidx.lifecycle.ViewModel
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.Spending
+import com.example.spendwise.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,8 +43,13 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun GetTotalCategory(): Map<String, Float>{
+    fun SetLoggedUser(user: User){
+        _uiState.update { currentState ->
+            currentState.copy(loggedUser = user)
+        }
+    }
 
+    fun GetTotalCategory(): Map<String, Float>{
         val sumByCategory = mutableMapOf<String, Float>()
         for (spending in _uiState.value.breakDownListSample) {
             val category = spending.category
@@ -54,7 +60,35 @@ class AppViewModel: ViewModel(){
     }
 
     fun GetCategories(): List<String>{
-        val listOfCategories: List<String> = _uiState.value.breakDownListSample.map { it.category }.distinct()
-        return listOfCategories
+        return _uiState.value.breakDownListSample.map { it.category }.distinct()
+    }
+
+    fun GetUsers(): List<User>{
+        return _uiState.value.userListSample
+    }
+    fun GetLoggedUser(): User {
+        return _uiState.value.loggedUser
+    }
+
+    fun AddUser(user : User) {
+        _uiState.update { currentState ->
+            currentState.copy(userListSample = _uiState.value.userListSample + user)
+        }
+    }
+
+    fun ChangeUserName(userName : String){
+        val currentName = GetLoggedUser().username
+
+        _uiState.update { currentState ->
+            currentState.copy(userListSample =
+            _uiState.value.userListSample.map {
+                if(it.username == currentName){
+                    it.copy(username = userName)
+                }else{
+                    it
+                }
+            })
+        }
+        SetLoggedUser(GetLoggedUser().copy(username = userName))
     }
 }

@@ -1,7 +1,4 @@
 package com.example.spendwise.model
-
-import java.util.Date
-
 data class Spending(
     val category: String,
     val description: String,
@@ -13,4 +10,11 @@ data class CategoryWeekly(
     val description: String,
     val spent: Float,
     val limit: Float
+)
+
+data class User(
+    val fullName : String,
+    val username : String,
+    val email : String,
+    val password : String
 )
