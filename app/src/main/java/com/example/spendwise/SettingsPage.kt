@@ -1,6 +1,6 @@
 package com.example.spendwise
 
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,9 +13,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,17 +35,18 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.height
+import com.example.spendwise.ui.theme.AppViewModel
 
 
 @Composable
-fun SettingPage(onClickDark: () -> Unit,
-                onClickLight: () -> Unit,
-                onLogout: () -> Unit) {
+fun SettingPage(
+    viewModel: AppViewModel,
+    onLogout: () -> Unit
+) {
     var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var darkMode by remember { mutableStateOf(viewModel.uiState.value.isDarkMode) }
     val context = LocalContext.current.applicationContext
-    var darkMode by remember {mutableStateOf (true)}
 
     Column(
         modifier = Modifier
@@ -54,7 +58,7 @@ fun SettingPage(onClickDark: () -> Unit,
     ) {
 
         Text(
-            text = "Hello, " + stringResource(id = R.string.user),
+            text = "Hello, " + viewModel.GetLoggedUser().username,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 40.sp,
@@ -63,10 +67,58 @@ fun SettingPage(onClickDark: () -> Unit,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
-        Column(modifier = Modifier.padding(16.dp)) {
+        Spacer(modifier = Modifier.width(15.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()) {
+
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            Text(
+                text = stringResource(id = R.string.setting_msg),
+                fontSize = 22.sp
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                TextField(
+                    value = username,
+                    label = { Text(text = "Username") },
+                    onValueChange = { value -> username = value },
+                    modifier = Modifier.weight(1f),
+                    textStyle = TextStyle(fontSize = 22.sp),
+                )
+
+                Spacer(modifier = Modifier.width(8.dp))
+
+                IconButton(onClick = {
+                    if (username.isNotEmpty()) {
+                        viewModel.ChangeUserName(username)
+                        Toast.makeText(context, context.getString(R.string.edit_username), Toast.LENGTH_SHORT).show()
+                        username = ""
+                    } else {
+                        Toast.makeText(context, context.getString(R.string.edit_warning), Toast.LENGTH_SHORT).show()
+                    }
+                }) {
+                    Icon(
+                        Icons.Default.FavoriteBorder,
+                        tint = Color(0xFF006A68),
+                        contentDescription = "Save"
+                    )
+                }
+
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = R.string.edit_darkMode),
                     fontSize = 22.sp
@@ -74,36 +126,32 @@ fun SettingPage(onClickDark: () -> Unit,
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Switch(checked = darkMode, onCheckedChange = {
-                    darkMode = it
-                    if(!it){
-                        onClickDark.invoke()
-                    } else{
-                        onClickLight.invoke()
-                    }
+                Switch(checked = darkMode, onCheckedChange = { newValue ->
+                    darkMode = newValue
+                    viewModel.toggleDarkMode(newValue)
                 })
             }
 
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = stringResource(id = R.string.Logout),
-                    fontSize = 22.sp,
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = stringResource(id = R.string.Logout),
+                        fontSize = 22.sp,
+                    )
 
-                Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
 
-                Icon(
-                    imageVector = Icons.Default.ExitToApp,
-                    contentDescription = "Logout",
-                    tint = Color(0xFF006A68),
-                    modifier = Modifier.clickable {
+                    Icon(
+                        imageVector = Icons.Default.ExitToApp,
+                        contentDescription = "Logout",
+                        tint = Color(0xFF006A68),
+                        modifier = Modifier.clickable {
 
-                        onLogout.invoke()
-                    }
-                )
-            }
+                            onLogout.invoke()
+                        }
+                    )
+                }
         }
     }
 }

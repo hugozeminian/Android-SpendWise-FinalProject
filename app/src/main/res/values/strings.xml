@@ -13,7 +13,7 @@
     <!-- LoginPage -->
     <string name="title">SpendWise</string>
     <string name="subtitle">Smarter spending starts here</string>
-    <string name="username">Username</string>
+    <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="btn_login">Login</string>
     <string name="text_register">Not a member? Register Here!</string>
@@ -22,11 +22,13 @@
 
     <!-- Create Account Page -->
 
+    <string name="register_Fullname">Full Name</string>
     <string name="register_Username">Username</string>
     <string name="register_Password">Password</string>
     <string name="register_Email">Email</string>
     <string name="register_ConfirmPassword">Confirm Password</string>
     <string name="btn_createAccount">Create Account</string>
+    <string name="backToLogin">Back to Login page</string>
 
     <!-- Welcome Page -->
 
@@ -34,10 +36,11 @@
 
     <string name="edit_info">Edit your information and click Save</string>
     <string name="edit_darkMode">Active Dark Mode</string>
-    <string name="edit_Username">Username</string>
-    <string name="edit_Password">Password</string>
-    <string name="edit_ConfirmPassword">Confirm Password</string>
     <string name="btn_editAccount">Save</string>
     <string name="Logout">Logout</string>
+    <string name="setting_msg">Edit and save Username pressing Favorite button</string>
+    <string name="edit_username">Editing Saved</string>
+    <string name="edit_warning">Please choose a new username</string>
+
 
 </resources>

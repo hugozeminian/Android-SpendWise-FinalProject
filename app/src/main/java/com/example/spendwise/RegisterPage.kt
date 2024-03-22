@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -37,12 +39,16 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.spendwise.model.User
+import com.example.spendwise.ui.theme.AppViewModel
 
 @Composable
-fun RegisterPage(onCreatingAccount: () -> Unit) {
+fun RegisterPage(onCreatingAccount: () -> Unit, viewModel: AppViewModel) {
+    var fullName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -79,6 +85,29 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 .padding(bottom = 8.dp)
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
+
+                OutlinedTextField(
+                    value = fullName,
+                    onValueChange = { fullName = it },
+                    label = { Text(text = stringResource(id = R.string.register_Fullname)) },
+                    shape = RoundedCornerShape(20.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedLabelColor = Color(0xFF006A68),
+                        unfocusedLabelColor = Color(0xFF006A68),
+                        focusedIndicatorColor = Color(0xFF006A68),
+                        unfocusedIndicatorColor = Color(0xFF006A68)
+                    ),
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = "FullName",
+                            tint = Color(0xFF006A68)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
                 OutlinedTextField(
                     value = username,
                     onValueChange = { username = it },
@@ -92,7 +121,7 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                     ),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Person,
+                            imageVector = Icons.Default.FavoriteBorder,
                             contentDescription = "Username",
                             tint = Color(0xFF006A68)
                         )
@@ -168,6 +197,7 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                     onClick = {
                         val errorMessage = authenticate(username, password, confirmPassword, email)
                         if (errorMessage == null) {
+                            viewModel.AddUser(User(fullName, username, email, password));
                             onCreatingAccount()
                             Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
                         } else {
@@ -189,6 +219,17 @@ fun RegisterPage(onCreatingAccount: () -> Unit) {
                 }
             }
         }
+        Text(
+            text = stringResource(id = R.string.backToLogin),
+            style = TextStyle(
+                fontSize = 16.sp,
+                color = Color.Gray,
+                textDecoration = TextDecoration.Underline
+            ),
+            modifier = Modifier.clickable {
+                onCreatingAccount.invoke()
+            }
+        )
     }
 }
 

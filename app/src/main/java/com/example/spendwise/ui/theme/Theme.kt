@@ -5,7 +5,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import kotlinx.coroutines.flow.map
 
 private val LightColors = lightColorScheme(
     primary = md_theme_light_primary,
@@ -74,17 +76,13 @@ private val DarkColors = darkColorScheme(
 
 @Composable
 fun SpendWiseTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    content: @Composable() () -> Unit
+    viewModel: AppViewModel,
+    content: @Composable () -> Unit
 ) {
-    val colors = if (!darkTheme) {
-        LightColors
-    } else {
-        DarkColors
-    }
+    val isDarkMode by viewModel.uiState.map { it.isDarkMode }.collectAsState(initial = isSystemInDarkTheme())
 
     MaterialTheme(
-        colorScheme = colors,
+        colorScheme = if (isDarkMode) DarkColors else LightColors,
         content = content
     )
 }

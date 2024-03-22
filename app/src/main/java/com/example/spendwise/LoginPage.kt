@@ -1,8 +1,5 @@
 package com.example.spendwise
 
-import android.content.SharedPreferences
-import android.preference.PreferenceActivity
-import android.preference.PreferenceManager
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +13,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -44,10 +41,14 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+import com.example.spendwise.ui.theme.AppViewModel
+
 @Composable
-fun LoginPage(onLoginSuccess: () -> Unit,
-              onNavigateToRegister: () -> Unit) {
-    var username by remember { mutableStateOf("") }
+fun LoginPage(
+    viewModel: AppViewModel,
+    onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit) {
+    var userEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current.applicationContext
     Column(
@@ -81,9 +82,9 @@ fun LoginPage(onLoginSuccess: () -> Unit,
         ) {
             Column(modifier = Modifier.padding(16.dp)) {
                 OutlinedTextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text(text = stringResource(id = R.string.username)) },
+                    value = userEmail,
+                    onValueChange = { userEmail = it },
+                    label = { Text(text = stringResource(id = R.string.email)) },
                     shape = RoundedCornerShape(20.dp),
                     colors = TextFieldDefaults.colors(
                         focusedLabelColor = Color(0xFF006A68),
@@ -93,14 +94,16 @@ fun LoginPage(onLoginSuccess: () -> Unit,
                     ),
                     leadingIcon = {
                         Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Username",
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email",
                             tint = Color(0xFF006A68)
                         )
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
+
                 Spacer(modifier = Modifier.height(16.dp))
+
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -124,7 +127,7 @@ fun LoginPage(onLoginSuccess: () -> Unit,
                 )
                 Button(
                     onClick = {
-                        if (authenticate(username, password)) {
+                        if (authenticate(userEmail, password, viewModel)) {
                             onLoginSuccess()
                             Toast.makeText(context, context.getString(R.string.login_success), Toast.LENGTH_SHORT).show()
                         } else {
@@ -160,8 +163,11 @@ fun LoginPage(onLoginSuccess: () -> Unit,
         )
     }
 }
-private fun authenticate(username: String, password: String): Boolean {
-    val validUsername = "user"
-    val validPassword = "1234"
-    return username == validUsername && password == validPassword
+private fun authenticate(userEmail: String, password: String, viewModel: AppViewModel): Boolean {
+    val user = viewModel.GetUsers().find { u -> u.email == userEmail && u.password == password }
+    if(user != null){
+        viewModel.SetLoggedUser(user)
+        return true
+    }
+    return false
 }
