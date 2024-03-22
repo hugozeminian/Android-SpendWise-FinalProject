@@ -41,7 +41,7 @@ fun SpendingsCategories() {
     val lazyListState = rememberLazyListState()
 
     Surface(
-        color = Color.LightGray,
+        color = Color(0xFFCCE8E6),
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -165,7 +165,7 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
     var showAlert by remember { mutableStateOf(false) }
 
     Surface(
-        color = Color.LightGray,
+        color = Color(0xFFCCE8E6),
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -277,7 +277,7 @@ fun RewardsInfo() {
     // Manage scroll state
     val lazyListState = rememberLazyListState()
     Surface(
-        color = Color.LightGray,
+        color = Color(0xFFCCE8E6),
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -423,7 +423,7 @@ fun BudgetInformation() {
     ) {
         item {
             Surface(
-                color = Color.LightGray,
+                color = Color(0xFFCCE8E6),
                 modifier = Modifier.padding(8.dp)
             ) {
                 Column(
