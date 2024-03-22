@@ -1,7 +1,6 @@
 package com.example.spendwise
 
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -37,20 +36,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.height
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.spendwise.model.User
 import com.example.spendwise.ui.theme.AppViewModel
 
 
 @Composable
 fun SettingPage(
     viewModel: AppViewModel,
-    onClickDark: () -> Unit,
-    onClickLight: () -> Unit,
     onLogout: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
-    var darkMode by remember { mutableStateOf(true) }
+    var darkMode by remember { mutableStateOf(viewModel.uiState.value.isDarkMode) }
     val context = LocalContext.current.applicationContext
 
     Column(
@@ -131,13 +126,9 @@ fun SettingPage(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                Switch(checked = darkMode, onCheckedChange = {
-                    darkMode = it
-                    if (!it) {
-                        onClickDark.invoke()
-                    } else {
-                        onClickLight.invoke()
-                    }
+                Switch(checked = darkMode, onCheckedChange = { newValue ->
+                    darkMode = newValue
+                    viewModel.toggleDarkMode(newValue)
                 })
             }
 

@@ -3,16 +3,12 @@ package com.example.spendwise
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
@@ -39,14 +34,15 @@ import androidx.compose.runtime.setValue
 
 
 class MainActivity : ComponentActivity() {
+    private val viewModel: AppViewModel by viewModels()
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var darkMode by mutableStateOf(false)
         var logged by mutableStateOf(false)
         setContent {
-            SpendWiseTheme(darkTheme = darkMode) {
+            SpendWiseTheme(viewModel = viewModel) {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -54,10 +50,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     MainScreen(
                         onClickDark = {
-                            darkMode = true
+                            viewModel.toggleDarkMode(true)
                         },
                         onClickLight = {
-                            darkMode = false
+                            viewModel.toggleDarkMode(false)
                         },
                         onLogin = {
                             logged = true
@@ -169,8 +165,7 @@ fun MainScreen(
             }
 
             composable(route = "Settings") {
-                SettingPage(onClickDark = onClickDark,
-                    onClickLight = onClickLight,
+                SettingPage(
                     onLogout = {
                         onLogout.invoke()
                         navController.navigate("Home")
@@ -184,41 +179,16 @@ fun MainScreen(
 @Preview
 @Composable
 fun MainScreenPreview() {
-    SpendWiseTheme(darkTheme = false) {
-        MainScreen(onClickDark = {}, onClickLight = {},
+    val viewModel = AppViewModel()
+    viewModel.toggleDarkMode(false)
+
+    SpendWiseTheme(viewModel = viewModel) {
+        MainScreen(
+            onClickDark = {},
+            onClickLight = {},
             onLogin = {},
             isLogged = false,
-            onLogout = {})
+            onLogout = {}
+        )
     }
 }
-
-//@Preview
-//@Composable
-//fun LightThemePreview() {
-//    SpendWiseTheme(darkTheme = false) {
-//        SpendWiseMainApp()
-//    }
-//}
-//
-//@Preview
-//@Composable
-//fun DarkThemePreview() {
-//    SpendWiseTheme(darkTheme = true) {
-//        SpendWiseMainApp()
-//    }
-//}
-//@Preview(showBackground = true)
-//@Composable
-//fun GreetingPreview() {
-//    SpendWiseTheme {
-//        SpendWiseMainApp()
-//    }
-//}
-//
-//@Composable
-//fun SpendWiseMainApp(modifier: Modifier = Modifier) {
-//    Text(
-//        text = stringResource(id = R.string.app_greetings),
-//        modifier = modifier
-//    )
-//}

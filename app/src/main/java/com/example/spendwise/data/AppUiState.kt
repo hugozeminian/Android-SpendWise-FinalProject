@@ -23,8 +23,11 @@ data class AppUiState(
     val userListSample: List<User> = listOf(
         User ("Aurora Wang", "Aurora","aurorawang@gmail.com", "1234" ),
         User("User", "User", "user@gmail.com", "123"),
-        User("John Doe", "john.doe", "john@gmail.com", "12")
+        User("John Doe", "john.doe", "john@gmail.com", "12"),
     ),
 
-    val loggedUser : User = User("","","","")
+    val loggedUser : User = User("","","",""),
+
+    //Other Settings Data
+    val isDarkMode: Boolean = false,
 )

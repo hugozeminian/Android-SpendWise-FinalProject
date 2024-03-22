@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlin.math.roundToInt
 
 class AppViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
@@ -90,5 +89,11 @@ class AppViewModel: ViewModel(){
             })
         }
         SetLoggedUser(GetLoggedUser().copy(username = userName))
+    }
+
+    fun toggleDarkMode(darkMode: Boolean) {
+        _uiState.update { currentState ->
+            currentState.copy(isDarkMode = darkMode)
+        }
     }
 }
