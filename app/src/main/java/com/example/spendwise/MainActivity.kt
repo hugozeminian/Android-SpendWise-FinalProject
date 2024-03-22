@@ -29,8 +29,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.navItems
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.SpendWiseTheme
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +38,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var logged by mutableStateOf(false)
         setContent {
             SpendWiseTheme(viewModel = viewModel) {
                 // A surface container using the 'background' color from the theme
@@ -49,18 +46,11 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     MainScreen(
-                        onClickDark = {
-                            viewModel.toggleDarkMode(true)
-                        },
-                        onClickLight = {
-                            viewModel.toggleDarkMode(false)
-                        },
                         onLogin = {
-                            logged = true
+                            viewModel.SetLoggedUser(true)
                         },
-                        isLogged = logged,
                         onLogout = {
-                            logged = false
+                            viewModel.SetLoggedUser(false)
                         },
                     )
                 }
@@ -75,10 +65,7 @@ class MainActivity : ComponentActivity() {
 fun MainScreen(
     viewModel: AppViewModel = viewModel(),
     navController: NavHostController = rememberNavController(),
-    onClickDark: () -> Unit,
-    onClickLight: () -> Unit,
     onLogin: () -> Unit,
-    isLogged: Boolean,
     onLogout: () -> Unit
 ) {
 
@@ -86,8 +73,8 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
+            if (uiState.isLogged) {
             NavigationBar {
-                if (isLogged) {
                     navItems.forEachIndexed { index, item ->
                         NavigationBarItem(
                             selected = uiState.selectedIconIndex == index,
@@ -129,7 +116,7 @@ fun MainScreen(
         ) {
 
             //====== Each composable will call the functions inside its scope base on the route given ======
-            if (!isLogged) {
+            if (!uiState.isLogged) {
                 composable(route = "Home") {
                     LoginPage(onLoginSuccess = {
                         onLogin.invoke()
@@ -184,10 +171,7 @@ fun MainScreenPreview() {
 
     SpendWiseTheme(viewModel = viewModel) {
         MainScreen(
-            onClickDark = {},
-            onClickLight = {},
             onLogin = {},
-            isLogged = false,
             onLogout = {}
         )
     }
