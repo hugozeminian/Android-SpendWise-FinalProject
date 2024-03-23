@@ -130,7 +130,7 @@ fun MainScreen(
                 }
             }
             composable("home") {
-                HomePage()
+                HomePage(viewModel)
             }
 
             composable("registerPage") {
@@ -140,7 +140,7 @@ fun MainScreen(
             }
 
             composable(route = "Budget") {
-                BudgetInformation()
+                BudgetInformation(viewModel)
             }
 
             composable(route = "Spending") {

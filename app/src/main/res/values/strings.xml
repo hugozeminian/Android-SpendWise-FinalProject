@@ -21,7 +21,6 @@
     <string name="login_fail">Invalid Credentials</string>
 
     <!-- Create Account Page -->
-
     <string name="register_Fullname">Full Name</string>
     <string name="register_Username">Username</string>
     <string name="register_Password">Password</string>
@@ -31,9 +30,9 @@
     <string name="backToLogin">Back to Login page</string>
 
     <!-- Welcome Page -->
+    <string name="wp_welcome_text">Welcome Back," "</string>
 
     <!-- Setting Page -->
-
     <string name="edit_info">Edit your information and click Save</string>
     <string name="edit_darkMode">Active Dark Mode</string>
     <string name="btn_editAccount">Save</string>
@@ -42,8 +41,26 @@
     <string name="edit_username">Editing Saved</string>
     <string name="edit_warning">Please choose a new username</string>
 
-    <!-- Report Page -->
+    <!-- Budget Page -->
+    <string name="bp_monthly_income">Monthly Income:" "</string>
+    <string name="bp_monthly_enter_income">Enter Monthly Income</string>
+    <string name="bp_monthly_savings_goal">Monthly Savings Goal:" "</string>
+    <string name="bp_monthly_enter_savings_goal">Enter Monthly Savings Goal (%)</string>
+    <string name="bp_monthly_rewards_balance">Rewards Balance:" "</string>
+    <string name="bp_monthly_budget">Monthly Budget:" "</string>
+    <string name="bp_description">Description</string>
+    <string name="bp_amount">Amount</string>
+    <string name="bp_weekly_budget">Weekly Budget:" "</string>
+    <string name="bp_spendings_categories">Spendings Categories" "</string>
+    <string name="bp_cat_name">Name</string>
+    <string name="bp_cat_weekly_limit">Weekly Limit:" "</string>
+    <string name="bp_button_edit">Edit</string>
+    <string name="bp_button_save">Save</string>
+    <string name="bp_button_done">Done</string>
+    <string name="bp_button_add">Add</string>
+    <string name="bp_button_clear_all">Clear All</string>
 
+    <!-- Report Page -->
     <string name="report_screen_title">Expenses Report</string>
     <string name="weekly_graph_title">This Week</string>
     <string name="spent_week">You\'ve spent:</string>
@@ -55,7 +72,6 @@
     <string name="saved_from_income">Of you monthly income</string>
 
     <!-- Reports Page -->
-
     <string name="spendings_screen_title">Spendings description</string>
     <string name="select_category">Select category:</string>
     <string name="spending_recap">Spending recap:</string>
