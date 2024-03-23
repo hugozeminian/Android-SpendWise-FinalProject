@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +67,8 @@ fun SpendingsScreen(
             .padding(16.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        Text("My Spendings",
+        Text(
+            stringResource(id = R.string.spendings_screen_title),
             fontWeight = FontWeight.SemiBold,
             fontSize = 28.sp)
         Spacer(modifier = Modifier.height(16.dp))
@@ -75,7 +77,7 @@ fun SpendingsScreen(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text("Select category:")
+            Text(stringResource(id = R.string.select_category))
             breakdownCategory = CustomDropdownMenu(categories)
         }
 
@@ -90,8 +92,8 @@ fun SpendingsScreen(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text("Spending recap:")
-            CustomDropdownMenu(categories)
+            Text(stringResource(id = R.string.spending_recap))
+            CustomDropdownMenu(listOf("Weekly", "Monthly"))
         }
         Spacer(modifier = Modifier.height(8.dp))
         SpendingRecapList(viewModel)

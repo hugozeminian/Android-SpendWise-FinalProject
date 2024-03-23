@@ -148,7 +148,7 @@ fun MainScreen(
             }
 
             composable(route = "Report") {
-                ReportScreen()
+                ReportScreen(viewModel)
             }
 
             composable(route = "Settings") {

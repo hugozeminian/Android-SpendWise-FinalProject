@@ -42,5 +42,21 @@
     <string name="edit_username">Editing Saved</string>
     <string name="edit_warning">Please choose a new username</string>
 
+    <!-- Report Page -->
 
+    <string name="report_screen_title">Expenses Report</string>
+    <string name="weekly_graph_title">This Week</string>
+    <string name="spent_week">You\'ve spent:</string>
+    <string name="spent_month">"You are spending a lot more than usual on the following category: %1$s</string>
+    <string name="monthly_graph_title">This Month\'s Projection</string>
+    <string name="spent_month2">This month you\'ve spent:</string>
+    <string name="spent_month_budget">Of your monthly budget</string>
+    <string name="saved_percentage">And saved:</string>
+    <string name="saved_from_income">Of you monthly income</string>
+
+    <!-- Reports Page -->
+
+    <string name="spendings_screen_title">Expenses Report</string>
+    <string name="select_category">Select category:</string>
+    <string name="spending_recap">Spending recap:</string>
 </resources>

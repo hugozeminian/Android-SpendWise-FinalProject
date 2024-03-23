@@ -59,5 +59,5 @@ fun CustomDropdownMenu(
         }
     }
 
-    return selectedItem
+    return selectedItem //This function returns the item selected
 }

@@ -20,19 +20,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
-    return toSortedMap(compareByDescending { this[it] })
-}
+//fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
+//    return toSortedMap(compareByDescending { this[it] })
+//}
 
 @Composable
 fun VerticalBarsChart(
-    data: Map<String, Int>,
+    data: Map<String, Float>,
 ) {
 
     val context = LocalContext.current
@@ -47,10 +48,9 @@ fun VerticalBarsChart(
     val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
 
     val maxValue = data.values.max()
-    val sortedData = data.sortByValue()
 
     val globalPadding = 25.dp
-    val firstColumnPadding = 35.dp
+    val firstColumnPadding = 60.dp
 
     Column(
         modifier = Modifier
@@ -59,7 +59,7 @@ fun VerticalBarsChart(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "This week",
+        Text(text = stringResource(id = R.string.weekly_graph_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold,
             modifier = Modifier.padding(10.dp))
@@ -81,7 +81,7 @@ fun VerticalBarsChart(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    Text(text = maxValue.toString())
+                    Text(text = String.format("%.1f", maxValue))
                     Spacer(modifier = Modifier.fillMaxHeight())
                 }
 
@@ -89,7 +89,7 @@ fun VerticalBarsChart(
                     modifier = Modifier.fillMaxHeight(),
                     verticalArrangement = Arrangement.Bottom
                 ) {
-                    Text(text = (maxValue / 2).toString())
+                    Text(text = (String.format("%.1f", maxValue / 2)))
                     Spacer(modifier = Modifier.fillMaxHeight(0.5f))
                 }
             }
@@ -97,17 +97,23 @@ fun VerticalBarsChart(
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.Bottom,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp)
             ){
-                sortedData.forEach {
+                data.forEach {
                     Box(
                         modifier = Modifier
                             .width(barGraphWidth)
-                            .fillMaxHeight(it.value/maxValue.toFloat())
+                            .fillMaxHeight(it.value / maxValue.toFloat())
                             .background(color = MaterialTheme.colorScheme.primary)
                             .clickable {
                                 Toast
-                                    .makeText(context, "${it.key.toString()}: \$${it.value.toString()}", Toast.LENGTH_SHORT)
+                                    .makeText(
+                                        context,
+                                        "${it.key}: \$${String.format("%.2f", it.value)}",
+                                        Toast.LENGTH_SHORT
+                                    )
                                     .show()
                             }
                     )
@@ -129,7 +135,7 @@ fun VerticalBarsChart(
                 .padding(start = firstColumnPadding),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            sortedData.forEach {
+            data.forEach {
                 Text(
                     text = it.key,
                     fontSize = 8.sp,
@@ -146,22 +152,22 @@ fun VerticalBarsChart(
 
 @Composable
 fun HorizontalBarsChart(
-    data: Map<String, Int>
+    data: Map<String, Float>
 ){
     val context = LocalContext.current
 
     // Screen width to distribute expenses bars
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+//    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     // BarGraph Dimensions
-    val barGraphHeight by remember { mutableStateOf(200.dp) }
-    val barGraphWidth by remember { mutableStateOf(20.dp) }
-    // Scale Dimensions
-    val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
-    val scaleLineWidth by remember { mutableStateOf(1.dp) }
+//    val barGraphHeight by remember { mutableStateOf(200.dp) }
+//    val barGraphWidth by remember { mutableStateOf(20.dp) }
+//    // Scale Dimensions
+//    val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
+//    val scaleLineWidth by remember { mutableStateOf(1.dp) }
 
     val maxValue = data.values.max()
-    val sortedData = data.sortByValue()
+//    val sortedData = data.sortByValue()
 
     Column {
         Column(
@@ -170,7 +176,7 @@ fun HorizontalBarsChart(
                 .padding(start = 25.dp, top = 10.dp, end = 25.dp, bottom = 10.dp)
                 .fillMaxWidth()
         ){
-            Text(text = "This month's projection",
+            Text(text = stringResource(id = R.string.monthly_graph_title),
                 fontSize = 24.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.padding(10.dp))
@@ -180,8 +186,8 @@ fun HorizontalBarsChart(
                         modifier = Modifier.height(120.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        sortedData.forEach{
-                            Text(it.key.toString())
+                        data.forEach{
+                            Text(it.key)
                         }
                     }
                 }
@@ -196,12 +202,21 @@ fun HorizontalBarsChart(
                             .height(120.dp)
                             .padding(end = 16.dp)
                     ){
-                        sortedData.forEach{
+                        data.forEach{
                             Box(
                                 modifier = Modifier
                                     .height(20.dp)
-                                    .fillMaxWidth(it.value/maxValue.toFloat())
+                                    .fillMaxWidth(it.value / maxValue)
                                     .background(color = MaterialTheme.colorScheme.primary)
+                                    .clickable {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "${it.key}: \$${String.format("%.2f", it.value)}",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
                             )
                         }
                     }
@@ -216,7 +231,7 @@ fun HorizontalBarsChart(
                 var range = maxValue / 5
                 for (i in 0 until 6) {
                     // Code to be executed in each iteration
-                    Text((i * range).toString(),
+                    Text(String.format("%.0f", (i * range)),
                         textAlign = TextAlign.Center,
                         modifier = Modifier.width(40.dp))
                 }
@@ -232,16 +247,16 @@ fun DisplayChart()
     Column {
         VerticalBarsChart(
             data = mapOf(
-                Pair("Groceries", 520),
-                Pair("Takeout", 500),
-                Pair("Utilities", 300),
-                Pair("Entertainment", 200)
+                Pair("Groceries", 520F),
+                Pair("Takeout", 500F),
+                Pair("Utilities", 300F),
+                Pair("Entertainment", 200F)
             ))
         HorizontalBarsChart(
             data = mapOf(
-                Pair("Income", 4000),
-                Pair("Budget", 3200),
-                Pair("Spendings", 2400),
+                Pair("Income", 4000F),
+                Pair("Budget", 3200F),
+                Pair("Spendings", 2400F),
             )
         )
     }
