@@ -38,19 +38,15 @@ fun VerticalBarsChart(
 
     val context = LocalContext.current
 
-    // Screen width to distribute expenses bars
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
     // BarGraph Dimensions
     val barGraphHeight by remember { mutableStateOf(200.dp) }
-    val barGraphWidth by remember { mutableStateOf(20.dp) }
+    val barGraphWidth by remember { mutableStateOf(25.dp) }
     // Scale Dimensions
     val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
 
     val maxValue = data.values.max()
 
     val globalPadding = 25.dp
-    val firstColumnPadding = 60.dp
 
     Column(
         modifier = Modifier
@@ -70,29 +66,6 @@ fun VerticalBarsChart(
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.Start
         ) {
-            // scale Y-Axis
-            Box(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .width(firstColumnPadding),
-                contentAlignment = Alignment.BottomCenter
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(text = String.format("%.1f", maxValue))
-                    Spacer(modifier = Modifier.fillMaxHeight())
-                }
-
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom
-                ) {
-                    Text(text = (String.format("%.1f", maxValue / 2)))
-                    Spacer(modifier = Modifier.fillMaxHeight(0.5f))
-                }
-            }
 
             Row(
                 horizontalArrangement = Arrangement.SpaceAround,
@@ -102,21 +75,27 @@ fun VerticalBarsChart(
                     .padding(top = 8.dp)
             ){
                 data.forEach {
-                    Box(
-                        modifier = Modifier
-                            .width(barGraphWidth)
-                            .fillMaxHeight(it.value / maxValue.toFloat())
-                            .background(color = MaterialTheme.colorScheme.primary)
-                            .clickable {
-                                Toast
-                                    .makeText(
-                                        context,
-                                        "${it.key}: \$${String.format("%.2f", it.value)}",
-                                        Toast.LENGTH_SHORT
-                                    )
-                                    .show()
-                            }
-                    )
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("$${String.format("%.1f", it.value)}")
+                        Box(
+                            modifier = Modifier
+                                .width(barGraphWidth)
+                                .fillMaxHeight(it.value / maxValue.toFloat())
+                                .background(color = MaterialTheme.colorScheme.primary)
+                                .clickable {
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "${it.key}: \$${String.format("%.2f", it.value)}",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                        )
+                    }
+
                 }
             }
         }
@@ -131,8 +110,7 @@ fun VerticalBarsChart(
         // Scale X-Axis
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = firstColumnPadding),
+                .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
             data.forEach {
@@ -247,8 +225,7 @@ fun DisplayChart()
     Column {
         VerticalBarsChart(
             data = mapOf(
-                Pair("Groceries", 520F),
-                Pair("Takeout", 500F),
+                Pair("Groceries", 520.45F),
                 Pair("Utilities", 300F),
                 Pair("Entertainment", 200F)
             ))

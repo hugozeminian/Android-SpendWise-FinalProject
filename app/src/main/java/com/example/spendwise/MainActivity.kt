@@ -143,7 +143,7 @@ fun MainScreen(
                 BudgetInformation()
             }
 
-            composable(route = "Spendings") {
+            composable(route = "Spending") {
                 SpendingsScreen(viewModel)
             }
 

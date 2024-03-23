@@ -56,7 +56,7 @@
 
     <!-- Reports Page -->
 
-    <string name="spendings_screen_title">Expenses Report</string>
+    <string name="spendings_screen_title">Spendings description</string>
     <string name="select_category">Select category:</string>
     <string name="spending_recap">Spending recap:</string>
 </resources>

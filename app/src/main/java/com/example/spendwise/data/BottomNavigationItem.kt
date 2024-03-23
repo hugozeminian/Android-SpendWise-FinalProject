@@ -37,7 +37,7 @@ val navItems = listOf<BottomNavigationItem>(
         hasNews = false,
     ),
     BottomNavigationItem(
-        title = "Spendings",
+        title = "Spending",
         selectedIcon = Icons.Filled.Star,
         unselectedIcon = Icons.Outlined.Star,
         hasNews = false,
