@@ -28,9 +28,17 @@ data class AppUiState(
 
     val loggedUser : User = User("","","",""),
 
-    val isLogged: Boolean = false,
-
+    val isLogged: Boolean = true,
     //Other Settings Data
     val isDarkMode: Boolean = false,
+
+    //Monthly income
+    val income: Float = 2500F,
+
+    //Monthly budget
+    val budget: Float = 2000F,
+
+    //Weekly limit
+    val weeklyLimit: Float = 500F,
 
 )

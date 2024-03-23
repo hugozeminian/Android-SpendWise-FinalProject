@@ -1,5 +1,6 @@
 package com.example.spendwise.ui.theme
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.Spending
@@ -56,6 +57,36 @@ class AppViewModel: ViewModel(){
             sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
         }
         return sumByCategory
+    }
+
+    fun GetMonthlyReport(): Map<String, Float>{
+        val info: Map<String,Float> = mapOf(
+            Pair("Income", _uiState.value.income),
+            Pair("Budget", _uiState.value.budget),
+            Pair("Spendings", GetTotalSpendings()),
+        )
+        return info
+    }
+
+    fun GetTotalSpendings(): Float{
+
+        var sum: Float = 0F
+        for(spending in _uiState.value.breakDownListSample){
+            sum = sum + spending.amount
+        }
+
+        return sum
+    }
+
+    //Special function to sort maps
+    fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
+        return toSortedMap(compareByDescending { this[it] })
+    }
+
+    fun GetSortedSpendings(): Map<String, Float>{
+        val allTotals: Map<String, Float> =  GetTotalCategory().sortByValue()
+
+        return allTotals
     }
 
     fun GetCategories(): List<String>{

@@ -10,13 +10,19 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -26,16 +32,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.spendwise.data.AppUiState
+import com.example.spendwise.ui.theme.AppViewModel
 
 @Composable
 fun ReportScreen(
+    viewModel: AppViewModel
 ){
-    ExpensesReportLayout()
-}
-
-@Composable
-fun ExpensesReportLayout(){
-
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
     Column(
@@ -44,69 +47,76 @@ fun ExpensesReportLayout(){
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-        WeeklyReport(screenWidth)
+        WeeklyReport(screenWidth, viewModel)
         Spacer(modifier = Modifier.height(25.dp))
-        MonthProjectionReport(screenWidth)
+        MonthProjectionReport(screenWidth, viewModel)
     }
 }
 
 @Composable
-fun WeeklyReport(screenWidth: Dp)
+fun WeeklyReport(
+    screenWidth: Dp,
+    viewModel: AppViewModel)
 {
+
+    val uiState by viewModel.uiState.collectAsState()
+    var totalSpendings = viewModel.GetTotalSpendings()
+    var dataSorted = viewModel.GetSortedSpendings()
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            "Expense Report",
+            stringResource(id = R.string.report_screen_title),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(16.dp))
-        VerticalBarsChart(
-            data = mapOf(
-                Pair("Groceries", 150),
-                Pair("Takeout", 230),
-                Pair("Utilities", 390),
-                Pair("Entertainment", 400),
-            ))
+        VerticalBarsChart(dataSorted)
         Spacer(modifier = Modifier.height(10.dp))
-        Text("You've spent:")
-        Text("$550/$750",
+        Text(stringResource(id = R.string.spent_week))
+        Text("$${String.format("%.1f", totalSpendings)}/$${uiState.weeklyLimit}",
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
-            "You are spending a lot more than usual on the following category: Groceries",
+            text = String.format(stringResource(id = R.string.spent_month), dataSorted.keys.firstOrNull()),
+            textAlign = TextAlign.Center,
             modifier = Modifier.width(screenWidth/2))
     }
 }
 
 @Composable
 fun MonthProjectionReport(
-    screenWidth: Dp){
-    HorizontalBarsChart(data = mapOf(
-        Pair("Income", 2800),
-        Pair("Budget", 2000),
-        Pair("Spendings", 1890),
-    ))
+    screenWidth: Dp,
+    viewModel: AppViewModel){
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    var totalSpendings = viewModel.GetTotalSpendings()
+    var totalPercentage = (totalSpendings * 100)/uiState.income
+
+    HorizontalBarsChart(viewModel.GetMonthlyReport())
     Spacer(modifier = Modifier.height(25.dp))
-    Text("This month you've spent:")
-    Text("$2200/$5000",
+    Text(stringResource(id = R.string.spent_month2))
+    Text("$${totalSpendings}/$${uiState.budget}",
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold
     )
-    Text("Of your monthly budget")
-    Text("And saved:")
-    Text("60%",
+    Text(stringResource(id = R.string.spent_month_budget))
+    Spacer(modifier = Modifier.height(8.dp))
+    Text(stringResource(id = R.string.saved_percentage))
+    Text(text = "${String.format("%.1f", (100 - totalPercentage))}%",
         fontSize = 24.sp,
+        color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.SemiBold
     )
-    Text("Of your monthly income")
+    Text(stringResource(id = R.string.saved_from_income))
     Spacer(modifier = Modifier.height(50.dp))
 }
 
 @Preview
 @Composable
 fun ShowGraph() {
-    ExpensesReportLayout()
+    ReportScreen(AppViewModel())
 }
