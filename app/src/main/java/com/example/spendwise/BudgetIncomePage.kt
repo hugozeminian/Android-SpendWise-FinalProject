@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,26 +17,32 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.spendwise.model.RewardItem
+import com.example.spendwise.model.SpendingsCategories
+import com.example.spendwise.ui.theme.AppViewModel
+
 //import com.example.budgetincome.ui.theme.BudgetIncomeTheme
 
-// Define a data class to represent a reward item
-data class RewardItem(val description: String, val amount: String)
+
 // Define a data class to represent a spending category
 data class SpendingCategory(val name: String, val weeklyLimit: String)
 
 // SpendingsCategories composable function
 
 @Composable
-fun SpendingsCategories() {
+fun SpendingsCategories(viewModel: AppViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+
     // Maintain state for category name and weekly limit fields
     var categoryName by remember { mutableStateOf("") }
     var weeklyLimit by remember { mutableStateOf("") }
 
     // Maintain state for the list of spending categories
-    var spendingCategories by remember { mutableStateOf(emptyList<SpendingCategory>()) }
+    var spendingCategories by remember { mutableStateOf(uiState.spendingsCategoriesList) }
 
     // Manage scroll state
     val lazyListState = rememberLazyListState()
@@ -48,7 +55,7 @@ fun SpendingsCategories() {
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Spendings Categories",
+                text = stringResource(id = R.string.bp_spendings_categories),
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
@@ -74,7 +81,7 @@ fun SpendingsCategories() {
                         val newText = it.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) } ?: weeklyLimit
                         weeklyLimit = newText
                     },
-                    label = { Text(text = "Weekly Limit") },
+                    label = { Text(stringResource(id = R.string.bp_cat_weekly_limit)) },
                     modifier = Modifier.weight(1f)
                 )
             }
@@ -88,10 +95,12 @@ fun SpendingsCategories() {
             ) {
                 // Clear All Button
                 Button(
-                    onClick = { spendingCategories = emptyList() },
+                    onClick = { spendingCategories = emptyList()
+                                viewModel.RemoveAllSpendingsCategoriesItem()
+                              },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Clear All")
+                    Text(text = stringResource(id = R.string.bp_button_clear_all))
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -101,8 +110,12 @@ fun SpendingsCategories() {
                     onClick = {
                         // Add the spending category to the list
                         if (categoryName.isNotBlank() && weeklyLimit.isNotBlank()) {
-                            val formattedWeeklyLimit = "$${"%.2f".format(weeklyLimit.toDouble())}"
-                            spendingCategories = listOf(SpendingCategory(categoryName, formattedWeeklyLimit)) + spendingCategories
+                            val newCategory = SpendingsCategories(categoryName, weeklyLimit.toFloat())
+
+                            spendingCategories = uiState.spendingsCategoriesList + newCategory
+                            viewModel.AddSpendingsCategoriesItem(newCategory)
+
+
                             // Clear fields after adding
                             categoryName = ""
                             weeklyLimit = ""
@@ -110,7 +123,7 @@ fun SpendingsCategories() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Add")
+                    Text(stringResource(id = R.string.bp_button_add))
                 }
             }
 
@@ -135,7 +148,8 @@ fun SpendingsCategories() {
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = "Weekly Limit: ${category.weeklyLimit}",
+                            text = stringResource(id = R.string.bp_cat_weekly_limit) + category.weeklyLimit,
+
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
@@ -143,6 +157,7 @@ fun SpendingsCategories() {
                             onClick = {
                                 // Remove the spending category from the list
                                 spendingCategories = spendingCategories.filterIndexed { i, _ -> i != index }
+                                viewModel.RemoveSpendingsCategoriesItem(index)
                             }
                         ) {
                             Icon(
@@ -158,11 +173,13 @@ fun SpendingsCategories() {
 }
 
 @Composable
-fun MonthlyWeeklyBudget(monthlyIncome: Double) {
+fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
+    val uiState by viewModel.uiState.collectAsState()
+
     var editing by remember { mutableStateOf(false) }
-    var monthlyBudget by remember { mutableStateOf("0.00") }
-    var weeklyBudget by remember { mutableStateOf("0.00") }
-    var showAlert by remember { mutableStateOf(false) }
+    var monthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
+    var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
+    var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
     Surface(
         color = Color(0xFFCCE8E6),
@@ -176,7 +193,7 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Monthly Budget: ",
+                    text = stringResource(id = R.string.bp_monthly_budget),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
@@ -202,7 +219,7 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = "Weekly Budget: ",
+                    text = stringResource(id = R.string.bp_weekly_budget),
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
@@ -238,6 +255,9 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
                         val weeklyBudgetValue = weeklyBudget.toDoubleOrNull() ?: 0.0
                         val monthlyBudgetLimit = weeklyBudgetValue * 4
 
+                        viewModel.SetMonthlyBudget(monthlyBudget.toFloat())
+                        viewModel.SetWeeklyBudget(weeklyBudget.toFloat())
+
                         if (monthlyBudgetValue > monthlyIncome || monthlyBudgetValue < monthlyBudgetLimit) {
                             showAlert = true
                         } else {
@@ -253,7 +273,7 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
                     .fillMaxWidth()
                     .padding(top = 16.dp)
             ) {
-                Text(text = if (editing) "Save" else "Edit")
+                Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit))
             }
         }
     }
@@ -262,13 +282,15 @@ fun MonthlyWeeklyBudget(monthlyIncome: Double) {
 
 
 @Composable
-fun RewardsInfo() {
+fun RewardsInfo(viewModel: AppViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+
     // Maintain state for description and amount fields
     var description by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
     // Maintain state for the list of rewards
-    var rewards by remember { mutableStateOf(emptyList<RewardItem>()) }
+    var rewards by remember { mutableStateOf(uiState.rewardsList) }
 
     // Calculate the total sum of amounts
     var totalAmount by remember { mutableStateOf(0.0) }
@@ -298,7 +320,7 @@ fun RewardsInfo() {
                 TextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(text = "Description") },
+                    label = { Text(text = stringResource(id = R.string.bp_description)) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
@@ -313,13 +335,13 @@ fun RewardsInfo() {
                         val newText = it.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) } ?: amount
                         amount = newText
                     },
-                    label = { Text(text = "Amount") },
+                    label = { Text(stringResource(id = R.string.bp_amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
                     singleLine = true,
-                    placeholder = { Text(text = "Amount") } // Placeholder for the amount field
+                    placeholder = { Text(text = stringResource(id = R.string.bp_amount)) } // Placeholder for the amount field
                 )
             }
 
@@ -335,12 +357,13 @@ fun RewardsInfo() {
                     onClick = {
                         // Clear all added items
                         rewards = emptyList()
+                        viewModel.RemoveAllRewardItems()
                     },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
                 ) {
-                    Text(text = "Clear All")
+                    Text(stringResource(id = R.string.bp_button_clear_all))
                 }
 
                 // Add Button
@@ -348,7 +371,8 @@ fun RewardsInfo() {
                     onClick = {
                         // Add the reward item to the list
                         if (description.isNotBlank() && amount.isNotBlank()) {
-                            rewards = listOf(RewardItem(description, amount)) + rewards
+                            rewards = uiState.rewardsList + RewardItem(description, amount)
+                            viewModel.AddRewardItem(RewardItem(description, amount))
                             // Clear fields after adding
                             description = ""
                             amount = ""
@@ -356,7 +380,7 @@ fun RewardsInfo() {
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = "Add")
+                    Text(stringResource(id = R.string.bp_button_add))
                 }
             }
 
@@ -391,6 +415,7 @@ fun RewardsInfo() {
                             onClick = {
                                 // Remove the reward item from the list
                                 rewards = rewards.filterIndexed { i, _ -> i != index }
+                                viewModel.RemoveRewardItem(index)
                             },
                             modifier = Modifier.size(24.dp)
                         ) {
@@ -412,10 +437,12 @@ fun RewardsInfo() {
 
 
 @Composable
-fun BudgetInformation() {
+fun BudgetInformation(viewModel: AppViewModel) {
+    val uiState by viewModel.uiState.collectAsState()
+
     var editing by remember { mutableStateOf(false) }
-    var incomeText by remember { mutableStateOf("0.00") }
-    var savingsPercentage by remember { mutableStateOf(0) }
+    var incomeText by remember { mutableStateOf(uiState.income.toString()) }
+    var savingsPercentageText by remember { mutableStateOf(uiState.savingsPercentage.toString()) }
 
     LazyColumn(
         modifier = Modifier
@@ -430,28 +457,36 @@ fun BudgetInformation() {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(text = "Monthly Income", style = MaterialTheme.typography.headlineSmall)
+                    Text(text = stringResource(id = R.string.bp_monthly_income), style = MaterialTheme.typography.headlineSmall)
                     if (editing) {
                         TextField(
                             value = incomeText,
-                            onValueChange = { incomeText = it },
-                            label = { Text(text = "Enter Monthly Income") },
+                            onValueChange = { newValue ->
+                                incomeText = newValue
+                                val income = newValue.toFloatOrNull() ?: 0f
+                                viewModel.SetMonthlyIncome(income)
+                            },
+                            label = { Text(text = stringResource(id = R.string.bp_monthly_enter_income)) },
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     } else {
                         Text(text = "$$incomeText", style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = "Monthly Savings Goal", style = MaterialTheme.typography.headlineSmall)
+                    Text(text = stringResource(id = R.string.bp_monthly_savings_goal), style = MaterialTheme.typography.headlineSmall)
                     if (editing) {
                         TextField(
-                            value = savingsPercentage.toString(),
-                            onValueChange = { savingsPercentage = it.toIntOrNull() ?: 0 },
-                            label = { Text(text = "Enter Monthly Savings Goal (%)") },
+                            value = savingsPercentageText,
+                            onValueChange = { newValue ->
+                                savingsPercentageText = newValue
+                                val savingsPercentage = newValue.toFloatOrNull() ?: 0f
+                                viewModel.SetMonthlySavingsGoalPercentage(savingsPercentage)
+                            },
+                            label = { Text(text = stringResource(id = R.string.bp_monthly_enter_savings_goal)) },
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     } else {
-                        Text(text = "$savingsPercentage%", style = MaterialTheme.typography.bodyLarge)
+                        Text(text = "$savingsPercentageText%", style = MaterialTheme.typography.bodyLarge)
                     }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
@@ -459,7 +494,7 @@ fun BudgetInformation() {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(onClick = { editing = !editing }) {
-                            Text(text = if (editing) "Done" else "Edit")
+                            Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit))
                         }
                     }
                 }
@@ -467,25 +502,14 @@ fun BudgetInformation() {
         }
 
         item {
-            RewardsInfo()
+            RewardsInfo(viewModel)
         }
 
         item {
-            MonthlyWeeklyBudget(monthlyIncome = incomeText.toDoubleOrNull() ?: 0.0)
+            MonthlyWeeklyBudget(viewModel, monthlyIncome = incomeText.toDoubleOrNull() ?: 0.0)
         }
         item{
-            SpendingsCategories()
+            SpendingsCategories(viewModel)
         }
     }
 }
-
-
-
-//@Preview(showBackground = true)
-//@Composable
-//fun BudgetInformationPreview() {
-//    BudgetIncomeTheme {
-//        BudgetInformation()
-//    }
-//}
-

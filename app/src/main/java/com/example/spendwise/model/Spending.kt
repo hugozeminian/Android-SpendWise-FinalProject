@@ -1,4 +1,5 @@
 package com.example.spendwise.model
+
 data class Spending(
     val category: String,
     val description: String,
@@ -13,8 +14,13 @@ data class CategoryWeekly(
 )
 
 data class User(
-    val fullName : String,
-    val username : String,
-    val email : String,
-    val password : String
+    val fullName: String,
+    val username: String,
+    val email: String,
+    val password: String
+)
+
+data class SpendingsCategories(
+    val name: String,
+    val weeklyLimit: Float,
 )

@@ -1,6 +1,8 @@
 package com.example.spendwise.data
 
+import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.Spending
+import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
 
 data class AppUiState(
@@ -24,21 +26,42 @@ data class AppUiState(
         User ("Aurora Wang", "Aurora","aurorawang@gmail.com", "1234" ),
         User("User", "User", "user@gmail.com", "123"),
         User("John Doe", "john.doe", "john@gmail.com", "12"),
+        User("H C", "hc", "h@c.com", "hc"),
     ),
 
     val loggedUser : User = User("","","",""),
 
-    val isLogged: Boolean = false,
+    val isLogged: Boolean = true,
+
     //Other Settings Data
     val isDarkMode: Boolean = false,
 
     //Monthly income
     val income: Float = 2500F,
+    val savingsPercentage: Float = 0F,
 
     //Monthly budget
     val budget: Float = 2000F,
+    val weeklyBudget: Float = 500F,
+
+    //Alert Limit
+    val showAlert: Boolean = false,
 
     //Weekly limit
     val weeklyLimit: Float = 500F,
 
+    //Spendings Categories
+    val spendingsCategoriesList: List<SpendingsCategories> = listOf(
+        SpendingsCategories("Groceries", 100F),
+        SpendingsCategories("Utilities", 300F),
+        SpendingsCategories("Entertainment", 200F),
+    ),
+
+    //Rewards
+    val rewardsBalance: Float = 0F,
+    val rewardsList: List<RewardItem> = listOf(
+        RewardItem("Reward-1", "10"),
+        RewardItem("Reward-2", "20"),
+        RewardItem("Reward-3", "30"),
+    ),
 )

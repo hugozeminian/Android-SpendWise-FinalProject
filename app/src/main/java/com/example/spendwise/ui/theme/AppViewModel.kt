@@ -3,7 +3,9 @@ package com.example.spendwise.ui.theme
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.spendwise.data.AppUiState
+import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.Spending
+import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -133,4 +135,70 @@ class AppViewModel: ViewModel(){
             currentState.copy(isDarkMode = darkMode)
         }
     }
+
+    // Budget Page
+    fun SetMonthlyIncome(income: Float){
+        _uiState.update { currentState ->
+            currentState.copy(income = income)
+        }
+    }
+
+    fun SetMonthlySavingsGoalPercentage(savingsPercentage: Float){
+        _uiState.update { currentState ->
+            currentState.copy(savingsPercentage = savingsPercentage)
+        }
+    }
+
+    fun AddRewardItem(rewardItem : RewardItem) {
+        _uiState.update { currentState ->
+            currentState.copy(rewardsList = _uiState.value.rewardsList + rewardItem)
+        }
+    }
+
+    fun RemoveRewardItem(index: Int) {
+        _uiState.update { currentState ->
+            val updatedList = currentState.rewardsList.toMutableList()
+            updatedList.removeAt(index)
+            currentState.copy(rewardsList = updatedList)
+        }
+    }
+
+    fun RemoveAllRewardItems() {
+        _uiState.update { currentState ->
+            currentState.copy(rewardsList = emptyList())
+        }
+    }
+
+    fun SetMonthlyBudget(monthlyBudget: Float){
+        _uiState.update { currentState ->
+            currentState.copy(budget = monthlyBudget)
+        }
+    }
+
+    fun SetWeeklyBudget(weeklyBudget: Float){
+        _uiState.update { currentState ->
+            currentState.copy(weeklyBudget = weeklyBudget)
+        }
+    }
+
+    fun AddSpendingsCategoriesItem(spendingsCategoriesItem : SpendingsCategories) {
+        _uiState.update { currentState ->
+            currentState.copy(spendingsCategoriesList = _uiState.value.spendingsCategoriesList + spendingsCategoriesItem)
+        }
+    }
+
+    fun RemoveSpendingsCategoriesItem(index: Int) {
+        _uiState.update { currentState ->
+            val updatedList = currentState.spendingsCategoriesList.toMutableList()
+            updatedList.removeAt(index)
+            currentState.copy(spendingsCategoriesList = updatedList)
+        }
+    }
+
+    fun RemoveAllSpendingsCategoriesItem() {
+        _uiState.update { currentState ->
+            currentState.copy(spendingsCategoriesList = emptyList())
+        }
+    }
+
 }
