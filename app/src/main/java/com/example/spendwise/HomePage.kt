@@ -1,26 +1,36 @@
 package com.example.spendwise
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.spendwise.data.AppUiState
+import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.darkThemeColorAlert
 import com.example.spendwise.ui.theme.lightThemeColorAlert
 import java.text.DecimalFormat
+import java.util.Calendar
 
 @Composable
 fun HomePage(viewModel: AppViewModel) {
@@ -34,13 +44,14 @@ fun HomePage(viewModel: AppViewModel) {
 
     val totalOfSpending = viewModel.GetTotalSpendings()
     val formatedTotalOfSpending = decimalFormat.format(totalOfSpending)
-    val formatedTotalOfSpendingWeek = decimalFormat.format(totalOfSpending/4)
+    val formatedTotalOfSpendingWeek = decimalFormat.format(totalOfSpending / 4)
 
     var formatedSpentPercentageOfBudget = decimalFormat.format((totalOfSpending * 100 / budget))
-    var formatedSpentPercentageOfBudgetWeek = decimalFormat.format((totalOfSpending * 100 / weeklyBudget))
+    var formatedSpentPercentageOfBudgetWeek =
+        decimalFormat.format((totalOfSpending * 100 / weeklyBudget))
 
     val isDarkColor = uiState.isDarkMode
-    val customColor = if (isDarkColor) lightThemeColorAlert else darkThemeColorAlert
+    val customColor = if (isDarkColor) darkThemeColorAlert else lightThemeColorAlert
     val budgetAlert = uiState.budgetAlert
     val cardColors = if (formatedSpentPercentageOfBudgetWeek > budgetAlert.toString()) {
         CardDefaults.cardColors(containerColor = customColor)
@@ -51,9 +62,13 @@ fun HomePage(viewModel: AppViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Top
+            .padding(8.dp)
     ) {
+        /////////////////////////////////////////////////// TESTNG START
+        SpendingList(viewModel, uiState)
+        SpendingListForCurrentMonth(viewModel, uiState)
+        SpendingListForCurrentWeek(viewModel, uiState)
+        /////////////////////////////////////////////////// TESTNG END
         Text(
             text = stringResource(id = R.string.wp_welcome_text) + uiState.loggedUser.username,
             style = MaterialTheme.typography.headlineLarge,
@@ -114,7 +129,7 @@ fun HomePage(viewModel: AppViewModel) {
                 Text(
                     text = stringResource(id = R.string.wp_you_spent) +
                             formatedSpentPercentageOfBudgetWeek +
-                            stringResource(id = R.string.app_percentage)  +
+                            stringResource(id = R.string.app_percentage) +
                             stringResource(id = R.string.wp_weekly_budget),
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -125,7 +140,7 @@ fun HomePage(viewModel: AppViewModel) {
         Card(
             modifier = Modifier.padding(top = 16.dp),
             colors = cardColors,
-            ) {
+        ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(16.dp)
@@ -133,7 +148,7 @@ fun HomePage(viewModel: AppViewModel) {
                 Text(
                     text = stringResource(id = R.string.wp_you_spent) +
                             formatedSpentPercentageOfBudget +
-                            stringResource(id = R.string.app_percentage)  +
+                            stringResource(id = R.string.app_percentage) +
                             stringResource(id = R.string.wp_monthly_budget),
                     style = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.padding(bottom = 8.dp)
@@ -148,4 +163,84 @@ fun HomePage(viewModel: AppViewModel) {
 fun PreviewHomePage() {
     val viewModel = AppViewModel()
     HomePage(viewModel)
+}
+
+@Composable
+fun SpendingList(viewModel: AppViewModel, uiState: AppUiState) {
+    var ascending by remember { mutableStateOf(true) }
+    val sortedList = viewModel.getSortedSpendingList(ascending, uiState)
+
+    Card(modifier = Modifier.padding(top = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+                Switch(checked = ascending, onCheckedChange = { ascending = it })
+            }
+            LazyColumn {
+                items(sortedList) { spending ->
+                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun SpendingListForCurrentMonth(viewModel: AppViewModel, uiState: AppUiState) {
+    var ascending by remember { mutableStateOf(true) }
+    val currentMonth = Spending.getCurrentMonth()
+    val spendingsForCurrentMonth = viewModel.getSortedSpendingsForMonth(currentMonth, ascending, uiState)
+
+    Card(modifier = Modifier.padding(top = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+                Switch(checked = ascending, onCheckedChange = { ascending = it })
+            }
+            Text("Spending for Current Month", modifier = Modifier.padding(bottom = 8.dp))
+            LazyColumn {
+                items(spendingsForCurrentMonth) { spending ->
+                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+                }
+            }
+        }
+    }
+
+}
+
+@Composable
+fun SpendingListForCurrentWeek(viewModel: AppViewModel, uiState: AppUiState) {
+    var ascending by remember { mutableStateOf(true) }
+    val calendar = Calendar.getInstance()
+    val weekDays = Spending.getWeekDays(calendar)
+    val spendingsForCurrentWeek = viewModel.getSortedSpendingsForWeek(weekDays, calendar, ascending, uiState)
+
+    Card(modifier = Modifier.padding(top = 8.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+                Switch(checked = ascending, onCheckedChange = { ascending = it })
+            }
+            Text("Spending for Current Week", modifier = Modifier.padding(bottom = 8.dp))
+            LazyColumn {
+                items(spendingsForCurrentWeek) { spending ->
+                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+                }
+            }
+        }
+    }
+
 }

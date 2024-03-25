@@ -1,6 +1,5 @@
 package com.example.spendwise.ui.theme
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.RewardItem
@@ -11,6 +10,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class AppViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
@@ -206,6 +209,43 @@ class AppViewModel: ViewModel(){
         _uiState.update { currentState ->
             currentState.copy(monthlyBudget = monthlyBudget)
         }
+    }
+
+    //Date manipulation functions
+    fun getSortedSpendingList(ascending: Boolean = false, uiState: AppUiState): List<Spending> {
+        val originalList = uiState.breakDownListSample
+        return Spending.sortByDate(originalList, ascending)
+    }
+
+    fun getSortedSpendingsForMonth(currentMonth: Int, ascending: Boolean, uiState: AppUiState): List<Spending> {
+        val spendings = getSortedSpendingList(ascending, uiState)
+        return spendings.filter { spending ->
+            val spendingMonth = SimpleDateFormat("MMM", Locale.ENGLISH).format(Date(spending.date)).toUpperCase()
+            spendingMonth == getMonthAbbreviation(currentMonth)
+        }
+    }
+
+    fun getSortedSpendingsForWeek(weekDays: List<Int>, calendar: Calendar, ascending: Boolean, uiState: AppUiState): List<Spending> {
+        val spendings = getSortedSpendingList(ascending, uiState)
+        return spendings.filter { spending ->
+            val spendingCalendar = Calendar.getInstance().apply {
+                time = SimpleDateFormat("MMM dd, yyyy", Locale.ENGLISH).parse(spending.date) ?: Date()
+            }
+            val spendingDay = spendingCalendar.get(Calendar.DAY_OF_MONTH)
+            val spendingMonth = spendingCalendar.get(Calendar.MONTH)
+            val spendingYear = spendingCalendar.get(Calendar.YEAR)
+            val currentYear = calendar.get(Calendar.YEAR)
+            val currentMonth = calendar.get(Calendar.MONTH)
+            val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+            currentYear == spendingYear &&
+                    currentMonth == spendingMonth &&
+                    weekDays.contains(spendingDay)
+        }
+    }
+
+    private fun getMonthAbbreviation(month: Int): String {
+        return SimpleDateFormat("MMM", Locale.ENGLISH).format(Calendar.getInstance().apply { set(Calendar.MONTH, month - 1) }.time).toUpperCase()
     }
 }
 

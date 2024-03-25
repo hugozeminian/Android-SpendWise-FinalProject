@@ -76,7 +76,7 @@ private val DarkColors = darkColorScheme(
 )
 
 val lightThemeColorAlert = Color(0xFFC0A5A5)
-val darkThemeColorAlert = Color(0xFFD9ACA9)
+val darkThemeColorAlert = Color(0xFFA82725)
 
 @Composable
 fun SpendWiseTheme(
