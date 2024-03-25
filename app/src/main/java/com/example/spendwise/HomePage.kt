@@ -31,60 +31,61 @@ fun HomePage(viewModel: AppViewModel) {
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
-            text = "You've spent:",
+            text = "Your monthly budget is: $${uiState.monthlyBudget}",
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
-        Text(
-            text = "$600.25 / $750.00",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Of your weekly Budget",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "You've spent:",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "$2,401 / $3000.00",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Text(
-            text = "Of your weekly Budget",
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        Card(modifier = Modifier.padding(top = 16.dp)) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = "You've spent 67.7% of your weekly limit!",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-        }
-
-        Card(modifier = Modifier.padding(top = 16.dp)) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
-            ) {
-                Text(
-                    text = "You've spent 67.7% of your monthly limit!",
-                    style = MaterialTheme.typography.headlineLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-        }
-
+//        Text(
+//            text = "$600.25 / $750.00",
+//            style = MaterialTheme.typography.headlineLarge,
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Text(
+//            text = "Of your weekly Budget",
+//            style = MaterialTheme.typography.bodyMedium,
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Text(
+//            text = "You've spent:",
+//            style = MaterialTheme.typography.bodyMedium,
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Text(
+//            text = "$2,401 / $3000.00",
+//            style = MaterialTheme.typography.headlineLarge,
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Text(
+//            text = "Of your weekly Budget",
+//            style = MaterialTheme.typography.bodyMedium,
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Card(modifier = Modifier.padding(top = 16.dp)) {
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                Text(
+//                    text = "You've spent 67.7% of your weekly limit!",
+//                    style = MaterialTheme.typography.headlineLarge,
+//                    modifier = Modifier.padding(bottom = 8.dp)
+//                )
+//            }
+//        }
+//
+//        Card(modifier = Modifier.padding(top = 16.dp)) {
+//            Column(
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                Text(
+//                    text = "You've spent 67.7% of your monthly limit!",
+//                    style = MaterialTheme.typography.headlineLarge,
+//                    modifier = Modifier.padding(bottom = 8.dp)
+//                )
+//            }
+//        }
+//
+//    }
     }
 }
