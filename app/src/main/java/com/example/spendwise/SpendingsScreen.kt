@@ -43,6 +43,7 @@ import com.example.spendwise.data.AppUiState
 import com.example.spendwise.data.CustomDropdownMenu
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
+import com.example.spendwise.ui.theme.Shapes
 
 @Composable
 fun SpendingsScreen(
@@ -159,6 +160,8 @@ fun AddTransactionCard(
     var description by remember {mutableStateOf("")}
     var category by remember {mutableStateOf("")}
 
+    var categories = viewModel.GetCategories()
+
     Card{
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -194,15 +197,13 @@ fun AddTransactionCard(
                     modifier = Modifier.width(100.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
-                category = CustomDropdownMenu(
-                    listOf("Groceries", "Utilities", "Entertainment")
-                )
+                category = CustomDropdownMenu(categories)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {viewModel.AddNewTransaction(Spending(category, description, date, amount.toFloat()))},
-                shape = RoundedCornerShape(8.dp)
+                shape = Shapes.extraSmall
             ) {
                 Text("Add transaction")
             }

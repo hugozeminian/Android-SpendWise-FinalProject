@@ -47,9 +47,6 @@ data class AppUiState(
     //Alert Limit
     val showAlert: Boolean = false,
 
-    //Weekly limit
-    val weeklyLimit: Float = 500F,
-
     //Spendings Categories
     val spendingsCategoriesList: List<SpendingsCategories> = listOf(
         SpendingsCategories("Groceries", 100F),
