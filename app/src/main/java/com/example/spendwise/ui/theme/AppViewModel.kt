@@ -169,11 +169,7 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun SetMonthlyBudget(monthlyBudget: Float){
-        _uiState.update { currentState ->
-            currentState.copy(budget = monthlyBudget)
-        }
-    }
+
 
     fun SetWeeklyBudget(weeklyBudget: Float){
         _uiState.update { currentState ->
@@ -200,5 +196,12 @@ class AppViewModel: ViewModel(){
             currentState.copy(spendingsCategoriesList = emptyList())
         }
     }
-
+    fun SetMonthlyBudget(monthlyBudget: Float) {
+        _uiState.update { currentState ->
+            currentState.copy(monthlyBudget = monthlyBudget)
+        }
+    }
 }
+
+
+

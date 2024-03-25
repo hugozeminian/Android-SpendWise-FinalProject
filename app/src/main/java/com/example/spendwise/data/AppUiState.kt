@@ -12,6 +12,9 @@ data class AppUiState(
     //Main page counter - test
     val counter: Int = 0,
 
+    //for budget that user set
+    val monthlyBudget: Float = 0F,
+
     //Sample list to show items in "Spendings" screen - first list
     val breakDownListSample: List<Spending> = listOf(
         Spending("Groceries","Walmart", "Feb 18, 2024", 54F),
