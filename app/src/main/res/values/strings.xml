@@ -6,6 +6,9 @@
 
     <!-- Hard Code Here -->
     <string name="app_greetings">Welcome to Spend Wise App</string>
+    <string name="app_money_icon">$</string>
+    <string name="app_slide">" "/" "</string>
+    <string name="app_percentage">%" "</string>
 
     <!-- User -->
     <string name="user">Jonh Doe</string>
@@ -31,6 +34,9 @@
 
     <!-- Welcome Page -->
     <string name="wp_welcome_text">Welcome Back," "</string>
+    <string name="wp_you_spent">You have spent" "</string>
+    <string name="wp_monthly_budget">of your monthly budget</string>
+    <string name="wp_weekly_budget">of your weekly budget</string>
 
     <!-- Setting Page -->
     <string name="edit_info">Edit your information and click Save</string>
