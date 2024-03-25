@@ -150,7 +150,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         )
                         Text(
                             text = stringResource(id = R.string.bp_cat_weekly_limit) + category.weeklyLimit,
-
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
@@ -181,6 +180,8 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
     var monthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
     var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
     var showAlert by remember { mutableStateOf(uiState.showAlert) }
+
+    var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
 
     Card(
         modifier = Modifier.padding(8.dp)
@@ -240,6 +241,32 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 }
             }
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.bp_budget_alert),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f)
+                )
+
+                if (editing) {
+                    TextField(
+                        value = budgetAlert,
+                        onValueChange = { budgetAlert = it },
+                        label = { Text(text = "") },
+                        modifier = Modifier.weight(1f)
+                    )
+                } else {
+                    Text(
+                        text = "%$budgetAlert",
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1.7f)
+                    )
+                }
+            }
+
             if (showAlert) { //ensure user's budget does not exceed monthly income set
                 Text(
                     text = "Error, Your monthly budget and/or weekly budget exceeds your current income!",
@@ -257,6 +284,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 
                         viewModel.SetMonthlyBudget(monthlyBudget.toFloat())
                         viewModel.SetWeeklyBudget(weeklyBudget.toFloat())
+                        viewModel.SetBudgetAlert(budgetAlert.toFloat())
 
                         if (monthlyBudgetValue > monthlyIncome || monthlyBudgetValue < monthlyBudgetLimit) {
                             showAlert = true

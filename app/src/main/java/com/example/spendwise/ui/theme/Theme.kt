@@ -7,6 +7,7 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import kotlinx.coroutines.flow.map
 
 private val LightColors = lightColorScheme(
@@ -73,6 +74,9 @@ private val DarkColors = darkColorScheme(
     outlineVariant = md_theme_dark_outlineVariant,
     scrim = md_theme_dark_scrim,
 )
+
+val lightThemeColorAlert = Color(0xFFC0A5A5)
+val darkThemeColorAlert = Color(0xFFA82725)
 
 @Composable
 fun SpendWiseTheme(

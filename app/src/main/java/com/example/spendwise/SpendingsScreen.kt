@@ -51,6 +51,7 @@ fun SpendingsScreen(
     modifier: Modifier = Modifier
 ){
     val uiState by viewModel.uiState.collectAsState()
+    val sortedList = viewModel.getSortedSpendingList(false, uiState)
 
     var breakdownCategory by remember {
         mutableStateOf("") }
@@ -82,7 +83,7 @@ fun SpendingsScreen(
             breakdownCategory = CustomDropdownMenu(categories)
         }
 
-        BreakDownList(uiState, breakdownCategory)
+        BreakDownList(breakdownCategory, sortedList)
         Spacer(modifier = Modifier.height(40.dp))
 
         AddTransactionCard(viewModel)
@@ -105,14 +106,14 @@ fun SpendingsScreen(
 
 @Composable
 fun BreakDownList(
-    uiState: AppUiState,
     category: String,
+    sortedList: List<Spending>,
     modifier: Modifier = Modifier
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        uiState.breakDownListSample.forEach(){
+        sortedList.forEach(){
             if(it.category == category) ItemList(spending = it)
         }
     }
