@@ -35,6 +35,12 @@ fun HomePage(viewModel: AppViewModel) {
             style = MaterialTheme.typography.bodyMedium,
             modifier = Modifier.padding(bottom = 8.dp)
         )
+        Text(
+            text = "Your weekly budget is: ${uiState.weeklyBudget}",
+            style = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+
 //        Text(
 //            text = "$600.25 / $750.00",
 //            style = MaterialTheme.typography.headlineLarge,
