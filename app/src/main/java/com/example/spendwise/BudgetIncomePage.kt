@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.ui.theme.AppViewModel
+import com.example.spendwise.ui.theme.Shapes
 
 //import com.example.budgetincome.ui.theme.BudgetIncomeTheme
 
@@ -47,8 +48,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
     // Manage scroll state
     val lazyListState = rememberLazyListState()
 
-    Surface(
-        color = Color(0xFFCCE8E6),
+    Card(
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -59,7 +59,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
-
             // Input fields for category name and weekly limit
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -98,6 +97,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     onClick = { spendingCategories = emptyList()
                                 viewModel.RemoveAllSpendingsCategoriesItem()
                               },
+                    shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(text = stringResource(id = R.string.bp_button_clear_all))
@@ -121,6 +121,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             weeklyLimit = ""
                         }
                     },
+                    shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(id = R.string.bp_button_add))
@@ -181,8 +182,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
     var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
     var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
-    Surface(
-        color = Color(0xFFCCE8E6),
+    Card(
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -269,9 +269,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                         editing = true
                     }
                 },
+                shape = Shapes.extraSmall,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(top = 16.dp)
+                    .align(Alignment.CenterHorizontally)
             ) {
                 Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit))
             }
@@ -289,17 +290,13 @@ fun RewardsInfo(viewModel: AppViewModel) {
     var description by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
 
-    // Maintain state for the list of rewards
-    var rewards by remember { mutableStateOf(uiState.rewardsList) }
-
     // Calculate the total sum of amounts
     var totalAmount by remember { mutableStateOf(0.0) }
-    totalAmount = rewards.map { it.amount.toDoubleOrNull() ?: 0.0 }.sum()
+    totalAmount = uiState.rewardsList.map { it.amount.toDoubleOrNull() ?: 0.0 }.sum()
 
     // Manage scroll state
     val lazyListState = rememberLazyListState()
-    Surface(
-        color = Color(0xFFCCE8E6),
+    Card(
         modifier = Modifier.padding(8.dp)
     ) {
         Column(
@@ -307,7 +304,6 @@ fun RewardsInfo(viewModel: AppViewModel) {
         ) {
             Text(
                 text = "Rewards Balance: $${"%.2f".format(totalAmount)}",
-                style = MaterialTheme.typography.headlineSmall,
                 modifier = Modifier.padding(bottom = 12.dp)
             )
 
@@ -356,9 +352,9 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 Button(
                     onClick = {
                         // Clear all added items
-                        rewards = emptyList()
                         viewModel.RemoveAllRewardItems()
                     },
+                    shape = Shapes.extraSmall,
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
@@ -371,32 +367,30 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     onClick = {
                         // Add the reward item to the list
                         if (description.isNotBlank() && amount.isNotBlank()) {
-                            rewards = uiState.rewardsList + RewardItem(description, amount)
                             viewModel.AddRewardItem(RewardItem(description, amount))
                             // Clear fields after adding
                             description = ""
                             amount = ""
                         }
                     },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    shape = Shapes.extraSmall
                 ) {
                     Text(stringResource(id = R.string.bp_button_add))
                 }
             }
 
             // Display list of rewards in a LazyColumn, allow for scrolling and only show first few rewards before needing to scroll
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                state = lazyListState
+                    .fillMaxSize()
             ) {
-                items(rewards.size) { index ->
+                uiState.rewardsList.map { it ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = rewards[index].description,
+                            text = it.description,
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier
                                 .weight(1f)
@@ -404,7 +398,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "$${"%.2f".format(rewards[index].amount.toDoubleOrNull() ?: 0.0)}",
+                            text = "$${"%.2f".format(it.amount.toDoubleOrNull() ?: 0.0)}",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier
                                 .weight(0.5f)
@@ -413,9 +407,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         )
                         IconButton(
                             onClick = {
-                                // Remove the reward item from the list
-                                rewards = rewards.filterIndexed { i, _ -> i != index }
-                                viewModel.RemoveRewardItem(index)
+                                viewModel.RemoveRewardItem(it)
                             },
                             modifier = Modifier.size(24.dp)
                         ) {
@@ -450,8 +442,7 @@ fun BudgetInformation(viewModel: AppViewModel) {
             .padding(16.dp)
     ) {
         item {
-            Surface(
-                color = Color(0xFFCCE8E6),
+            Card(
                 modifier = Modifier.padding(8.dp)
             ) {
                 Column(
@@ -472,28 +463,14 @@ fun BudgetInformation(viewModel: AppViewModel) {
                     } else {
                         Text(text = "$$incomeText", style = MaterialTheme.typography.bodyLarge)
                     }
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = stringResource(id = R.string.bp_monthly_savings_goal), style = MaterialTheme.typography.headlineSmall)
-                    if (editing) {
-                        TextField(
-                            value = savingsPercentageText,
-                            onValueChange = { newValue ->
-                                savingsPercentageText = newValue
-                                val savingsPercentage = newValue.toFloatOrNull() ?: 0f
-                                viewModel.SetMonthlySavingsGoalPercentage(savingsPercentage)
-                            },
-                            label = { Text(text = stringResource(id = R.string.bp_monthly_enter_savings_goal)) },
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        )
-                    } else {
-                        Text(text = "$savingsPercentageText%", style = MaterialTheme.typography.bodyLarge)
-                    }
                     Spacer(modifier = Modifier.height(16.dp))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        Button(onClick = { editing = !editing }) {
+                        Button(
+                            onClick = { editing = !editing },
+                            shape = Shapes.extraSmall) {
                             Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit))
                         }
                     }
@@ -511,5 +488,16 @@ fun BudgetInformation(viewModel: AppViewModel) {
         item{
             SpendingsCategories(viewModel)
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewBudget(){
+    Column {
+        BudgetInformation(AppViewModel())
+        MonthlyWeeklyBudget(AppViewModel(), 3000.0)
+        RewardsInfo(AppViewModel())
+        SpendingsCategories(AppViewModel())
     }
 }

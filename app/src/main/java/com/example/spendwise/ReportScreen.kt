@@ -74,7 +74,7 @@ fun WeeklyReport(
         VerticalBarsChart(dataSorted)
         Spacer(modifier = Modifier.height(10.dp))
         Text(stringResource(id = R.string.spent_week))
-        Text("$${String.format("%.1f", totalSpendings)}/$${uiState.weeklyLimit}",
+        Text("$${String.format("%.1f", totalSpendings)}/$${uiState.weeklyBudget}",
             fontSize = 24.sp,
             fontWeight = FontWeight.SemiBold
         )

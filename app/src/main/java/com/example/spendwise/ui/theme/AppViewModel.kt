@@ -92,7 +92,7 @@ class AppViewModel: ViewModel(){
     }
 
     fun GetCategories(): List<String>{
-        return _uiState.value.breakDownListSample.map { it.category }.distinct()
+        return _uiState.value.spendingsCategoriesList.map { it.name }
     }
 
     fun GetUsers(): List<User>{
@@ -155,10 +155,12 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun RemoveRewardItem(index: Int) {
+    fun RemoveRewardItem(
+        item: RewardItem
+    ) {
         _uiState.update { currentState ->
             val updatedList = currentState.rewardsList.toMutableList()
-            updatedList.removeAt(index)
+            updatedList.remove(item)
             currentState.copy(rewardsList = updatedList)
         }
     }
