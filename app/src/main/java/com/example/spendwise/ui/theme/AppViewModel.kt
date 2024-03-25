@@ -171,11 +171,15 @@ class AppViewModel: ViewModel(){
         }
     }
 
-
-
     fun SetWeeklyBudget(weeklyBudget: Float){
         _uiState.update { currentState ->
             currentState.copy(weeklyBudget = weeklyBudget)
+        }
+    }
+
+    fun SetBudgetAlert(budgetAlert: Float){
+        _uiState.update { currentState ->
+            currentState.copy(budgetAlert = budgetAlert)
         }
     }
 

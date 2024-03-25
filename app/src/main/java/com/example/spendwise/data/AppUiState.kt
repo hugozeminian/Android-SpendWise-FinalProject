@@ -46,6 +46,7 @@ data class AppUiState(
     //Monthly budget
     val budget: Float = 2000F,
     val weeklyBudget: Float = 500F,
+    val budgetAlert: Float = 90F,
 
     //Alert Limit
     val showAlert: Boolean = false,
