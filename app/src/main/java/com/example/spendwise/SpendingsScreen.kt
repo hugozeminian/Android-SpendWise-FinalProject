@@ -1,5 +1,7 @@
 package com.example.spendwise
 
+import android.app.DatePickerDialog
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -41,9 +44,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.data.CustomDropdownMenu
+import com.example.spendwise.data.NumericAlertMessage
+import com.example.spendwise.data.containsOnlyNumbers
+import com.example.spendwise.data.isValidDateFormat
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.Shapes
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 @Composable
 fun SpendingsScreen(
@@ -155,11 +164,13 @@ fun AddTransactionCard(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
-    
+
     var amount by remember {mutableStateOf("")}
-    var date by remember {mutableStateOf("")}
+    var selectedFormattedDate by remember { mutableStateOf("") }
     var description by remember {mutableStateOf("")}
     var category by remember {mutableStateOf("")}
+    var showAlertMessage by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
 
     var categories = viewModel.GetCategories()
 
@@ -168,6 +179,14 @@ fun AddTransactionCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(16.dp)
         ) {
+            DateSelectionDialog(
+                context = LocalContext.current,
+                selectedDate = selectedDate,
+                onFormattedDateChanged = { formattedDate ->
+                    selectedFormattedDate = formattedDate
+                }
+            )
+
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
@@ -178,13 +197,6 @@ fun AddTransactionCard(
                     onValueChange = { value -> description = value },
                     modifier = Modifier.weight(1F),
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                TextField(
-                    value = date,
-                    placeholder = { Text("Date") },
-                    onValueChange = { value -> date = value },
-                    modifier = Modifier.weight(1F)
-                )
             }
 
             Row(
@@ -194,7 +206,18 @@ fun AddTransactionCard(
                 TextField(
                     value = amount,
                     placeholder = { Text("Amount") },
-                    onValueChange = { value -> amount = value },
+                    onValueChange = { newValue ->
+                        if (containsOnlyNumbers(newValue)) {
+                            // Only allow numeric input and limit to two decimal places
+                            val newText =
+                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                    ?: amount
+                            amount = newText
+                            showAlertMessage = false
+                        } else {
+                            showAlertMessage = true
+                        }
+                    },
                     modifier = Modifier.width(100.dp),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
                 )
@@ -203,10 +226,23 @@ fun AddTransactionCard(
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = {viewModel.AddNewTransaction(Spending(category, description, date, amount.toFloat()))},
+                onClick = {
+                    viewModel.AddNewTransaction(
+                        Spending(category, description, selectedFormattedDate, amount.toFloat())
+                    )
+                    description=""
+                    amount=""
+                },
                 shape = Shapes.extraSmall
             ) {
                 Text("Add transaction")
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                NumericAlertMessage(showAlertMessage)
             }
         }
     }
@@ -279,4 +315,59 @@ fun SpendingRecapItem(
 @Composable
 fun PreviewSpendingsScreen(){
     SpendingsScreen(viewModel = AppViewModel())
+}
+
+@Composable
+fun DateSelectionDialog(
+    context: Context,
+    selectedDate: Calendar,
+    onFormattedDateChanged: (String) -> Unit
+) {
+    var selectedDateState by remember { mutableStateOf(selectedDate) }
+    var formattedDate by remember { mutableStateOf("") }
+
+    // Function to update the formatted date and notify the parent component about the change
+    fun updateFormattedDate() {
+        formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(selectedDateState.time)
+        onFormattedDateChanged(formattedDate)
+    }
+
+    updateFormattedDate()
+
+    // Function to show the date picker dialog
+    val showDatePicker = { date: Calendar ->
+        val datePickerDialog = DatePickerDialog(
+            context,
+            { _, year, month, dayOfMonth ->
+                val selectedCalendar = Calendar.getInstance().apply {
+                    set(year, month, dayOfMonth)
+                }
+                selectedDateState = selectedCalendar
+                updateFormattedDate()
+            },
+            date.get(Calendar.YEAR),
+            date.get(Calendar.MONTH),
+            date.get(Calendar.DAY_OF_MONTH)
+        )
+        datePickerDialog.show()
+    }
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        // Show the date picker dialog when clicked
+        Button(
+            onClick = { showDatePicker(selectedDateState) },
+            shape = Shapes.extraSmall) {
+            Text(text = "Select Date")
+        }
+
+        // Display the selected date
+        Text(
+            text = formattedDate,
+            modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+        )
+    }
 }

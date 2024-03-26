@@ -21,18 +21,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.spendwise.data.NumericAlertMessage
+import com.example.spendwise.data.containsOnlyNumbers
 import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.Shapes
 
 //import com.example.budgetincome.ui.theme.BudgetIncomeTheme
-
-
-// Define a data class to represent a spending category
-data class SpendingCategory(val name: String, val weeklyLimit: String)
-
-// SpendingsCategories composable function
 
 @Composable
 fun SpendingsCategories(viewModel: AppViewModel) {
@@ -47,6 +43,8 @@ fun SpendingsCategories(viewModel: AppViewModel) {
 
     // Manage scroll state
     val lazyListState = rememberLazyListState()
+
+    var showAlertMessage by remember { mutableStateOf(false) }
 
     Card(
         modifier = Modifier.padding(8.dp)
@@ -75,10 +73,17 @@ fun SpendingsCategories(viewModel: AppViewModel) {
 
                 TextField(
                     value = weeklyLimit,
-                    onValueChange = {
-                        // Only allow numeric input and limit to two decimal places
-                        val newText = it.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) } ?: weeklyLimit
-                        weeklyLimit = newText
+                    onValueChange = { newValue ->
+                        if (containsOnlyNumbers(newValue)) {
+                            // Only allow numeric input and limit to two decimal places
+                            val newText =
+                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                    ?: weeklyLimit
+                            weeklyLimit = newText
+                            showAlertMessage = false
+                        } else {
+                            showAlertMessage = true
+                        }
                     },
                     label = { Text(stringResource(id = R.string.bp_cat_weekly_limit)) },
                     modifier = Modifier.weight(1f)
@@ -126,6 +131,13 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 ) {
                     Text(stringResource(id = R.string.bp_button_add))
                 }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                NumericAlertMessage(showAlertMessage)
             }
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -183,6 +195,8 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 
     var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
 
+    var showAlertMessage by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -202,7 +216,16 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 if (editing) {
                     TextField(
                         value = monthlyBudget,
-                        onValueChange = { monthlyBudget = it },
+                        onValueChange = { newValue ->
+                            if (containsOnlyNumbers(newValue)) {
+                                monthlyBudget = newValue
+                                val income = newValue.toFloatOrNull() ?: 0f
+                                viewModel.SetMonthlyIncome(income)
+                                showAlertMessage = false
+                            } else {
+                                showAlertMessage = true
+                            }
+                        },
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -228,7 +251,16 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 if (editing) {
                     TextField(
                         value = weeklyBudget,
-                        onValueChange = { weeklyBudget = it },
+                        onValueChange = { newValue ->
+                            if (containsOnlyNumbers(newValue)) {
+                                weeklyBudget = newValue
+                                val income = newValue.toFloatOrNull() ?: 0f
+                                viewModel.SetMonthlyIncome(income)
+                                showAlertMessage = false
+                            } else {
+                                showAlertMessage = true
+                            }
+                        },
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -254,7 +286,16 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 if (editing) {
                     TextField(
                         value = budgetAlert,
-                        onValueChange = { budgetAlert = it },
+                        onValueChange = { newValue ->
+                            if (containsOnlyNumbers(newValue)) {
+                                budgetAlert = newValue
+                                val income = newValue.toFloatOrNull() ?: 0f
+                                viewModel.SetMonthlyIncome(income)
+                                showAlertMessage = false
+                            } else {
+                                showAlertMessage = true
+                            }
+                        },
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -304,6 +345,13 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
             ) {
                 Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit))
             }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                NumericAlertMessage(showAlertMessage)
+            }
         }
     }
 }
@@ -322,8 +370,8 @@ fun RewardsInfo(viewModel: AppViewModel) {
     var totalAmount by remember { mutableStateOf(0.0) }
     totalAmount = uiState.rewardsList.map { it.amount.toDoubleOrNull() ?: 0.0 }.sum()
 
-    // Manage scroll state
-    val lazyListState = rememberLazyListState()
+    var showAlertMessage by remember { mutableStateOf(false) }
+
     Card(
         modifier = Modifier.padding(8.dp)
     ) {
@@ -354,10 +402,17 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 // Amount TextField
                 TextField(
                     value = amount,
-                    onValueChange = {
-                        // Only allow numeric input and limit to two decimal places
-                        val newText = it.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) } ?: amount
-                        amount = newText
+                    onValueChange = { newValue ->
+                        if (containsOnlyNumbers(newValue)) {
+                            // Only allow numeric input and limit to two decimal places
+                            val newText =
+                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                    ?: amount
+                            amount = newText
+                            showAlertMessage = false
+                        } else {
+                            showAlertMessage = true
+                        }
                     },
                     label = { Text(stringResource(id = R.string.bp_amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -406,6 +461,13 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 ) {
                     Text(stringResource(id = R.string.bp_button_add))
                 }
+            }
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                NumericAlertMessage(showAlertMessage)
             }
 
             // Display list of rewards in a LazyColumn, allow for scrolling and only show first few rewards before needing to scroll
@@ -462,7 +524,8 @@ fun BudgetInformation(viewModel: AppViewModel) {
 
     var editing by remember { mutableStateOf(false) }
     var incomeText by remember { mutableStateOf(uiState.income.toString()) }
-    var savingsPercentageText by remember { mutableStateOf(uiState.savingsPercentage.toString()) }
+
+    var showAlertMessage by remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier
@@ -481,9 +544,14 @@ fun BudgetInformation(viewModel: AppViewModel) {
                         TextField(
                             value = incomeText,
                             onValueChange = { newValue ->
-                                incomeText = newValue
-                                val income = newValue.toFloatOrNull() ?: 0f
-                                viewModel.SetMonthlyIncome(income)
+                                if (containsOnlyNumbers(newValue)) {
+                                    incomeText = newValue
+                                    val income = newValue.toFloatOrNull() ?: 0f
+                                    viewModel.SetMonthlyIncome(income)
+                                    showAlertMessage = false
+                                } else {
+                                    showAlertMessage = true
+                                }
                             },
                             label = { Text(text = stringResource(id = R.string.bp_monthly_enter_income)) },
                             modifier = Modifier.padding(vertical = 4.dp)
@@ -501,6 +569,13 @@ fun BudgetInformation(viewModel: AppViewModel) {
                             shape = Shapes.extraSmall) {
                             Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit))
                         }
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        NumericAlertMessage(showAlertMessage)
                     }
                 }
             }
@@ -529,3 +604,4 @@ fun PreviewBudget(){
         SpendingsCategories(AppViewModel())
     }
 }
+
