@@ -11,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.FavoriteBorder
@@ -59,6 +61,7 @@ fun RegisterPage(onCreatingAccount: () -> Unit, viewModel: AppViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 26.dp)
+            .verticalScroll(rememberScrollState())
             .wrapContentHeight(align = Alignment.CenterVertically),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

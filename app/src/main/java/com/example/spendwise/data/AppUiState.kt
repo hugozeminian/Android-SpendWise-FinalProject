@@ -35,7 +35,7 @@ data class AppUiState(
 
     val loggedUser : User = User("","","",""),
 
-    val isLogged: Boolean = true,
+    val isLogged: Boolean = false,
 
     //Other Settings Data
     val isDarkMode: Boolean = false,
