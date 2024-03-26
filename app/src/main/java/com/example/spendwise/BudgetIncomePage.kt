@@ -86,7 +86,9 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         }
                     },
                     label = { Text(stringResource(id = R.string.bp_cat_weekly_limit)) },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     modifier = Modifier.weight(1f)
+
                 )
             }
 
@@ -554,6 +556,7 @@ fun BudgetInformation(viewModel: AppViewModel) {
                                 }
                             },
                             label = { Text(text = stringResource(id = R.string.bp_monthly_enter_income)) },
+                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     } else {
