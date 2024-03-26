@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,33 +46,30 @@ fun HomePage(viewModel: AppViewModel) {
     val formatedBudgetMonth = decimalFormat.format(budget)
     val formatedBudgetWeek = decimalFormat.format(uiState.weeklyBudget)
 
-    val totalOfSpending = viewModel.GetTotalSpendings()
-    val formatedTotalOfSpending = decimalFormat.format(totalOfSpending)
-    val formatedTotalOfSpendingWeek = decimalFormat.format(totalOfSpending / 4)
+    val totalOfSpendingMounth = viewModel.GetTotalSpendingsMounth()
+    val totalOfSpendingWeek = viewModel.GetTotalSpendingsWeek()
+    val formatedTotalOfSpending = decimalFormat.format(totalOfSpendingMounth)
+    val formatedTotalOfSpendingWeek = decimalFormat.format(totalOfSpendingWeek)
 
-    var formatedSpentPercentageOfBudget = decimalFormat.format((totalOfSpending * 100 / budget))
+    var formatedSpentPercentageOfBudget = decimalFormat.format((totalOfSpendingMounth * 100 / budget))
     var formatedSpentPercentageOfBudgetWeek =
-        decimalFormat.format((totalOfSpending * 100 / weeklyBudget))
+        decimalFormat.format((totalOfSpendingWeek * 100 / weeklyBudget))
 
     val isDarkColor = uiState.isDarkMode
     val customColor = if (isDarkColor) darkThemeColorAlert else lightThemeColorAlert
     val budgetAlert = uiState.budgetAlert
-    val cardColors = if (formatedSpentPercentageOfBudgetWeek > budgetAlert.toString()) {
-        CardDefaults.cardColors(containerColor = customColor)
-    } else {
-        CardDefaults.cardColors()
-    }
+
+    val cardColorsMounth = getCardColors(totalOfSpendingMounth, budget, budgetAlert, customColor)
+    val cardColorsWeek = getCardColors(totalOfSpendingWeek, weeklyBudget, budgetAlert, customColor)
+
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
+            .verticalScroll(rememberScrollState())
     ) {
-        /////////////////////////////////////////////////// TESTNG START
-        SpendingList(viewModel, uiState)
-        SpendingListForCurrentMonth(viewModel, uiState)
-        SpendingListForCurrentWeek(viewModel, uiState)
-        /////////////////////////////////////////////////// TESTNG END
+
         Text(
             text = stringResource(id = R.string.wp_welcome_text) + uiState.loggedUser.username,
             style = MaterialTheme.typography.headlineLarge,
@@ -119,8 +120,8 @@ fun HomePage(viewModel: AppViewModel) {
         Divider()
 
         Card(
-            modifier = Modifier.padding(top = 16.dp),
-            colors = cardColors,
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            colors = cardColorsMounth,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -138,8 +139,8 @@ fun HomePage(viewModel: AppViewModel) {
         }
 
         Card(
-            modifier = Modifier.padding(top = 16.dp),
-            colors = cardColors,
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            colors = cardColorsWeek,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -243,4 +244,19 @@ fun SpendingListForCurrentWeek(viewModel: AppViewModel, uiState: AppUiState) {
         }
     }
 
+}
+
+@Composable
+fun getCardColors(
+    totalSpending: Float,
+    budget: Float,
+    budgetAlert: Float,
+    customColor: Color
+): CardColors {
+    val formattedSpentPercentage = totalSpending * 100 / budget
+    return if (formattedSpentPercentage > budgetAlert) {
+        CardDefaults.cardColors(containerColor = customColor)
+    } else {
+        CardDefaults.cardColors()
+    }
 }

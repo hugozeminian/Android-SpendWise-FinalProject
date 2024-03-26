@@ -1,5 +1,9 @@
 package com.example.spendwise.ui.theme
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.RewardItem
@@ -82,6 +86,36 @@ class AppViewModel: ViewModel(){
 
         return sum
     }
+
+    fun GetTotalSpendingsMounth(): Float{
+        val spendings = _uiState.value
+        val currentMonth = Spending.getCurrentMonth()
+        val ascending = false
+        val spendingsForCurrentMonth = getSortedSpendingsForMonth(currentMonth, ascending, spendings)
+
+        var sum: Float = 0F
+        for(spending in spendingsForCurrentMonth){
+            sum = sum + spending.amount
+        }
+
+        return sum
+    }
+
+    fun GetTotalSpendingsWeek(): Float{
+        val calendar = Calendar.getInstance()
+        val weekDays = Spending.getWeekDays(calendar)
+        val spendings = _uiState.value
+        val ascending = false
+        val spendingsForCurrentWeek = getSortedSpendingsForWeek(weekDays, calendar, ascending, spendings)
+
+        var sum: Float = 0F
+        for(spending in spendingsForCurrentWeek){
+            sum = sum + spending.amount
+        }
+
+        return sum
+    }
+
 
     //Special function to sort maps
     fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
