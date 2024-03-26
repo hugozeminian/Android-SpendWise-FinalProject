@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -59,20 +61,28 @@ fun LoginPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id= R.string.title),
-            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(bottom = 8.dp)
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "App Logo",
+                    modifier = Modifier
+                    .fillMaxWidth()
+                .height(200.dp)
+                .padding(bottom = 5.dp)
         )
-        Text(
-            text = stringResource(id = R.string.subtitle),
-            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 20.sp,
-                color = Color.Gray),
-            modifier = Modifier.padding(bottom = 24.dp)
-        )
+//        Text(
+//            text = stringResource(id= R.string.title),
+//            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+//                fontSize = 40.sp,
+//                fontWeight = FontWeight.Bold),
+//            modifier = Modifier.padding(bottom = 8.dp)
+//        )
+//        Text(
+//            text = stringResource(id = R.string.subtitle),
+//            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+//                fontSize = 20.sp,
+//                color = Color.Gray),
+//            modifier = Modifier.padding(bottom = 24.dp)
+//        )
         Card(
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
