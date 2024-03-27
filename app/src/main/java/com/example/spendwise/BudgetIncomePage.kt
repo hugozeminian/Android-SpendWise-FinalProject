@@ -440,7 +440,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 TextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(text = stringResource(id = R.string.bp_description)) },
+                    label = { Text(text = stringResource(id = R.string.bp_description), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
@@ -462,13 +465,15 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             showAlertMessage = true
                         }
                     },
-                    label = { Text(stringResource(id = R.string.bp_amount)) },
+                    label = { Text(stringResource(id = R.string.bp_amount), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
                     singleLine = true,
-                    placeholder = { Text(text = stringResource(id = R.string.bp_amount)) } // Placeholder for the amount field
                 )
             }
 
