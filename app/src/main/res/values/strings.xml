@@ -79,8 +79,8 @@
     <string name="saved_percentage">And saved:</string>
     <string name="saved_from_income">Of you monthly income</string>
 
-    <!-- Reports Page -->
-    <string name="spendings_screen_title">Spendings description</string>
+    <!-- Spending Page -->
+    <string name="spending_screen_title">Spendings description</string>
     <string name="select_category">Select category:</string>
     <string name="spending_recap">Spending recap:</string>
 </resources>

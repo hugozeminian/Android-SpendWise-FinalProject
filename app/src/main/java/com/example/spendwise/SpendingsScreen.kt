@@ -87,7 +87,7 @@ fun SpendingsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            stringResource(id = R.string.spendings_screen_title),
+            stringResource(id = R.string.spending_screen_title),
             fontWeight = FontWeight.SemiBold,
             fontSize = 28.sp)
         Spacer(modifier = Modifier.height(16.dp))
