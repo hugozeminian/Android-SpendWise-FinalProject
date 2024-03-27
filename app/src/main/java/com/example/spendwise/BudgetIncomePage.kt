@@ -207,9 +207,8 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
     var editing by remember { mutableStateOf(false) }
     var monthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
     var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
-    var showAlert by remember { mutableStateOf(uiState.showAlert) }
-
     var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
+    var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
@@ -221,6 +220,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -229,7 +229,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -246,7 +246,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             }
                         },
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
@@ -255,13 +255,14 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                             fontSize = 16.sp,
                         ),
-                        modifier = Modifier.weight(1.7f).padding(start = 8.dp) // Adjusted padding
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -270,7 +271,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -287,7 +288,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             }
                         },
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
@@ -296,13 +297,14 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                             fontSize = 16.sp,
                         ),
-                        modifier = Modifier.weight(1.7f).padding(start = 8.dp) // Adjusted padding
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
@@ -311,7 +313,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.weight(1.7f).padding(start = 80.dp)
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -328,7 +330,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             }
                         },
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
@@ -337,7 +339,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                             fontSize = 16.sp,
                         ),
-                        modifier = Modifier.weight(1.7f).padding(start = 80.dp) // Adjusted padding
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
@@ -412,7 +414,12 @@ fun RewardsInfo(viewModel: AppViewModel) {
         ) {
             Text(
                 text = "Rewards Balance: $${"%.2f".format(totalAmount)}",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 25.sp,
+                ),
                 modifier = Modifier.padding(bottom = 12.dp)
+
             )
 
             // Description and Amount input fields Row
@@ -513,7 +520,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     ) {
                         Text(
                             text = it.description,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(top = 8.dp, start = 16.dp)
@@ -521,7 +531,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "$${"%.2f".format(it.amount.toDoubleOrNull() ?: 0.0)}",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier
                                 .weight(0.5f)
                                 .padding(top = 8.dp, end = 16.dp),
