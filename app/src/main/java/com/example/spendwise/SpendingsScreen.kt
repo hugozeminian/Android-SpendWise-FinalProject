@@ -206,7 +206,10 @@ fun AddTransactionCard(
             ){
                 TextField(
                     value = description,
-                    placeholder = { Text("Description") },
+                    placeholder = { Text("Description", style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     onValueChange = { value -> description = value },
                     modifier = Modifier.weight(1F),
                 )
@@ -218,7 +221,10 @@ fun AddTransactionCard(
             ) {
                 TextField(
                     value = amount,
-                    placeholder = { Text("Amount") },
+                    placeholder = { Text("Amount", style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     onValueChange = { newValue ->
                         if (containsOnlyNumbers(newValue)) {
                             // Only allow numeric input and limit to two decimal places
@@ -251,7 +257,7 @@ fun AddTransactionCard(
                 Text("Add transaction", style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                     fontSize = 16.sp,
-                ),)
+                ))
             }
 
             Row(
@@ -302,7 +308,10 @@ fun SpendingRecapItem(
                 imageVector = Icons.Filled.CheckCircle,
                 contentDescription = ""
             )
-            Text(category.first)
+            Text(category.first, style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ))
         }
         Column(){
             Text(displaValue,
@@ -394,6 +403,10 @@ fun DateSelectionDialog(
         // Display the selected date
         Text(
             text = formattedDate,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.padding(top = 8.dp, start = 8.dp)
         )
     }
