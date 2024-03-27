@@ -23,17 +23,6 @@ class AppViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
-    var variable: Int = 0
-
-    //Just a variable change test - counter
-    fun ChangeVariable(){
-        _uiState.update { currentState ->
-            currentState.copy(
-                counter = _uiState.value.counter + 1
-            )
-        }
-    }
-
     //Navbar icon set
     fun SetIconIndex(index: Int){
         _uiState.update { currentState ->
@@ -58,20 +47,53 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun GetTotalCategory(): Map<String, Float>{
+    fun SortByDescendingSpendings(
+        list: Map<String, Float>
+    ): Map<String, Float>{
+        return list.sortByValue()
+    }
+
+    fun FilterList(
+        period: String
+    ): Map<String, Float>{
+
         val sumByCategory = mutableMapOf<String, Float>()
-        for (spending in _uiState.value.breakDownListSample) {
-            val category = spending.category
-            val amount = spending.amount
-            sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+
+        if(period == "Monthly"){
+            val spendings = _uiState.value
+            val currentMonth = Spending.getCurrentMonth()
+            val ascending = false
+            val spendingsForCurrentMonth = getSortedSpendingsForMonth(currentMonth, ascending, spendings)
+
+            for (spending in spendingsForCurrentMonth) {
+                val category = spending.category
+                val amount = spending.amount
+                sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+            }
+            return sumByCategory
         }
-        return sumByCategory
+        else
+        {
+
+            val calendar = Calendar.getInstance()
+            val weekDays = Spending.getWeekDays(calendar)
+            val spendings = _uiState.value
+            val ascending = false
+
+            val spendingsForCurrentWeek = getSortedSpendingsForWeek(weekDays, calendar, ascending, spendings)
+            for (spending in spendingsForCurrentWeek) {
+                val category = spending.category
+                val amount = spending.amount
+                sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+            }
+            return sumByCategory
+        }
     }
 
     fun GetMonthlyReport(): Map<String, Float>{
         val info: Map<String,Float> = mapOf(
             Pair("Income", _uiState.value.income),
-            Pair("Budget", _uiState.value.budget),
+            Pair("Budget", _uiState.value.monthlyBudget),
             Pair("Spendings", GetTotalSpendings()),
         )
         return info
@@ -122,12 +144,6 @@ class AppViewModel: ViewModel(){
         return toSortedMap(compareByDescending { this[it] })
     }
 
-    fun GetSortedSpendings(): Map<String, Float>{
-        val allTotals: Map<String, Float> =  GetTotalCategory().sortByValue()
-
-        return allTotals
-    }
-
     fun GetCategories(): List<String>{
         return _uiState.value.spendingsCategoriesList.map { it.name }
     }
@@ -137,6 +153,16 @@ class AppViewModel: ViewModel(){
     }
     fun GetLoggedUser(): User {
         return _uiState.value.loggedUser
+    }
+
+    fun DeleteSpending(
+        item: Spending
+    ){
+        _uiState.update { currentState ->
+            val updatedList = currentState.breakDownListSample.toMutableList()
+            updatedList.remove(item)
+            currentState.copy(breakDownListSample = updatedList)
+        }
     }
 
     fun AddUser(user : User) {
@@ -242,6 +268,14 @@ class AppViewModel: ViewModel(){
     fun SetMonthlyBudget(monthlyBudget: Float) {
         _uiState.update { currentState ->
             currentState.copy(monthlyBudget = monthlyBudget)
+        }
+    }
+
+    fun SetSpendingRecap(
+        set: String
+    ){
+        _uiState.update { currentState ->
+            currentState.copy(spendingRecap = set)
         }
     }
 

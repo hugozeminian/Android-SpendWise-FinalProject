@@ -64,7 +64,8 @@ fun WeeklyReport(
 
     val uiState by viewModel.uiState.collectAsState()
     var totalSpendings = viewModel.GetTotalSpendings()
-    var dataSorted = viewModel.GetSortedSpendings()
+    val data = viewModel.FilterList("Weekly")
+    val dataSorted = viewModel.SortByDescendingSpendings(data)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,14 +114,14 @@ fun MonthProjectionReport(
     HorizontalBarsChart(viewModel.GetMonthlyReport())
     Spacer(modifier = Modifier.height(25.dp))
     Text(stringResource(id = R.string.spent_month2), style = TextStyle(
-        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-        fontSize = 25.sp,
-    ))
-    Text("$${String.format("%.1f", totalSpendings)}/$${uiState.budget}",
+          fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+          fontSize = 25.sp)
+        )
+    Text("$${String.format("%.1f", totalSpendings)}/$${uiState.monthlyBudget}",
         style = TextStyle(
             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
             fontSize = 25.sp,
-        )
+          )
     )
     Text(stringResource(id = R.string.spent_month_budget))
     Spacer(modifier = Modifier.height(8.dp))

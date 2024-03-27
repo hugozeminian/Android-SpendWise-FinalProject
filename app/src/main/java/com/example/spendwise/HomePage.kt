@@ -44,7 +44,7 @@ import java.util.Calendar
 @Composable
 fun HomePage(viewModel: AppViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-    val budget = uiState.budget
+    val budget = uiState.monthlyBudget
     val weeklyBudget = uiState.weeklyBudget
     val decimalFormat = DecimalFormat("#")
 

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +20,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -72,6 +76,10 @@ fun SpendingsScreen(
         mutableStateOf(listOf(""))
     }
 
+    var monthOrWeek by remember {
+        mutableStateOf("")
+    }
+
     categories = viewModel.GetCategories()
 
     Column(
@@ -82,7 +90,7 @@ fun SpendingsScreen(
             .verticalScroll(rememberScrollState())
     ) {
         Text(
-            stringResource(id = R.string.spendings_screen_title),
+            stringResource(id = R.string.spending_screen_title),
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 25.sp,
@@ -102,7 +110,7 @@ fun SpendingsScreen(
 
         }
 
-        BreakDownList(breakdownCategory, sortedList)
+        BreakDownList(breakdownCategory, sortedList, viewModel)
         Spacer(modifier = Modifier.height(40.dp))
 
         AddTransactionCard(viewModel)
@@ -113,11 +121,14 @@ fun SpendingsScreen(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(stringResource(id = R.string.spending_recap), style = TextStyle(
+            Text(stringResource(id = R.string.spending_recap),
+                 style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
-            ), )
-            CustomDropdownMenu(listOf("Weekly", "Monthly"),)
+                )
+            )
+            monthOrWeek = CustomDropdownMenu(listOf("Weekly", "Monthly"))
+            viewModel.SetSpendingRecap(monthOrWeek)
         }
         Spacer(modifier = Modifier.height(8.dp))
         SpendingRecapList(viewModel)
@@ -130,13 +141,14 @@ fun SpendingsScreen(
 fun BreakDownList(
     category: String,
     sortedList: List<Spending>,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         sortedList.forEach(){
-            if(it.category == category) ItemList(spending = it)
+            if(it.category == category) ItemList(spending = it, viewModel)
         }
     }
 }
@@ -144,6 +156,7 @@ fun BreakDownList(
 @Composable
 fun ItemList(
     spending: Spending,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
     Column {
@@ -167,10 +180,29 @@ fun ItemList(
                     fontSize = 16.sp,
                 ))
             }
-            Text(spending.amount.toString(), style = TextStyle(
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("$${spending.amount}", style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
-            ))
+                    )
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = {
+                        viewModel.DeleteSpending(spending)
+                    },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete"
+                    )
+                }
+            }
         }
         Box(
             modifier = Modifier
@@ -285,13 +317,18 @@ fun SpendingRecapList(
     modifier: Modifier = Modifier
 ){
 
-    val list: Map<String, Float> = viewModel.GetTotalCategory()
+    val uiState by viewModel.uiState.collectAsState()
+    val filteredList = viewModel.FilterList(uiState.spendingRecap)
 
     Column(
     ) {
-        list.forEach {
-            SpendingRecapItem(
-                category = Pair(it.key, it.value), limit = 200F)
+        filteredList.forEach { item ->
+
+            val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key}
+            if(findCategoryLimit != null){
+                SpendingRecapItem(
+                    category = Pair(item.key, item.value), findCategoryLimit.weeklyLimit, viewModel)
+            }
         }
     }
 }
@@ -299,11 +336,17 @@ fun SpendingRecapList(
 @Composable
 fun SpendingRecapItem(
     category: Pair<String, Float>,
-    limit: Float
+    limit: Float,
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier
 ){
 
-    val displaValue: String = if(category.second < limit) "$${String.format("%.2f", category.second)}"
-                        else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
+    val uiState by viewModel.uiState.collectAsState()
+
+    val displaValue: String =
+            if(category.second < limit) "$${String.format("%.2f", category.second)}"
+            else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -322,27 +365,38 @@ fun SpendingRecapItem(
                 fontSize = 16.sp,
             ))
         }
-        Column(){
-            Text(displaValue,
-                textAlign = TextAlign.End,
-                color =
-                if(category.second > limit){
-                    Color.Red }
-                else{
-                    MaterialTheme.colorScheme.primary
-                },
-                style = TextStyle(
+        Column(
+            verticalArrangement = Arrangement.Center
+        ){
+
+            if(uiState.spendingRecap == "Weekly"){
+                Text(displaValue,
+                    textAlign = TextAlign.End,
+                    color =
+                    if(category.second > limit){
+                        Color.Red }
+                    else{
+                        MaterialTheme.colorScheme.primary
+                    },
+                     style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                     fontSize = 16.sp,
-                ),
-                modifier = Modifier.fillMaxWidth())
-            Text("Weekly limit: \$" + limit.toString(),
-                textAlign = TextAlign.End,
-                style = TextStyle(
+                    ),
+                    modifier = Modifier.fillMaxWidth())
+                Text("Weekly limit: \$" + limit.toString(),
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth())
+            }
+            else if(uiState.spendingRecap == "Monthly"){
+                Text("$${category.second}",
+                    textAlign = TextAlign.End,
+                    color = MaterialTheme.colorScheme.primary,
+                     style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                     fontSize = 16.sp,
-                ),
-                modifier = Modifier.fillMaxWidth())
+                    ),
+                    modifier = Modifier.fillMaxWidth())
+            }
         }
     }
     Box(
