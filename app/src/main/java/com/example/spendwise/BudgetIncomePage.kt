@@ -251,8 +251,11 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 } else {
                     Text(
                         text = "$$monthlyBudget",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.weight(1.7f).padding(start = 8.dp) // Adjusted padding
                     )
                 }
             }
@@ -263,7 +266,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_weekly_budget),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),
                     modifier = Modifier.weight(1f)
                 )
 
@@ -286,8 +292,11 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 } else {
                     Text(
                         text = "$$weeklyBudget",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.weight(1.7f).padding(start = 8.dp) // Adjusted padding
                     )
                 }
             }
@@ -298,8 +307,11 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_budget_alert),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f)
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),
+                    modifier = Modifier.weight(1.7f).padding(start = 80.dp)
                 )
 
                 if (editing) {
@@ -321,8 +333,11 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                 } else {
                     Text(
                         text = "%$budgetAlert",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.weight(1.7f).padding(start = 80.dp) // Adjusted padding
                     )
                 }
             }
@@ -374,8 +389,6 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
         }
     }
 }
-
-
 
 @Composable
 fun RewardsInfo(viewModel: AppViewModel) {
