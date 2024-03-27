@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -47,7 +49,8 @@ import com.example.spendwise.ui.theme.AppViewModel
 fun LoginPage(
     viewModel: AppViewModel,
     onLoginSuccess: () -> Unit,
-    onNavigateToRegister: () -> Unit) {
+    onNavigateToRegister: () -> Unit
+) {
     var userEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current.applicationContext
@@ -59,24 +62,29 @@ fun LoginPage(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id= R.string.title),
-            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold),
-            modifier = Modifier.padding(bottom = 8.dp)
+        Image(
+            painter = painterResource(id = R.drawable.logo),
+            contentDescription = "App Logo",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(bottom = 5.dp)
         )
+
         Text(
             text = stringResource(id = R.string.subtitle),
-            style = TextStyle( fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 20.sp,
-                color = Color.Gray),
+                color = Color.Gray
+            ),
             modifier = Modifier.padding(bottom = 24.dp)
         )
+
         Card(
             shape = RoundedCornerShape(20.dp),
             modifier = Modifier
-                .padding(vertical = 24.dp)
+                .padding(vertical = 5.dp)
                 .fillMaxWidth()
                 .padding(bottom = 8.dp)
         ) {
@@ -129,9 +137,17 @@ fun LoginPage(
                     onClick = {
                         if (authenticate(userEmail, password, viewModel)) {
                             onLoginSuccess()
-                            Toast.makeText(context, context.getString(R.string.login_success), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.login_success),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Toast.makeText(context, context.getString(R.string.login_fail), Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.login_fail),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFF006A68)),
@@ -145,7 +161,13 @@ fun LoginPage(
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 24.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.btn_login), fontSize = 22.sp)
+                    Text(
+                        text = stringResource(id = R.string.btn_login),
+                        fontSize = 22.sp,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular))
+                        )
+                    )
                 }
             }
         }
@@ -153,6 +175,7 @@ fun LoginPage(
         Text(
             text = stringResource(id = R.string.text_register),
             style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
                 color = Color.Gray,
                 textDecoration = TextDecoration.Underline
