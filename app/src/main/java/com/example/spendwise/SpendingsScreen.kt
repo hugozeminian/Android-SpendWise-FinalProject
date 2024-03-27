@@ -163,7 +163,7 @@ fun ItemList(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
-                modifier = Modifier.width(80.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text("$${spending.amount}")
                 Spacer(modifier = Modifier.width(8.dp))
@@ -285,31 +285,17 @@ fun SpendingRecapList(
 ){
 
     val uiState by viewModel.uiState.collectAsState()
-    val list: List<Spending>
-
-    val calendar = Calendar.getInstance()
-    val weekDays = Spending.getWeekDays(calendar)
-    val currentMonth = Spending.getCurrentMonth()
-
-    if(uiState.spendingRecap == "Monthly")
-    {
-        list = viewModel.getSortedSpendingsForMonth(currentMonth, true, uiState)
-    }
-    else
-    {
-        list = viewModel.getSortedSpendingsForWeek(weekDays, calendar,true, uiState)
-    }
-
-    val filteredList = viewModel.FilterCategories(list)
+    val filteredList = viewModel.FilterList(uiState.spendingRecap)
 
     Column(
     ) {
         filteredList.forEach { item ->
 
             val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key}
-            if(findCategoryLimit != null)
-            SpendingRecapItem(
-                category = Pair(item.key, item.value), findCategoryLimit.weeklyLimit)
+            if(findCategoryLimit != null){
+                SpendingRecapItem(
+                    category = Pair(item.key, item.value), findCategoryLimit.weeklyLimit, viewModel)
+            }
         }
     }
 }
@@ -317,8 +303,12 @@ fun SpendingRecapList(
 @Composable
 fun SpendingRecapItem(
     category: Pair<String, Float>,
-    limit: Float
+    limit: Float,
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier
 ){
+
+    val uiState by viewModel.uiState.collectAsState()
 
     val displaValue: String = if(category.second < limit) "$${String.format("%.2f", category.second)}"
                         else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
@@ -337,19 +327,30 @@ fun SpendingRecapItem(
             )
             Text(category.first)
         }
-        Column(){
-            Text(displaValue,
-                textAlign = TextAlign.End,
-                color =
-                if(category.second > limit){
-                    Color.Red }
-                else{
-                    MaterialTheme.colorScheme.primary
-                },
-                modifier = Modifier.fillMaxWidth())
-            Text("Weekly limit: \$" + limit.toString(),
-                textAlign = TextAlign.End,
-                modifier = Modifier.fillMaxWidth())
+        Column(
+            verticalArrangement = Arrangement.Center
+        ){
+
+            if(uiState.spendingRecap == "Weekly"){
+                Text(displaValue,
+                    textAlign = TextAlign.End,
+                    color =
+                    if(category.second > limit){
+                        Color.Red }
+                    else{
+                        MaterialTheme.colorScheme.primary
+                    },
+                    modifier = Modifier.fillMaxWidth())
+                Text("Weekly limit: \$" + limit.toString(),
+                    textAlign = TextAlign.End,
+                    modifier = Modifier.fillMaxWidth())
+            }
+            else if(uiState.spendingRecap == "Monthly"){
+                Text(displaValue,
+                    textAlign = TextAlign.End,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.fillMaxWidth())
+            }
         }
     }
     Box(
