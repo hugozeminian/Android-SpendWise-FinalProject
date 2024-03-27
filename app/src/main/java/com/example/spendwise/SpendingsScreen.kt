@@ -115,7 +115,7 @@ fun SpendingsScreen(
         ){
             Text(stringResource(id = R.string.spending_recap), style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 25.sp,
+                fontSize = 16.sp,
             ), )
             CustomDropdownMenu(listOf("Weekly", "Monthly"))
         }
