@@ -36,6 +36,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -80,16 +83,23 @@ fun SpendingsScreen(
     ) {
         Text(
             stringResource(id = R.string.spendings_screen_title),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 28.sp)
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 25.sp,
+            ),
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(stringResource(id = R.string.select_category))
+            Text(stringResource(id = R.string.select_category) ,   style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),)
             breakdownCategory = CustomDropdownMenu(categories)
+
         }
 
         BreakDownList(breakdownCategory, sortedList)
@@ -103,7 +113,10 @@ fun SpendingsScreen(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(stringResource(id = R.string.spending_recap))
+            Text(stringResource(id = R.string.spending_recap), style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 25.sp,
+            ), )
             CustomDropdownMenu(listOf("Weekly", "Monthly"))
         }
         Spacer(modifier = Modifier.height(8.dp))
