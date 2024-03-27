@@ -58,6 +58,18 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    fun FilterCategories(
+        list: List<Spending>
+    ): Map<String, Float>{
+        val sumByCategory = mutableMapOf<String, Float>()
+        for (spending in list) {
+            val category = spending.category
+            val amount = spending.amount
+            sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+        }
+        return sumByCategory
+    }
+
     fun GetTotalCategory(): Map<String, Float>{
         val sumByCategory = mutableMapOf<String, Float>()
         for (spending in _uiState.value.breakDownListSample) {
@@ -71,7 +83,7 @@ class AppViewModel: ViewModel(){
     fun GetMonthlyReport(): Map<String, Float>{
         val info: Map<String,Float> = mapOf(
             Pair("Income", _uiState.value.income),
-            Pair("Budget", _uiState.value.budget),
+            Pair("Budget", _uiState.value.monthlyBudget),
             Pair("Spendings", GetTotalSpendings()),
         )
         return info
@@ -137,6 +149,16 @@ class AppViewModel: ViewModel(){
     }
     fun GetLoggedUser(): User {
         return _uiState.value.loggedUser
+    }
+
+    fun DeleteSpending(
+        item: Spending
+    ){
+        _uiState.update { currentState ->
+            val updatedList = currentState.breakDownListSample.toMutableList()
+            updatedList.remove(item)
+            currentState.copy(breakDownListSample = updatedList)
+        }
     }
 
     fun AddUser(user : User) {
@@ -242,6 +264,14 @@ class AppViewModel: ViewModel(){
     fun SetMonthlyBudget(monthlyBudget: Float) {
         _uiState.update { currentState ->
             currentState.copy(monthlyBudget = monthlyBudget)
+        }
+    }
+
+    fun SetSpendingRecap(
+        set: String
+    ){
+        _uiState.update { currentState ->
+            currentState.copy(spendingRecap = set)
         }
     }
 

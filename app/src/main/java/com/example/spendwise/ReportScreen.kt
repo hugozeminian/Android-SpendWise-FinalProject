@@ -99,7 +99,7 @@ fun MonthProjectionReport(
     HorizontalBarsChart(viewModel.GetMonthlyReport())
     Spacer(modifier = Modifier.height(25.dp))
     Text(stringResource(id = R.string.spent_month2))
-    Text("$${String.format("%.1f", totalSpendings)}/$${uiState.budget}",
+    Text("$${String.format("%.1f", totalSpendings)}/$${uiState.monthlyBudget}",
         fontSize = 24.sp,
         fontWeight = FontWeight.SemiBold
     )

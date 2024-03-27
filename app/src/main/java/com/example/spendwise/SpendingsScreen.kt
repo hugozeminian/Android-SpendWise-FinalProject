@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,9 +20,12 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -69,6 +73,10 @@ fun SpendingsScreen(
         mutableStateOf(listOf(""))
     }
 
+    var monthOrWeek by remember {
+        mutableStateOf("")
+    }
+
     categories = viewModel.GetCategories()
 
     Column(
@@ -92,7 +100,7 @@ fun SpendingsScreen(
             breakdownCategory = CustomDropdownMenu(categories)
         }
 
-        BreakDownList(breakdownCategory, sortedList)
+        BreakDownList(breakdownCategory, sortedList, viewModel)
         Spacer(modifier = Modifier.height(40.dp))
 
         AddTransactionCard(viewModel)
@@ -104,7 +112,8 @@ fun SpendingsScreen(
             modifier = Modifier.fillMaxWidth()
         ){
             Text(stringResource(id = R.string.spending_recap))
-            CustomDropdownMenu(listOf("Weekly", "Monthly"))
+            monthOrWeek = CustomDropdownMenu(listOf("Weekly", "Monthly"))
+            viewModel.SetSpendingRecap(monthOrWeek)
         }
         Spacer(modifier = Modifier.height(8.dp))
         SpendingRecapList(viewModel)
@@ -117,13 +126,14 @@ fun SpendingsScreen(
 fun BreakDownList(
     category: String,
     sortedList: List<Spending>,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         sortedList.forEach(){
-            if(it.category == category) ItemList(spending = it)
+            if(it.category == category) ItemList(spending = it, viewModel)
         }
     }
 }
@@ -131,6 +141,7 @@ fun BreakDownList(
 @Composable
 fun ItemList(
     spending: Spending,
+    viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ){
     Column {
@@ -148,7 +159,26 @@ fun ItemList(
                 Text(spending.date)
                 Text(spending.description)
             }
-            Text(spending.amount.toString())
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier.width(80.dp)
+            ) {
+                Text("$${spending.amount}")
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = {
+                        viewModel.DeleteSpending(spending)
+                    },
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Delete"
+                    )
+                }
+            }
         }
         Box(
             modifier = Modifier
@@ -254,13 +284,32 @@ fun SpendingRecapList(
     modifier: Modifier = Modifier
 ){
 
-    val list: Map<String, Float> = viewModel.GetTotalCategory()
+    val uiState by viewModel.uiState.collectAsState()
+    val list: List<Spending>
+
+    val calendar = Calendar.getInstance()
+    val weekDays = Spending.getWeekDays(calendar)
+    val currentMonth = Spending.getCurrentMonth()
+
+    if(uiState.spendingRecap == "Monthly")
+    {
+        list = viewModel.getSortedSpendingsForMonth(currentMonth, true, uiState)
+    }
+    else
+    {
+        list = viewModel.getSortedSpendingsForWeek(weekDays, calendar,true, uiState)
+    }
+
+    val filteredList = viewModel.FilterCategories(list)
 
     Column(
     ) {
-        list.forEach {
+        filteredList.forEach { item ->
+
+            val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key}
+            if(findCategoryLimit != null)
             SpendingRecapItem(
-                category = Pair(it.key, it.value), limit = 200F)
+                category = Pair(item.key, item.value), findCategoryLimit.weeklyLimit)
         }
     }
 }

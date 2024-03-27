@@ -189,7 +189,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
     val uiState by viewModel.uiState.collectAsState()
 
     var editing by remember { mutableStateOf(false) }
-    var monthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
+    var monthlyBudget by remember { mutableStateOf(uiState.monthlyBudget.toString()) }
     var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
     var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
