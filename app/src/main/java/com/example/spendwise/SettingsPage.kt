@@ -64,8 +64,7 @@ fun SettingPage(
             text = "Hello, " + viewModel.GetLoggedUser().username,
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 32.sp,
             ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -80,7 +79,10 @@ fun SettingPage(
         ) {
             Text(
                 text = stringResource(id = R.string.setting_msg),
-                fontSize = 22.sp
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 25.sp,
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -91,7 +93,10 @@ fun SettingPage(
             ) {
                 TextField(
                     value = username,
-                    label = { Text(text = "Username") },
+                    label = { Text(text = "Username", style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 25.sp,
+                    )) },
                     onValueChange = { value -> username = value },
                     modifier = Modifier.weight(1f),
                     textStyle = TextStyle(fontSize = 22.sp),
@@ -124,7 +129,10 @@ fun SettingPage(
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = R.string.edit_darkMode),
-                    fontSize = 22.sp
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 25.sp,
+                    )
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -140,7 +148,10 @@ fun SettingPage(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = stringResource(id = R.string.Logout),
-                        fontSize = 22.sp,
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 25.sp,
+                        )
                     )
 
                     Spacer(modifier = Modifier.width(8.dp))

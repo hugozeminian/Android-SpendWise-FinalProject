@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -69,20 +72,31 @@ fun WeeklyReport(
     ) {
         Text(
             stringResource(id = R.string.report_screen_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 32.sp,
+            ),
             modifier = Modifier.padding(16.dp))
         VerticalBarsChart(dataSorted)
         Spacer(modifier = Modifier.height(10.dp))
-        Text(stringResource(id = R.string.spent_week))
+        Text(stringResource(id = R.string.spent_week), style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+            fontSize = 25.sp,
+        ))
         Text("$${String.format("%.1f", totalSpendings)}/$${uiState.weeklyBudget}",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 25.sp,
+            )
         )
         Spacer(modifier = Modifier.height(10.dp))
         Text(
             text = String.format(stringResource(id = R.string.spent_month), dataSorted.keys.firstOrNull()),
             textAlign = TextAlign.Center,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.width(screenWidth/2))
     }
 }
@@ -99,20 +113,31 @@ fun MonthProjectionReport(
 
     HorizontalBarsChart(viewModel.GetMonthlyReport())
     Spacer(modifier = Modifier.height(25.dp))
-    Text(stringResource(id = R.string.spent_month2))
+    Text(stringResource(id = R.string.spent_month2), style = TextStyle(
+          fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+          fontSize = 25.sp)
+        )
     Text("$${String.format("%.1f", totalSpendings)}/$${uiState.monthlyBudget}",
-        fontSize = 24.sp,
-        fontWeight = FontWeight.SemiBold
+        style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+            fontSize = 25.sp,
+          )
     )
     Text(stringResource(id = R.string.spent_month_budget))
     Spacer(modifier = Modifier.height(8.dp))
     Text(stringResource(id = R.string.saved_percentage))
     Text(text = "${String.format("%.1f", (100 - totalPercentage))}%",
-        fontSize = 24.sp,
+        style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+            fontSize = 25.sp,
+        ),
         color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.SemiBold
     )
-    Text(stringResource(id = R.string.saved_from_income))
+    Text(stringResource(id = R.string.saved_from_income), style = TextStyle(
+        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+        fontSize = 25.sp,
+    ))
     Spacer(modifier = Modifier.height(50.dp))
 }
 

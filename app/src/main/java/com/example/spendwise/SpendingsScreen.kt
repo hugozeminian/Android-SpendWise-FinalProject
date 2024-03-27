@@ -40,6 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -88,16 +91,23 @@ fun SpendingsScreen(
     ) {
         Text(
             stringResource(id = R.string.spending_screen_title),
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 28.sp)
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 25.sp,
+            ),
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(stringResource(id = R.string.select_category))
+            Text(stringResource(id = R.string.select_category) ,   style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),)
             breakdownCategory = CustomDropdownMenu(categories)
+
         }
 
         BreakDownList(breakdownCategory, sortedList, viewModel)
@@ -111,7 +121,12 @@ fun SpendingsScreen(
             horizontalArrangement = Arrangement.SpaceAround,
             modifier = Modifier.fillMaxWidth()
         ){
-            Text(stringResource(id = R.string.spending_recap))
+            Text(stringResource(id = R.string.spending_recap),
+                 style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+                )
+            )
             monthOrWeek = CustomDropdownMenu(listOf("Weekly", "Monthly"))
             viewModel.SetSpendingRecap(monthOrWeek)
         }
@@ -156,16 +171,25 @@ fun ItemList(
                 verticalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                Text(spending.date)
-                Text(spending.description)
+                Text(spending.date, style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
+                Text(spending.description, style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
             }
-
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("$${spending.amount}")
+                Text("$${spending.amount}", style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+                    )
+                )
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
                     onClick = {
@@ -223,7 +247,10 @@ fun AddTransactionCard(
             ){
                 TextField(
                     value = description,
-                    placeholder = { Text("Description") },
+                    placeholder = { Text("Description", style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     onValueChange = { value -> description = value },
                     modifier = Modifier.weight(1F),
                 )
@@ -235,7 +262,10 @@ fun AddTransactionCard(
             ) {
                 TextField(
                     value = amount,
-                    placeholder = { Text("Amount") },
+                    placeholder = { Text("Amount", style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     onValueChange = { newValue ->
                         if (containsOnlyNumbers(newValue)) {
                             // Only allow numeric input and limit to two decimal places
@@ -265,7 +295,10 @@ fun AddTransactionCard(
                 },
                 shape = Shapes.extraSmall
             ) {
-                Text("Add transaction")
+                Text("Add transaction", style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
             }
 
             Row(
@@ -327,7 +360,10 @@ fun SpendingRecapItem(
                 imageVector = Icons.Filled.CheckCircle,
                 contentDescription = ""
             )
-            Text(category.first)
+            Text(category.first, style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ))
         }
         Column(
             verticalArrangement = Arrangement.Center
@@ -342,6 +378,10 @@ fun SpendingRecapItem(
                     else{
                         MaterialTheme.colorScheme.primary
                     },
+                     style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                    ),
                     modifier = Modifier.fillMaxWidth())
                 Text("Weekly limit: \$" + limit.toString(),
                     textAlign = TextAlign.End,
@@ -351,6 +391,10 @@ fun SpendingRecapItem(
                 Text("$${category.second}",
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.primary,
+                     style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                    ),
                     modifier = Modifier.fillMaxWidth())
             }
         }
@@ -413,12 +457,19 @@ fun DateSelectionDialog(
         Button(
             onClick = { showDatePicker(selectedDateState) },
             shape = Shapes.extraSmall) {
-            Text(text = "Select Date")
+            Text(text = "Select Date",  style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),)
         }
 
         // Display the selected date
         Text(
             text = formattedDate,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.padding(top = 8.dp, start = 8.dp)
         )
     }

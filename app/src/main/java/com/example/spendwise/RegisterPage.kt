@@ -215,7 +215,10 @@ fun RegisterPage(onCreatingAccount: () -> Unit, viewModel: AppViewModel) {
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 24.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.btn_createAccount), fontSize = 22.sp)
+                    Text(text = stringResource(id = R.string.btn_createAccount),  style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
             }
         }
