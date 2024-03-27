@@ -310,8 +310,10 @@ fun SpendingRecapItem(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    val displaValue: String = if(category.second < limit) "$${String.format("%.2f", category.second)}"
-                        else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
+    val displaValue: String =
+            if(category.second < limit) "$${String.format("%.2f", category.second)}"
+            else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
+
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -346,7 +348,7 @@ fun SpendingRecapItem(
                     modifier = Modifier.fillMaxWidth())
             }
             else if(uiState.spendingRecap == "Monthly"){
-                Text(displaValue,
+                Text("$${category.second}",
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.fillMaxWidth())
