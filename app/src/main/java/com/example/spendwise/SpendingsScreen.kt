@@ -158,10 +158,19 @@ fun ItemList(
                 verticalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxHeight()
             ) {
-                Text(spending.date)
-                Text(spending.description)
+                Text(spending.date, style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
+                Text(spending.description, style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
             }
-            Text(spending.amount.toString())
+            Text(spending.amount.toString(), style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ))
         }
         Box(
             modifier = Modifier
