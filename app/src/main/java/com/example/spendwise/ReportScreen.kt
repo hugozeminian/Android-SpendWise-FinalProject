@@ -64,7 +64,7 @@ fun WeeklyReport(
 
     val uiState by viewModel.uiState.collectAsState()
     var totalSpendings = viewModel.GetTotalSpendings()
-    val data = viewModel.FilterList("Weekly")
+    var data = viewModel.FilterList("Weekly")
     val dataSorted = viewModel.SortByDescendingSpendings(data)
 
     Column(

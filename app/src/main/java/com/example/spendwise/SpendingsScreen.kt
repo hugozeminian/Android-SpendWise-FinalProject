@@ -277,7 +277,7 @@ fun AddTransactionCard(
                     placeholder = { Text("Amount", style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
-                    )) }
+                    )) },
                     onValueChange = { newValue ->
                         // Only allow numeric input and limit to two decimal places
                         val validatedText =

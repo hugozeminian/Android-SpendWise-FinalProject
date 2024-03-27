@@ -50,6 +50,7 @@ class AppViewModel: ViewModel(){
     fun SortByDescendingSpendings(
         list: Map<String, Float>
     ): Map<String, Float>{
+        if(list.isEmpty()) return list
         return list.sortByValue()
     }
 
@@ -65,12 +66,15 @@ class AppViewModel: ViewModel(){
             val ascending = false
             val spendingsForCurrentMonth = getSortedSpendingsForMonth(currentMonth, ascending, spendings)
 
-            for (spending in spendingsForCurrentMonth) {
-                val category = spending.category
-                val amount = spending.amount
-                sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+            if(!spendingsForCurrentMonth.isEmpty())
+            {
+                for (spending in spendingsForCurrentMonth) {
+                    val category = spending.category
+                    val amount = spending.amount
+                    sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+                }
+                return sumByCategory
             }
-            return sumByCategory
         }
         else
         {
@@ -81,13 +85,18 @@ class AppViewModel: ViewModel(){
             val ascending = false
 
             val spendingsForCurrentWeek = getSortedSpendingsForWeek(weekDays, calendar, ascending, spendings)
-            for (spending in spendingsForCurrentWeek) {
-                val category = spending.category
-                val amount = spending.amount
-                sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+
+            if(!spendingsForCurrentWeek.isEmpty()) {
+                for (spending in spendingsForCurrentWeek) {
+                    val category = spending.category
+                    val amount = spending.amount
+                    sumByCategory[category] = (sumByCategory[category] ?: 0f) + amount
+                }
+                return sumByCategory
             }
-            return sumByCategory
         }
+
+        return sumByCategory
     }
 
     fun GetMonthlyReport(): Map<String, Float>{

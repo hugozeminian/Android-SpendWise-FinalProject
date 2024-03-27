@@ -79,28 +79,30 @@ fun VerticalBarsChart(
                     .fillMaxWidth()
                     .padding(top = 8.dp)
             ){
-                data.forEach {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Text("$${String.format("%.1f", it.value)}")
-                        Box(
-                            modifier = Modifier
-                                .width(barGraphWidth)
-                                .fillMaxHeight(it.value / maxValue.toFloat())
-                                .background(color = MaterialTheme.colorScheme.primary)
-                                .clickable {
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "${it.key}: \$${String.format("%.2f", it.value)}",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
-                                }
-                        )
-                    }
+                if(!data.isEmpty()){
+                    data.forEach {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text("$${String.format("%.1f", it.value)}")
+                            Box(
+                                modifier = Modifier
+                                    .width(barGraphWidth)
+                                    .fillMaxHeight(it.value / maxValue.toFloat())
+                                    .background(color = MaterialTheme.colorScheme.primary)
+                                    .clickable {
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "${it.key}: \$${String.format("%.2f", it.value)}",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
+                            )
+                        }
 
+                    }
                 }
             }
         }
@@ -118,17 +120,17 @@ fun VerticalBarsChart(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround
         ) {
-            data.forEach {
-                Text(
-                    text = it.key,
-                    fontSize = 8.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.width(60.dp)
-                )
+            if(!data.isEmpty()){
+                data.forEach {
+                    Text(
+                        text = it.key,
+                        fontSize = 8.sp,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.width(60.dp)
+                    )
+                }
             }
-
         }
-
     }
 
 }
@@ -139,18 +141,7 @@ fun HorizontalBarsChart(
 ){
     val context = LocalContext.current
 
-    // Screen width to distribute expenses bars
-//    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
-    // BarGraph Dimensions
-//    val barGraphHeight by remember { mutableStateOf(200.dp) }
-//    val barGraphWidth by remember { mutableStateOf(20.dp) }
-//    // Scale Dimensions
-//    val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
-//    val scaleLineWidth by remember { mutableStateOf(1.dp) }
-
     val maxValue = data.values.max()
-//    val sortedData = data.sortByValue()
 
     Column {
         Column(
@@ -171,8 +162,10 @@ fun HorizontalBarsChart(
                         modifier = Modifier.height(120.dp),
                         verticalArrangement = Arrangement.SpaceBetween
                     ) {
-                        data.forEach{
-                            Text(it.key)
+                        if(!data.isEmpty()){
+                            data.forEach{
+                                Text(it.key)
+                            }
                         }
                     }
                 }
@@ -187,22 +180,28 @@ fun HorizontalBarsChart(
                             .height(120.dp)
                             .padding(end = 16.dp)
                     ){
-                        data.forEach{
-                            Box(
-                                modifier = Modifier
-                                    .height(20.dp)
-                                    .fillMaxWidth(it.value / maxValue)
-                                    .background(color = MaterialTheme.colorScheme.primary)
-                                    .clickable {
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "${it.key}: \$${String.format("%.2f", it.value)}",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
-                            )
+                        if(!data.isEmpty()){
+                            data.forEach{
+                                Box(
+                                    modifier = Modifier
+                                        .height(20.dp)
+                                        .fillMaxWidth(it.value / maxValue)
+                                        .background(color = MaterialTheme.colorScheme.primary)
+                                        .clickable {
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "${it.key}: \$${String.format("%.2f", it.value)}",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                        }
+                                )
+                            }
+                        }
+                        else
+                        {
+                            Text("No data.")
                         }
                     }
                 }

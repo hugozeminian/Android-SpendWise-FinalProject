@@ -64,7 +64,7 @@ fun HomePage(viewModel: AppViewModel) {
     val customColor = if (isDarkColor) darkThemeColorAlert else lightThemeColorAlert
     val budgetAlert = uiState.budgetAlert
 
-    val cardColorsMounth = getCardColors(totalOfSpendingMounth, budget, budgetAlert, customColor)
+    val cardColorsMonth = getCardColors(totalOfSpendingMounth, budget, budgetAlert, customColor)
     val cardColorsWeek = getCardColors(totalOfSpendingWeek, weeklyBudget, budgetAlert, customColor)
 
 
@@ -75,6 +75,10 @@ fun HomePage(viewModel: AppViewModel) {
             .verticalScroll(rememberScrollState())
     ) {
 
+        Text("Budget Alert ${budgetAlert}")
+        Text("Budget ${budget}")
+        Text("Total spending month ${totalOfSpendingMounth}")
+        Text("Total spending week ${totalOfSpendingWeek}")
         Text(
             text = stringResource(id = R.string.wp_welcome_text) + uiState.loggedUser.username,
             style = TextStyle(
@@ -149,7 +153,7 @@ fun HomePage(viewModel: AppViewModel) {
 
         Card(
             modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
-            colors = cardColorsMounth,
+            colors = cardColorsWeek,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -171,7 +175,7 @@ fun HomePage(viewModel: AppViewModel) {
 
         Card(
             modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
-            colors = cardColorsWeek,
+            colors = cardColorsMonth,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -289,8 +293,8 @@ fun getCardColors(
 ): CardColors {
     val formattedSpentPercentage = totalSpending * 100 / budget
     return if (formattedSpentPercentage > budgetAlert) {
-        CardDefaults.cardColors()
-    } else {
         CardDefaults.cardColors(containerColor = customColor)
+    } else {
+        CardDefaults.cardColors()
     }
 }

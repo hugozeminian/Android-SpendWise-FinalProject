@@ -258,7 +258,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
     var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
     var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
-    var manipulatedMonthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
+    var manipulatedMonthlyBudget by remember { mutableStateOf(uiState.monthlyBudget.toString()) }
     var manipulatedWeeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
     var manipulatedBudgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
 
@@ -537,7 +537,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 TextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(text = stringResource(id = R.string.bp_description)) style = TextStyle(
+                    label = { Text(text = stringResource(id = R.string.bp_description), style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     )) },
