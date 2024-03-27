@@ -30,10 +30,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-//fun <K, V : Comparable<V>> Map<K, V>.sortByValue(): Map<K, V> {
-//    return toSortedMap(compareByDescending { this[it] })
-//}
-
 @Composable
 fun VerticalBarsChart(
     data: Map<String, Float>,
@@ -47,7 +43,14 @@ fun VerticalBarsChart(
     // Scale Dimensions
     val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
 
-    val maxValue = data.values.max()
+    var maxValue: Float
+
+    if(data.isEmpty()){
+        maxValue = 0F
+    }
+    else{
+        maxValue = data.values.max()
+    }
 
     val globalPadding = 25.dp
 
@@ -102,6 +105,18 @@ fun VerticalBarsChart(
                             )
                         }
 
+                    }
+                }
+                else{
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ){
+                        Text("No data",style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 25.sp,
+                        ))
                     }
                 }
             }
@@ -231,9 +246,9 @@ fun DisplayChart()
     Column {
         VerticalBarsChart(
             data = mapOf(
-                Pair("Groceries", 520.45F),
-                Pair("Utilities", 300F),
-                Pair("Entertainment", 200F)
+                Pair("Utilities", 225F),
+                Pair("Groceries", 420F),
+                Pair("Entertainment", 178F),
             ))
         HorizontalBarsChart(
             data = mapOf(
