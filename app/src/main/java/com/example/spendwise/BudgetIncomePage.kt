@@ -509,7 +509,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 NumericAlertMessage(showAlertMessage)
             }
 
-            // Display list of rewards in a LazyColumn, allow for scrolling and only show first few rewards before needing to scroll
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -537,7 +537,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier
                                 .weight(0.5f)
-                                .padding(top = 8.dp, end = 20.dp),
+                                .padding(top = 8.dp, end = 16.dp),
 
                         )
                         IconButton(
