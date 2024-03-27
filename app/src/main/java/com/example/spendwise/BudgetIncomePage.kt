@@ -115,7 +115,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.bp_button_clear_all))
+                    Text(text = stringResource(id = R.string.bp_button_clear_all), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -139,7 +142,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(stringResource(id = R.string.bp_button_add))
+                    Text(stringResource(id = R.string.bp_button_add), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
             }
 
@@ -379,7 +385,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                     .padding(top = 16.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit))
+                Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit), style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ))
             }
 
             Row(
@@ -481,7 +490,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         .weight(1f)
                         .padding(end = 8.dp)
                 ) {
-                    Text(stringResource(id = R.string.bp_button_clear_all))
+                    Text(stringResource(id = R.string.bp_button_clear_all), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
 
                 // Add Button
@@ -498,7 +510,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     modifier = Modifier.weight(1f),
                     shape = Shapes.extraSmall
                 ) {
-                    Text(stringResource(id = R.string.bp_button_add))
+                    Text(stringResource(id = R.string.bp_button_add), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
             }
 
@@ -615,7 +630,10 @@ fun BudgetInformation(viewModel: AppViewModel) {
                         Button(
                             onClick = { editing = !editing },
                             shape = Shapes.extraSmall) {
-                            Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit))
+                            Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit), style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 16.sp,
+                            ))
 
                         }
                     }
