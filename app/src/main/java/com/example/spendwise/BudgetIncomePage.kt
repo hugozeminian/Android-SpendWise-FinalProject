@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -18,11 +19,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.spendwise.data.NumericAlertMessage
 import com.example.spendwise.data.checkEmptyOrNullOrNegative
 import com.example.spendwise.data.containsOnlyNumbers
@@ -31,7 +38,7 @@ import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.Shapes
 
-//import com.example.budgetincome.ui.theme.BudgetIncomeTheme
+
 
 @Composable
 fun SpendingsCategories(viewModel: AppViewModel) {
@@ -58,7 +65,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
         ) {
             Text(
                 text = stringResource(id = R.string.bp_spendings_categories),
-                style = MaterialTheme.typography.headlineMedium,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 25.sp,
+                ),
                 modifier = Modifier.padding(bottom = 12.dp)
             )
             // Input fields for category name and weekly limit
@@ -79,20 +89,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
 
                 Spacer(modifier = Modifier.width(16.dp))
 
-                TextField(
-//                    value = weeklyLimit,
-//                    onValueChange = { newValue ->
-//                        if (containsOnlyNumbers(newValue)) {
-//                            // Only allow numeric input and limit to two decimal places
-//                            val newText =
-//                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
-//                                    ?: weeklyLimit
-//                            weeklyLimit = newText
-//                            showAlertMessage = false
-//                        } else {
-//                            showAlertMessage = true
-//                        }
-//                    },
+                TextField(                   
                     value = manipulatedWeeklyLimit,
                     onValueChange = { newValue ->
                         if (containsOnlyNumbers(newValue)) {
@@ -153,7 +150,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(text = stringResource(id = R.string.bp_button_clear_all))
+                    Text(text = stringResource(id = R.string.bp_button_clear_all), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
 
                 Spacer(modifier = Modifier.width(16.dp))
@@ -183,7 +183,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(stringResource(id = R.string.bp_button_add))
+                    Text(stringResource(id = R.string.bp_button_add), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
             }
 
@@ -211,12 +214,18 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     ) {
                         Text(
                             text = category.name,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier.weight(1f)
                         )
                         Text(
                             text = stringResource(id = R.string.bp_cat_weekly_limit) + category.weeklyLimit,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(
@@ -244,11 +253,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
     val uiState by viewModel.uiState.collectAsState()
 
     var editing by remember { mutableStateOf(false) }
-    var monthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
+    var monthlyBudget by remember { mutableStateOf(uiState.monthlyBudget.toString()) }
     var weeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
-    var showAlert by remember { mutableStateOf(uiState.showAlert) }
-
     var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
+    var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
     var manipulatedMonthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
     var manipulatedWeeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
@@ -264,12 +272,16 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_monthly_budget),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f)
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -292,25 +304,32 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                             keyboardType = KeyboardType.Number
                         ),
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
                         text = "$$monthlyBudget",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_weekly_budget),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f)
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -333,25 +352,32 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                             keyboardType = KeyboardType.Number
                         ),
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
                         text = "$$weeklyBudget",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_budget_alert),
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.weight(1f)
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),
+                    modifier = Modifier.alignByBaseline()
                 )
 
                 if (editing) {
@@ -401,13 +427,16 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                             }
                         ),
                         label = { Text(text = "") },
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 } else {
                     Text(
                         text = "%$budgetAlert",
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1.7f)
+                        style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     )
                 }
             }
@@ -451,10 +480,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                     .padding(top = 16.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                Text(
-                    text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(
-                        id = R.string.bp_button_edit
-                    )
+                Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit), style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                  )
                 )
             }
 
@@ -467,7 +496,6 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
         }
     }
 }
-
 
 @Composable
 fun RewardsInfo(viewModel: AppViewModel) {
@@ -492,7 +520,12 @@ fun RewardsInfo(viewModel: AppViewModel) {
         ) {
             Text(
                 text = "Rewards Balance: $${"%.2f".format(totalAmount)}",
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 25.sp,
+                ),
                 modifier = Modifier.padding(bottom = 12.dp)
+
             )
 
             // Description and Amount input fields Row
@@ -504,7 +537,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 TextField(
                     value = description,
                     onValueChange = { description = it },
-                    label = { Text(text = stringResource(id = R.string.bp_description)) },
+                    label = { Text(text = stringResource(id = R.string.bp_description)) style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Text
@@ -526,7 +562,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         manipulatedAmountText = validatedText
                         showAlertMessage = false
                     },
-                    label = { Text(stringResource(id = R.string.bp_amount)) },
+                    label = { Text(stringResource(id = R.string.bp_amount), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    )) },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Done,
                         keyboardType = KeyboardType.Number
@@ -550,7 +589,6 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         .weight(1f)
                         .padding(end = 8.dp),
                     singleLine = true,
-                    placeholder = { Text(text = stringResource(id = R.string.bp_amount)) } // Placeholder for the amount field
                 )
             }
 
@@ -572,7 +610,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         .weight(1f)
                         .padding(end = 8.dp)
                 ) {
-                    Text(stringResource(id = R.string.bp_button_clear_all))
+                    Text(stringResource(id = R.string.bp_button_clear_all), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
 
                 // Add Button
@@ -593,7 +634,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     modifier = Modifier.weight(1f),
                     shape = Shapes.extraSmall
                 ) {
-                    Text(stringResource(id = R.string.bp_button_add))
+                    Text(stringResource(id = R.string.bp_button_add), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ))
                 }
             }
 
@@ -604,7 +648,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 NumericAlertMessage(showAlertMessage)
             }
 
-            // Display list of rewards in a LazyColumn, allow for scrolling and only show first few rewards before needing to scroll
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -615,7 +659,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     ) {
                         Text(
                             text = it.description,
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(top = 8.dp, start = 16.dp)
@@ -623,7 +670,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
                             text = "$${"%.2f".format(it.amount.toDoubleOrNull() ?: 0.0)}",
-                            style = MaterialTheme.typography.bodyMedium,
+                            style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 13.sp,
+                            ),
                             modifier = Modifier
                                 .weight(0.5f)
                                 .padding(top = 8.dp, end = 16.dp),
@@ -672,10 +722,11 @@ fun BudgetInformation(viewModel: AppViewModel) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(
-                        text = stringResource(id = R.string.bp_monthly_income),
-                        style = MaterialTheme.typography.headlineSmall
-                    )
+                    Text(text = stringResource(id = R.string.bp_monthly_income), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 25.sp,
+                    ),)
+                    
                     if (editing) {
                         TextField(
                             value = manipulatedIncomeText,
@@ -721,9 +772,9 @@ fun BudgetInformation(viewModel: AppViewModel) {
                             },
                             shape = Shapes.extraSmall
                         ) {
-                            Text(
-                                text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(
-                                    id = R.string.bp_button_edit
+                            Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit), style = TextStyle(
+                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                fontSize = 16.sp,
                                 )
                             )
                         }

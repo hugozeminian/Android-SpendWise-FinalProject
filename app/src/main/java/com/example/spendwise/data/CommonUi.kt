@@ -17,7 +17,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.spendwise.R
 import com.example.spendwise.ui.theme.AppViewModel
 
@@ -53,7 +57,10 @@ fun CustomDropdownMenu(
         ) {
             list.forEachIndexed { index, text ->
                 DropdownMenuItem(
-                    text = { Text(text = text) },
+                    text = { Text(text = text, style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp,
+                    ),) },
                     onClick = {
                         selectedItem = list[index]
                         isExpanded = false },

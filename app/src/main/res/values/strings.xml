@@ -35,7 +35,7 @@
 
     <!-- Welcome Page -->
     <string name="wp_welcome_text">Welcome Back," "</string>
-    <string name="wp_you_spent">You have spent" "</string>
+    <string name="wp_you_spent">You have spent: " "</string>
     <string name="wp_monthly_budget">of your monthly budget</string>
     <string name="wp_weekly_budget">of your weekly budget</string>
 
@@ -77,10 +77,10 @@
     <string name="spent_month2">This month you\'ve spent:</string>
     <string name="spent_month_budget">Of your monthly budget</string>
     <string name="saved_percentage">And saved:</string>
-    <string name="saved_from_income">Of you monthly income</string>
+    <string name="saved_from_income">Of your monthly income</string>
 
-    <!-- Reports Page -->
-    <string name="spendings_screen_title">Spendings description</string>
+    <!-- Spending Page -->
+    <string name="spending_screen_title">Spendings description</string>
     <string name="select_category">Select category:</string>
     <string name="spending_recap">Spending recap:</string>
 </resources>

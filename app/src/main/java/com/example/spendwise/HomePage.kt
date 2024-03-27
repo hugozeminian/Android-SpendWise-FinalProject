@@ -26,8 +26,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
@@ -39,7 +44,7 @@ import java.util.Calendar
 @Composable
 fun HomePage(viewModel: AppViewModel) {
     val uiState by viewModel.uiState.collectAsState()
-    val budget = uiState.budget
+    val budget = uiState.monthlyBudget
     val weeklyBudget = uiState.weeklyBudget
     val decimalFormat = DecimalFormat("#")
 
@@ -72,12 +77,20 @@ fun HomePage(viewModel: AppViewModel) {
 
         Text(
             text = stringResource(id = R.string.wp_welcome_text) + uiState.loggedUser.username,
-            style = MaterialTheme.typography.headlineLarge,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 32.sp,
+                textDecoration = TextDecoration.Underline
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = stringResource(id = R.string.wp_you_spent),
-            style = MaterialTheme.typography.bodyMedium,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
@@ -86,12 +99,18 @@ fun HomePage(viewModel: AppViewModel) {
                     stringResource(id = R.string.app_slide) +
                     stringResource(id = R.string.app_money_icon) +
                     formatedBudgetWeek,
-            style = MaterialTheme.typography.headlineLarge,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 32.sp,
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = stringResource(id = R.string.wp_weekly_budget),
-            style = MaterialTheme.typography.bodyMedium,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -99,7 +118,10 @@ fun HomePage(viewModel: AppViewModel) {
 
         Text(
             text = stringResource(id = R.string.wp_you_spent),
-            style = MaterialTheme.typography.bodyMedium,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
         )
         Text(
@@ -108,12 +130,18 @@ fun HomePage(viewModel: AppViewModel) {
                     stringResource(id = R.string.app_slide) +
                     stringResource(id = R.string.app_money_icon) +
                     formatedBudgetMonth,
-            style = MaterialTheme.typography.headlineLarge,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 32.sp,
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = stringResource(id = R.string.wp_monthly_budget),
-            style = MaterialTheme.typography.bodyMedium,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
@@ -132,7 +160,10 @@ fun HomePage(viewModel: AppViewModel) {
                             formatedSpentPercentageOfBudgetWeek +
                             stringResource(id = R.string.app_percentage) +
                             stringResource(id = R.string.wp_weekly_budget),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 32.sp,
+                    ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
@@ -151,7 +182,10 @@ fun HomePage(viewModel: AppViewModel) {
                             formatedSpentPercentageOfBudget +
                             stringResource(id = R.string.app_percentage) +
                             stringResource(id = R.string.wp_monthly_budget),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 32.sp,
+                    ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }

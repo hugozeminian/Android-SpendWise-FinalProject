@@ -12,18 +12,18 @@ data class AppUiState(
     //Main page counter - test
     val counter: Int = 0,
 
-    //for budget that user set
-    val monthlyBudget: Float = 0F,
+    //Selection of recap list (monthly or weekly)
+    val spendingRecap: String = "Weekly",
 
     //Sample list to show items in "Spendings" screen - first list
     val breakDownListSample: List<Spending> = listOf(
-        Spending("Groceries","Walmart", "Feb 25, 2024", 1000F),
-        Spending("Groceries","Costco", "Mar 12, 2024", 56.12F),
-        Spending("Groceries","Safeway - Pharmacy", "Feb 12, 2024", 54.98F),
-        Spending("Utilities","Enmax", "Mar 6, 2024", 114.99F),
-        Spending("Utilities","Telus", "Mar 9, 2024", 69.5F),
-        Spending("Entertainment","Skate park", "Mar 25, 2024", 75.30F),
-        Spending("Entertainment","Skate park", "Mar 26, 2024", 100.30F)
+        Spending("Groceries","Walmart", "Feb 25, 2024", 100F),
+        Spending("Groceries","Costco", "Mar 12, 2024", 50F),
+        Spending("Groceries","Safeway - Pharmacy", "Feb 12, 2024", 50F),
+        Spending("Utilities","Enmax", "Mar 6, 2024", 100F),
+        Spending("Utilities","Telus", "Mar 9, 2024", 70F),
+        Spending("Entertainment","Skate park", "Mar 25, 2024", 70F),
+        Spending("Entertainment","Skate park", "Mar 26, 2024", 50F)
     ),
 
     val userListSample: List<User> = listOf(
@@ -45,7 +45,7 @@ data class AppUiState(
     val savingsPercentage: Float = 0F,
 
     //Monthly budget
-    val budget: Float = 2000F,
+    val monthlyBudget: Float = 2000F,
     val weeklyBudget: Float = 500F,
     val budgetAlert: Float = 90F,
 
