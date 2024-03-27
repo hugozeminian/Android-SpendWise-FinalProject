@@ -248,7 +248,10 @@ fun AddTransactionCard(
                 },
                 shape = Shapes.extraSmall
             ) {
-                Text("Add transaction")
+                Text("Add transaction", style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ),)
             }
 
             Row(
