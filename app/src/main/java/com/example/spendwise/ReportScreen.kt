@@ -20,6 +20,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -68,8 +71,10 @@ fun WeeklyReport(
     ) {
         Text(
             stringResource(id = R.string.report_screen_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 32.sp,
+            ),
             modifier = Modifier.padding(16.dp))
         VerticalBarsChart(dataSorted)
         Spacer(modifier = Modifier.height(10.dp))

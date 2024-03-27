@@ -21,6 +21,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -56,8 +59,10 @@ fun VerticalBarsChart(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(text = stringResource(id = R.string.weekly_graph_title),
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold,
+            style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 25.sp,
+            ),
             modifier = Modifier.padding(10.dp))
         Row(
             modifier = Modifier
