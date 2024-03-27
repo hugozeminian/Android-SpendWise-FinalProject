@@ -526,7 +526,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(top = 12.dp, start = 16.dp)
+                                .padding(top = 8.dp, start = 16.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -537,7 +537,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier
                                 .weight(0.5f)
-                                .padding(top = 8.dp, end = 16.dp),
+                                .padding(top = 8.dp, end = 20.dp),
 
                         )
                         IconButton(
