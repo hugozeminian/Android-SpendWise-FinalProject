@@ -526,7 +526,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(top = 8.dp, start = 16.dp)
+                                .padding(top = 12.dp, start = 16.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -584,7 +584,10 @@ fun BudgetInformation(viewModel: AppViewModel) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.bp_monthly_income), style = MaterialTheme.typography.headlineSmall)
+                    Text(text = stringResource(id = R.string.bp_monthly_income), style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 25.sp,
+                    ),)
                     if (editing) {
                         TextField(
                             value = incomeText,
