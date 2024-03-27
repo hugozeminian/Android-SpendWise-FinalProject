@@ -160,8 +160,10 @@ fun HorizontalBarsChart(
                 .fillMaxWidth()
         ){
             Text(text = stringResource(id = R.string.monthly_graph_title),
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 25.sp,
+                ),
                 modifier = Modifier.padding(10.dp))
             Row{
                 Box(){
