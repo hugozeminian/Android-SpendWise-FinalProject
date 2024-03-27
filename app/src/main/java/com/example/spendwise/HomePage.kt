@@ -255,8 +255,8 @@ fun getCardColors(
 ): CardColors {
     val formattedSpentPercentage = totalSpending * 100 / budget
     return if (formattedSpentPercentage > budgetAlert) {
-        CardDefaults.cardColors(containerColor = customColor)
-    } else {
         CardDefaults.cardColors()
+    } else {
+        CardDefaults.cardColors(containerColor = customColor)
     }
 }

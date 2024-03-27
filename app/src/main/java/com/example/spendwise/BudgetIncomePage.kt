@@ -4,6 +4,7 @@ package com.example.spendwise
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -18,10 +19,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spendwise.data.NumericAlertMessage
+import com.example.spendwise.data.checkEmptyOrNullOrNegative
 import com.example.spendwise.data.containsOnlyNumbers
 import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.SpendingsCategories
@@ -37,6 +40,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
     // Maintain state for category name and weekly limit fields
     var categoryName by remember { mutableStateOf("") }
     var weeklyLimit by remember { mutableStateOf("") }
+    var manipulatedWeeklyLimit by remember { mutableStateOf("") }
 
     // Maintain state for the list of spending categories
     var spendingCategories by remember { mutableStateOf(uiState.spendingsCategoriesList) }
@@ -66,25 +70,68 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     value = categoryName,
                     onValueChange = { categoryName = it },
                     label = { Text(text = "Name") },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
                     modifier = Modifier.weight(1f)
                 )
 
                 Spacer(modifier = Modifier.width(16.dp))
 
                 TextField(
-                    value = weeklyLimit,
+//                    value = weeklyLimit,
+//                    onValueChange = { newValue ->
+//                        if (containsOnlyNumbers(newValue)) {
+//                            // Only allow numeric input and limit to two decimal places
+//                            val newText =
+//                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+//                                    ?: weeklyLimit
+//                            weeklyLimit = newText
+//                            showAlertMessage = false
+//                        } else {
+//                            showAlertMessage = true
+//                        }
+//                    },
+                    value = manipulatedWeeklyLimit,
                     onValueChange = { newValue ->
                         if (containsOnlyNumbers(newValue)) {
                             // Only allow numeric input and limit to two decimal places
-                            val newText =
+                            val validatedText =
                                 newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
-                                    ?: weeklyLimit
-                            weeklyLimit = newText
+                                    ?: manipulatedWeeklyLimit
+                            manipulatedWeeklyLimit = validatedText
                             showAlertMessage = false
-                        } else {
+                        }else {
                             showAlertMessage = true
                         }
                     },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            // Add the spending category to the list
+                            if (categoryName.isNotBlank() && manipulatedWeeklyLimit.isNotBlank()) {
+                                weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
+                                val newCategory =
+                                    SpendingsCategories(categoryName, weeklyLimit.toFloat())
+
+                                spendingCategories = uiState.spendingsCategoriesList + newCategory
+                                viewModel.AddSpendingsCategoriesItem(newCategory)
+
+
+                                // Clear fields after adding
+                                categoryName = ""
+                                weeklyLimit = ""
+                                manipulatedWeeklyLimit = ""
+                                showAlertMessage = false
+                            }else{
+                                showAlertMessage = true
+                            }
+                        }
+                    ),
                     label = { Text(stringResource(id = R.string.bp_cat_weekly_limit)) },
                     modifier = Modifier.weight(1f)
                 )
@@ -99,9 +146,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
             ) {
                 // Clear All Button
                 Button(
-                    onClick = { spendingCategories = emptyList()
-                                viewModel.RemoveAllSpendingsCategoriesItem()
-                              },
+                    onClick = {
+                        spendingCategories = emptyList()
+                        viewModel.RemoveAllSpendingsCategoriesItem()
+                    },
                     shape = Shapes.extraSmall,
                     modifier = Modifier.weight(1f)
                 ) {
@@ -114,8 +162,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 Button(
                     onClick = {
                         // Add the spending category to the list
-                        if (categoryName.isNotBlank() && weeklyLimit.isNotBlank()) {
-                            val newCategory = SpendingsCategories(categoryName, weeklyLimit.toFloat())
+                        if (categoryName.isNotBlank() && manipulatedWeeklyLimit.isNotBlank()) {
+                            weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
+                            val newCategory =
+                                SpendingsCategories(categoryName, weeklyLimit.toFloat())
 
                             spendingCategories = uiState.spendingsCategoriesList + newCategory
                             viewModel.AddSpendingsCategoriesItem(newCategory)
@@ -124,6 +174,10 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             // Clear fields after adding
                             categoryName = ""
                             weeklyLimit = ""
+                            manipulatedWeeklyLimit = ""
+                            showAlertMessage = false
+                        }else{
+                            showAlertMessage = true
                         }
                     },
                     shape = Shapes.extraSmall,
@@ -168,7 +222,8 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         IconButton(
                             onClick = {
                                 // Remove the spending category from the list
-                                spendingCategories = spendingCategories.filterIndexed { i, _ -> i != index }
+                                spendingCategories =
+                                    spendingCategories.filterIndexed { i, _ -> i != index }
                                 viewModel.RemoveSpendingsCategoriesItem(index)
                             }
                         ) {
@@ -185,7 +240,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
 }
 
 @Composable
-fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
+fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
     val uiState by viewModel.uiState.collectAsState()
 
     var editing by remember { mutableStateOf(false) }
@@ -194,6 +249,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
     var showAlert by remember { mutableStateOf(uiState.showAlert) }
 
     var budgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
+
+    var manipulatedMonthlyBudget by remember { mutableStateOf(uiState.budget.toString()) }
+    var manipulatedWeeklyBudget by remember { mutableStateOf(uiState.weeklyBudget.toString()) }
+    var manipulatedBudgetAlert by remember { mutableStateOf(uiState.budgetAlert.toString()) }
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
@@ -215,17 +274,23 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 
                 if (editing) {
                     TextField(
-                        value = monthlyBudget,
+                        value = manipulatedMonthlyBudget,
                         onValueChange = { newValue ->
                             if (containsOnlyNumbers(newValue)) {
-                                monthlyBudget = newValue
-                                val income = newValue.toFloatOrNull() ?: 0f
-                                viewModel.SetMonthlyIncome(income)
+                                // Only allow numeric input and limit to two decimal places
+                                val validatedText =
+                                    newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                        ?: manipulatedMonthlyBudget
+                                manipulatedMonthlyBudget = validatedText
                                 showAlertMessage = false
-                            } else {
+                            }else {
                                 showAlertMessage = true
                             }
                         },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -250,17 +315,23 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 
                 if (editing) {
                     TextField(
-                        value = weeklyBudget,
+                        value = manipulatedWeeklyBudget,
                         onValueChange = { newValue ->
                             if (containsOnlyNumbers(newValue)) {
-                                weeklyBudget = newValue
-                                val income = newValue.toFloatOrNull() ?: 0f
-                                viewModel.SetMonthlyIncome(income)
+                                // Only allow numeric input and limit to two decimal places
+                                val validatedText =
+                                    newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                        ?: manipulatedWeeklyBudget
+                                manipulatedWeeklyBudget = validatedText
                                 showAlertMessage = false
-                            } else {
+                            }else {
                                 showAlertMessage = true
                             }
                         },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Next,
+                            keyboardType = KeyboardType.Number
+                        ),
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -285,17 +356,50 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 
                 if (editing) {
                     TextField(
-                        value = budgetAlert,
+                        value = manipulatedBudgetAlert,
                         onValueChange = { newValue ->
                             if (containsOnlyNumbers(newValue)) {
-                                budgetAlert = newValue
-                                val income = newValue.toFloatOrNull() ?: 0f
-                                viewModel.SetMonthlyIncome(income)
+                                // Only allow numeric input and limit to two decimal places
+                                val validatedText =
+                                    newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                        ?: manipulatedBudgetAlert
+                                manipulatedBudgetAlert = validatedText
                                 showAlertMessage = false
-                            } else {
+                            }else {
                                 showAlertMessage = true
                             }
                         },
+                        keyboardOptions = KeyboardOptions.Default.copy(
+                            imeAction = ImeAction.Done,
+                            keyboardType = KeyboardType.Number
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = {
+                                if (editing) {
+                                    monthlyBudget = checkEmptyOrNullOrNegative(manipulatedMonthlyBudget)
+                                    weeklyBudget = checkEmptyOrNullOrNegative(manipulatedWeeklyBudget)
+                                    budgetAlert = checkEmptyOrNullOrNegative(manipulatedBudgetAlert)
+
+                                    val monthlyBudgetValue = monthlyBudget.toDoubleOrNull() ?: 0.0
+                                    val weeklyBudgetValue = weeklyBudget.toDoubleOrNull() ?: 0.0
+                                    val monthlyBudgetLimit = weeklyBudgetValue * 4
+
+                                    viewModel.SetMonthlyBudget(monthlyBudget.toFloat())
+                                    viewModel.SetWeeklyBudget(weeklyBudget.toFloat())
+                                    viewModel.SetBudgetAlert(budgetAlert.toFloat())
+
+                                    if (monthlyBudgetValue > monthlyIncome || monthlyBudgetValue < monthlyBudgetLimit) {
+                                        showAlert = true
+                                    } else {
+                                        showAlert = false
+                                        editing = false
+
+                                    }
+                                } else {
+                                    editing = true
+                                }
+                            }
+                        ),
                         label = { Text(text = "") },
                         modifier = Modifier.weight(1f)
                     )
@@ -319,6 +423,10 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
             Button(
                 onClick = {//ensure user's budget does not exceed monthly income set
                     if (editing) {
+                        monthlyBudget = checkEmptyOrNullOrNegative(manipulatedMonthlyBudget)
+                        weeklyBudget = checkEmptyOrNullOrNegative(manipulatedWeeklyBudget)
+                        budgetAlert = checkEmptyOrNullOrNegative(manipulatedBudgetAlert)
+
                         val monthlyBudgetValue = monthlyBudget.toDoubleOrNull() ?: 0.0
                         val weeklyBudgetValue = weeklyBudget.toDoubleOrNull() ?: 0.0
                         val monthlyBudgetLimit = weeklyBudgetValue * 4
@@ -343,7 +451,11 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
                     .padding(top = 16.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
-                Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit))
+                Text(
+                    text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(
+                        id = R.string.bp_button_edit
+                    )
+                )
             }
 
             Row(
@@ -357,7 +469,6 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Double) {
 }
 
 
-
 @Composable
 fun RewardsInfo(viewModel: AppViewModel) {
     val uiState by viewModel.uiState.collectAsState()
@@ -365,6 +476,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
     // Maintain state for description and amount fields
     var description by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
+    var manipulatedAmountText by remember { mutableStateOf("") }
 
     // Calculate the total sum of amounts
     var totalAmount by remember { mutableStateOf(0.0) }
@@ -393,6 +505,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     value = description,
                     onValueChange = { description = it },
                     label = { Text(text = stringResource(id = R.string.bp_description)) },
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
@@ -401,21 +517,35 @@ fun RewardsInfo(viewModel: AppViewModel) {
 
                 // Amount TextField
                 TextField(
-                    value = amount,
+                    value = manipulatedAmountText,
                     onValueChange = { newValue ->
-                        if (containsOnlyNumbers(newValue)) {
                             // Only allow numeric input and limit to two decimal places
-                            val newText =
-                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
-                                    ?: amount
-                            amount = newText
-                            showAlertMessage = false
-                        } else {
-                            showAlertMessage = true
-                        }
+                        val validatedText =
+                            newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                ?: manipulatedAmountText
+                        manipulatedAmountText = validatedText
+                        showAlertMessage = false
                     },
                     label = { Text(stringResource(id = R.string.bp_amount)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Done,
+                        keyboardType = KeyboardType.Number
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (description.isNotBlank() && manipulatedAmountText.isNotBlank()) {
+                                amount = checkEmptyOrNullOrNegative(manipulatedAmountText)
+                                viewModel.AddRewardItem(RewardItem(description, amount))
+                                // Clear fields after adding
+                                description = ""
+                                amount = ""
+                                manipulatedAmountText = ""
+                                showAlertMessage = false
+                            }else{
+                                showAlertMessage = true
+                            }
+                        }
+                    ),
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
@@ -449,12 +579,16 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 Button(
                     onClick = {
                         // Add the reward item to the list
-                        if (description.isNotBlank() && amount.isNotBlank()) {
+                        if (description.isNotBlank() && manipulatedAmountText.isNotBlank()) {
+                            amount = checkEmptyOrNullOrNegative(manipulatedAmountText)
                             viewModel.AddRewardItem(RewardItem(description, amount))
                             // Clear fields after adding
                             description = ""
                             amount = ""
-                        }
+                            manipulatedAmountText = ""
+                        }else{
+                    showAlertMessage = true
+                }
                     },
                     modifier = Modifier.weight(1f),
                     shape = Shapes.extraSmall
@@ -494,7 +628,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                                 .weight(0.5f)
                                 .padding(top = 8.dp, end = 16.dp),
 
-                        )
+                            )
                         IconButton(
                             onClick = {
                                 viewModel.RemoveRewardItem(it)
@@ -513,9 +647,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
     }
 
 
-
 }
-
 
 
 @Composable
@@ -524,6 +656,7 @@ fun BudgetInformation(viewModel: AppViewModel) {
 
     var editing by remember { mutableStateOf(false) }
     var incomeText by remember { mutableStateOf(uiState.income.toString()) }
+    var manipulatedIncomeText by remember { mutableStateOf(uiState.income.toString()) }
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
@@ -539,20 +672,36 @@ fun BudgetInformation(viewModel: AppViewModel) {
                 Column(
                     modifier = Modifier.padding(16.dp)
                 ) {
-                    Text(text = stringResource(id = R.string.bp_monthly_income), style = MaterialTheme.typography.headlineSmall)
+                    Text(
+                        text = stringResource(id = R.string.bp_monthly_income),
+                        style = MaterialTheme.typography.headlineSmall
+                    )
                     if (editing) {
                         TextField(
-                            value = incomeText,
+                            value = manipulatedIncomeText,
                             onValueChange = { newValue ->
                                 if (containsOnlyNumbers(newValue)) {
-                                    incomeText = newValue
-                                    val income = newValue.toFloatOrNull() ?: 0f
-                                    viewModel.SetMonthlyIncome(income)
+                                    // Only allow numeric input and limit to two decimal places
+                                    val validatedText =
+                                        newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                            ?: manipulatedIncomeText
+                                    manipulatedIncomeText = validatedText
                                     showAlertMessage = false
-                                } else {
+                                }else {
                                     showAlertMessage = true
                                 }
                             },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Done,
+                                keyboardType = KeyboardType.Number
+                            ),
+                            keyboardActions = KeyboardActions(
+                                onDone = {
+                                    editing = !editing
+                                    incomeText = checkEmptyOrNullOrNegative(manipulatedIncomeText)
+                                    viewModel.SetMonthlyIncome(incomeText.toFloat())
+                                }
+                            ),
                             label = { Text(text = stringResource(id = R.string.bp_monthly_enter_income)) },
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
@@ -565,11 +714,21 @@ fun BudgetInformation(viewModel: AppViewModel) {
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Button(
-                            onClick = { editing = !editing },
-                            shape = Shapes.extraSmall) {
-                            Text(text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(id = R.string.bp_button_edit))
+                            onClick = {
+                                editing = !editing
+                                incomeText = checkEmptyOrNullOrNegative(manipulatedIncomeText)
+                                viewModel.SetMonthlyIncome(incomeText.toFloat())
+                            },
+                            shape = Shapes.extraSmall
+                        ) {
+                            Text(
+                                text = if (editing) stringResource(id = R.string.bp_button_done) else stringResource(
+                                    id = R.string.bp_button_edit
+                                )
+                            )
                         }
                     }
+
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -586,9 +745,9 @@ fun BudgetInformation(viewModel: AppViewModel) {
         }
 
         item {
-            MonthlyWeeklyBudget(viewModel, monthlyIncome = incomeText.toDoubleOrNull() ?: 0.0)
+            MonthlyWeeklyBudget(viewModel, monthlyIncome = incomeText.toFloatOrNull() ?: 0.0F)
         }
-        item{
+        item {
             SpendingsCategories(viewModel)
         }
     }
@@ -596,10 +755,10 @@ fun BudgetInformation(viewModel: AppViewModel) {
 
 @Preview
 @Composable
-fun PreviewBudget(){
+fun PreviewBudget() {
     Column {
         BudgetInformation(AppViewModel())
-        MonthlyWeeklyBudget(AppViewModel(), 3000.0)
+        MonthlyWeeklyBudget(AppViewModel(), 3000.0F)
         RewardsInfo(AppViewModel())
         SpendingsCategories(AppViewModel())
     }
