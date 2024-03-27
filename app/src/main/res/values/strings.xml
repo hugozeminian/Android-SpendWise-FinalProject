@@ -9,7 +9,7 @@
     <string name="app_money_icon">$</string>
     <string name="app_slide">" "/" "</string>
     <string name="app_percentage">%" "</string>
-    <string name="app_keyboard_number_alert">Use just numbers</string>
+    <string name="app_keyboard_number_alert">Error check input</string>
 
     <!-- User -->
     <string name="user">Jonh Doe</string>

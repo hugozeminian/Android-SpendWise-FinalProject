@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -49,29 +48,37 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spendwise.data.AppUiState
 import com.example.spendwise.data.CustomDropdownMenu
 import com.example.spendwise.data.NumericAlertMessage
 import com.example.spendwise.data.containsOnlyNumbers
-import com.example.spendwise.data.isValidDateFormat
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.Shapes
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.input.ImeAction
+import com.example.spendwise.data.checkEmptyOrNullOrNegative
+import com.example.spendwise.model.RewardItem
+
 
 @Composable
 fun SpendingsScreen(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
-){
+) {
     val uiState by viewModel.uiState.collectAsState()
     val sortedList = viewModel.getSortedSpendingList(false, uiState)
 
     var breakdownCategory by remember {
-        mutableStateOf("") }
-    
+        mutableStateOf("")
+    }
+
     var categories by remember {
         mutableStateOf(listOf(""))
     }
@@ -143,7 +150,7 @@ fun BreakDownList(
     sortedList: List<Spending>,
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
-){
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -158,7 +165,7 @@ fun ItemList(
     spending: Spending,
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
-){
+) {
     Column {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -217,18 +224,19 @@ fun ItemList(
 fun AddTransactionCard(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
-){
+) {
 
-    var amount by remember {mutableStateOf("")}
+    var amount by remember { mutableStateOf("") }
+    var manipulatedAmount by remember { mutableStateOf("") }
     var selectedFormattedDate by remember { mutableStateOf("") }
-    var description by remember {mutableStateOf("")}
-    var category by remember {mutableStateOf("")}
+    var description by remember { mutableStateOf("") }
+    var category by remember { mutableStateOf("") }
     var showAlertMessage by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
 
     var categories = viewModel.GetCategories()
 
-    Card{
+    Card {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(16.dp)
@@ -244,7 +252,7 @@ fun AddTransactionCard(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
-            ){
+            ) {
                 TextField(
                     value = description,
                     placeholder = { Text("Description", style = TextStyle(
@@ -253,6 +261,10 @@ fun AddTransactionCard(
                     )) },
                     onValueChange = { value -> description = value },
                     modifier = Modifier.weight(1F),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Text
+                    ),
                 )
             }
 
@@ -261,37 +273,45 @@ fun AddTransactionCard(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
-                    value = amount,
+                    value = manipulatedAmount,
                     placeholder = { Text("Amount", style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
-                    )) },
+                    )) }
                     onValueChange = { newValue ->
-                        if (containsOnlyNumbers(newValue)) {
-                            // Only allow numeric input and limit to two decimal places
-                            val newText =
-                                newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
-                                    ?: amount
-                            amount = newText
-                            showAlertMessage = false
-                        } else {
-                            showAlertMessage = true
-                        }
+                        // Only allow numeric input and limit to two decimal places
+                        val validatedText =
+                            newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                ?: manipulatedAmount
+                        manipulatedAmount = validatedText
+                        showAlertMessage = false
                     },
                     modifier = Modifier.width(100.dp),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
-                )
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        imeAction = ImeAction.Next,
+                        keyboardType = KeyboardType.Number
+                    ),
+
+                    )
                 category = CustomDropdownMenu(categories)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    viewModel.AddNewTransaction(
-                        Spending(category, description, selectedFormattedDate, amount.toFloat())
-                    )
-                    description=""
-                    amount=""
+                    if (description.isNotBlank() && manipulatedAmount.isNotBlank()) {
+                        amount = checkEmptyOrNullOrNegative(manipulatedAmount)
+                        viewModel.AddNewTransaction(
+                            Spending(category, description, selectedFormattedDate, amount.toFloat())
+                        )
+                        // Clear fields after adding
+                        description = ""
+                        amount = ""
+                        manipulatedAmount = ""
+                        showAlertMessage = false
+                    } else {
+                        showAlertMessage = true
+                    }
                 },
                 shape = Shapes.extraSmall
             ) {
@@ -315,7 +335,7 @@ fun AddTransactionCard(
 fun SpendingRecapList(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
-){
+) {
 
     val uiState by viewModel.uiState.collectAsState()
     val filteredList = viewModel.FilterList(uiState.spendingRecap)
@@ -347,14 +367,13 @@ fun SpendingRecapItem(
             if(category.second < limit) "$${String.format("%.2f", category.second)}"
             else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
 
-
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .height(60.dp)
-    ){
+    ) {
         Row {
             Icon(
                 imageVector = Icons.Filled.CheckCircle,
@@ -407,11 +426,11 @@ fun SpendingRecapItem(
     )
 }
 
-@Preview
-@Composable
-fun PreviewSpendingsScreen(){
-    SpendingsScreen(viewModel = AppViewModel())
-}
+//@Preview
+//@Composable
+//fun PreviewSpendingsScreen(){
+//    SpendingsScreen(viewModel = AppViewModel())
+//}
 
 @Composable
 fun DateSelectionDialog(
@@ -424,7 +443,8 @@ fun DateSelectionDialog(
 
     // Function to update the formatted date and notify the parent component about the change
     fun updateFormattedDate() {
-        formattedDate = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(selectedDateState.time)
+        formattedDate =
+            SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).format(selectedDateState.time)
         onFormattedDateChanged(formattedDate)
     }
 
