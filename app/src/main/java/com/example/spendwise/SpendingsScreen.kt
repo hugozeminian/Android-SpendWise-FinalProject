@@ -117,7 +117,7 @@ fun SpendingsScreen(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
             ), )
-            CustomDropdownMenu(listOf("Weekly", "Monthly"))
+            CustomDropdownMenu(listOf("Weekly", "Monthly"),)
         }
         Spacer(modifier = Modifier.height(8.dp))
         SpendingRecapList(viewModel)
