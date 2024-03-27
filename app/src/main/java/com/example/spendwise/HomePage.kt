@@ -182,7 +182,10 @@ fun HomePage(viewModel: AppViewModel) {
                             formatedSpentPercentageOfBudget +
                             stringResource(id = R.string.app_percentage) +
                             stringResource(id = R.string.wp_monthly_budget),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 32.sp,
+                    ),
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
