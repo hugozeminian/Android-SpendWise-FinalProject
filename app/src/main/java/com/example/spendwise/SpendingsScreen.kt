@@ -310,9 +310,17 @@ fun SpendingRecapItem(
                 else{
                     MaterialTheme.colorScheme.primary
                 },
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ),
                 modifier = Modifier.fillMaxWidth())
             Text("Weekly limit: \$" + limit.toString(),
                 textAlign = TextAlign.End,
+                style = TextStyle(
+                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                    fontSize = 16.sp,
+                ),
                 modifier = Modifier.fillMaxWidth())
         }
     }
@@ -374,7 +382,10 @@ fun DateSelectionDialog(
         Button(
             onClick = { showDatePicker(selectedDateState) },
             shape = Shapes.extraSmall) {
-            Text(text = "Select Date")
+            Text(text = "Select Date",  style = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp,
+            ),)
         }
 
         // Display the selected date
