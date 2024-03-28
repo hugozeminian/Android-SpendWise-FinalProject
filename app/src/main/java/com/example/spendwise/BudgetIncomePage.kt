@@ -209,7 +209,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
                             ),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(2f)
                         )
                         Text(
                             text = stringResource(id = R.string.bp_cat_weekly_limit) + it.weeklyLimit,
@@ -230,6 +230,8 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             )
                         }
                     }
+                    Divider( thickness = 1.dp,
+                        color = Color.Black)
                 }
             }
         }
@@ -261,7 +263,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_monthly_budget),
@@ -269,7 +271,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.alignByBaseline()
+
                 )
 
                 if (editing) {
@@ -309,7 +311,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_weekly_budget),
@@ -317,7 +319,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.alignByBaseline()
+
                 )
 
                 if (editing) {
@@ -357,7 +359,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_budget_alert),
@@ -365,7 +367,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 16.sp,
                     ),
-                    modifier = Modifier.alignByBaseline()
+
                 )
 
                 if (editing) {
@@ -465,7 +467,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                 },
                 shape = Shapes.extraSmall,
                 modifier = Modifier
-                    .padding(top = 16.dp)
+                    .padding(top = 20.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
                 Text(text = if (editing) stringResource(id = R.string.bp_button_save) else stringResource(id = R.string.bp_button_edit), style = TextStyle(
@@ -653,7 +655,8 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(top = 8.dp, start = 16.dp)
+                                .padding(bottom = 12.dp, top = 16.dp)
+
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
@@ -663,15 +666,16 @@ fun RewardsInfo(viewModel: AppViewModel) {
                                 fontSize = 13.sp,
                             ),
                             modifier = Modifier
-                                .weight(0.5f)
-                                .padding(top = 8.dp, end = 16.dp),
+                                .weight(0.2f)
+                                .padding(bottom = 16.dp),
 
                             )
                         IconButton(
                             onClick = {
                                 viewModel.RemoveRewardItem(it)
                             },
-                            modifier = Modifier.size(24.dp)
+                            modifier = Modifier.size(40.dp)
+                                .padding(bottom = 16.dp)
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Delete,
@@ -679,6 +683,8 @@ fun RewardsInfo(viewModel: AppViewModel) {
                             )
                         }
                     }
+                    Divider( thickness = 1.dp,
+                        color = Color.Black)
                 }
             }
         }
