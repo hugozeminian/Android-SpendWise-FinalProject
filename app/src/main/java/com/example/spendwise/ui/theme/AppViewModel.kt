@@ -261,10 +261,12 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun RemoveSpendingsCategoriesItem(index: Int) {
+    fun RemoveSpendingsCategoriesItem(
+        index: SpendingsCategories
+    ) {
         _uiState.update { currentState ->
             val updatedList = currentState.spendingsCategoriesList.toMutableList()
-            updatedList.removeAt(index)
+            updatedList.remove(index)
             currentState.copy(spendingsCategoriesList = updatedList)
         }
     }

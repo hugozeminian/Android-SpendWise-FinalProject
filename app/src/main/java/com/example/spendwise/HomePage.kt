@@ -74,11 +74,6 @@ fun HomePage(viewModel: AppViewModel) {
             .padding(8.dp)
             .verticalScroll(rememberScrollState())
     ) {
-
-        Text("Budget Alert ${budgetAlert}")
-        Text("Budget ${budget}")
-        Text("Total spending month ${totalOfSpendingMounth}")
-        Text("Total spending week ${totalOfSpendingWeek}")
         Text(
             text = stringResource(id = R.string.wp_welcome_text) + uiState.loggedUser.username,
             style = TextStyle(

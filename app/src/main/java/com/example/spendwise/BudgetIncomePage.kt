@@ -50,7 +50,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
     var manipulatedWeeklyLimit by remember { mutableStateOf("") }
 
     // Maintain state for the list of spending categories
-    var spendingCategories by remember { mutableStateOf(uiState.spendingsCategoriesList) }
+    val spendingCategories = uiState.spendingsCategoriesList
 
     // Manage scroll state
     val lazyListState = rememberLazyListState()
@@ -114,8 +114,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                                 weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
                                 val newCategory =
                                     SpendingsCategories(categoryName, weeklyLimit.toFloat())
-
-                                spendingCategories = uiState.spendingsCategoriesList + newCategory
                                 viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -144,7 +142,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 // Clear All Button
                 Button(
                     onClick = {
-                        spendingCategories = emptyList()
                         viewModel.RemoveAllSpendingsCategoriesItem()
                     },
                     shape = Shapes.extraSmall,
@@ -166,8 +163,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
                             val newCategory =
                                 SpendingsCategories(categoryName, weeklyLimit.toFloat())
-
-                            spendingCategories = uiState.spendingsCategoriesList + newCategory
                             viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -200,20 +195,17 @@ fun SpendingsCategories(viewModel: AppViewModel) {
             Spacer(modifier = Modifier.height(8.dp))
 
             // Display list of spendings categories.
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 200.dp),  // Limit the height for scrolling
-                state = lazyListState
+                    .fillMaxWidth() // Limit the height for scrolling
             ) {
-                items(spendingCategories.size) { index ->
-                    val category = spendingCategories[index]
+                spendingCategories.map {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = category.name,
+                            text = it.name,
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
@@ -221,7 +213,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = stringResource(id = R.string.bp_cat_weekly_limit) + category.weeklyLimit,
+                            text = stringResource(id = R.string.bp_cat_weekly_limit) + it.weeklyLimit,
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
@@ -230,10 +222,8 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         )
                         IconButton(
                             onClick = {
-                                // Remove the spending category from the list
-                                spendingCategories =
-                                    spendingCategories.filterIndexed { i, _ -> i != index }
-                                viewModel.RemoveSpendingsCategoriesItem(index)
+// Remove the spending category from the list
+                                viewModel.RemoveSpendingsCategoriesItem(it)
                             }
                         ) {
                             Icon(
