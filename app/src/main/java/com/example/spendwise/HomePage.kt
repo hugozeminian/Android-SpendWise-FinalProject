@@ -147,8 +147,8 @@ fun HomePage(viewModel: AppViewModel) {
         Divider()
 
         Card(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
-            colors = cardColorsWeek
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            colors = cardColorsWeek,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -163,14 +163,14 @@ fun HomePage(viewModel: AppViewModel) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 32.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
         }
 
         Card(
-            modifier = Modifier.padding(top = 8.dp),
-            colors = cardColorsMonth
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            colors = cardColorsMonth,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -185,7 +185,7 @@ fun HomePage(viewModel: AppViewModel) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 32.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 12.dp)
+                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
         }
