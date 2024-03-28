@@ -147,7 +147,8 @@ fun HomePage(viewModel: AppViewModel) {
         Divider()
 
         Card(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(0.9f).align(Alignment.CenterHorizontally)
+            ,
             colors = cardColorsWeek,
         ) {
             Column(
@@ -169,7 +170,7 @@ fun HomePage(viewModel: AppViewModel) {
         }
 
         Card(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(),
+            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(0.9f).align(Alignment.CenterHorizontally),
             colors = cardColorsMonth,
         ) {
             Column(
