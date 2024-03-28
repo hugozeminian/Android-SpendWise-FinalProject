@@ -21,6 +21,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -71,7 +72,10 @@ fun LoginPage(
                 .fillMaxWidth()
                 .height(200.dp)
                 .padding(bottom = 5.dp)
+                .clip(shape=  RoundedCornerShape(20.dp))
+
         )
+
 
         Text(
             text = stringResource(id = R.string.subtitle),

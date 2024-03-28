@@ -375,10 +375,6 @@ fun SpendingRecapItem(
             .height(60.dp)
     ) {
         Row {
-            Icon(
-                imageVector = Icons.Filled.CheckCircle,
-                contentDescription = ""
-            )
             Text(category.first, style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,

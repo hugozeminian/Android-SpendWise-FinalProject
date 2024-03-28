@@ -112,8 +112,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                                 weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
                                 val newCategory =
                                     SpendingsCategories(categoryName, weeklyLimit.toFloat())
-
-                                //spendingCategories = uiState.spendingsCategoriesList + newCategory
+                                    
                                 viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -142,7 +141,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 // Clear All Button
                 Button(
                     onClick = {
-                        //spendingCategories = emptyList()
                         viewModel.RemoveAllSpendingsCategoriesItem()
                     },
                     shape = Shapes.extraSmall,
@@ -164,8 +162,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
                             val newCategory =
                                 SpendingsCategories(categoryName, weeklyLimit.toFloat())
-
-                            //spendingCategories = uiState.spendingsCategoriesList + newCategory
                             viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -225,7 +221,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         )
                         IconButton(
                             onClick = {
-                                // Remove the spending category from the list
                                 viewModel.RemoveSpendingsCategoriesItem(it)
                             }
                         ) {
