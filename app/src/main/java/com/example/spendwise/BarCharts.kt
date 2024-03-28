@@ -36,13 +36,6 @@ fun VerticalBarsChart(
 ) {
 
     val context = LocalContext.current
-
-    // BarGraph Dimensions
-    val barGraphHeight by remember { mutableStateOf(200.dp) }
-    val barGraphWidth by remember { mutableStateOf(25.dp) }
-    // Scale Dimensions
-    val scaleYAxisWidth by remember { mutableStateOf(40.dp) }
-
     var maxValue: Float
 
     if(data.isEmpty()){
@@ -70,7 +63,7 @@ fun VerticalBarsChart(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(barGraphHeight),
+                .height(200.dp),
             verticalAlignment = Alignment.Bottom,
             horizontalArrangement = Arrangement.Start
         ) {
@@ -90,7 +83,7 @@ fun VerticalBarsChart(
                             Text("$${String.format("%.1f", it.value)}")
                             Box(
                                 modifier = Modifier
-                                    .width(barGraphWidth)
+                                    .width(25.dp)
                                     .fillMaxHeight(it.value / maxValue.toFloat())
                                     .background(color = MaterialTheme.colorScheme.primary)
                                     .clickable {
@@ -155,7 +148,6 @@ fun HorizontalBarsChart(
     data: Map<String, Float>
 ){
     val context = LocalContext.current
-
     val maxValue = data.values.max()
 
     Column {
@@ -224,7 +216,7 @@ fun HorizontalBarsChart(
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
-                    .padding(start = 56.dp)
+                    .padding(start = 68.dp)
                     .fillMaxWidth()
             ){
                 var range = maxValue / 5

@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.spendwise.ui.theme.AppViewModel
+import com.example.spendwise.ui.theme.Shapes
 
 @Composable
 fun LoginPage(

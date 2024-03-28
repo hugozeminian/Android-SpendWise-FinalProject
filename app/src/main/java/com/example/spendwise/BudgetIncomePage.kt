@@ -1,7 +1,6 @@
 package com.example.spendwise
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,20 +12,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -114,6 +112,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                                 weeklyLimit = checkEmptyOrNullOrNegative(manipulatedWeeklyLimit)
                                 val newCategory =
                                     SpendingsCategories(categoryName, weeklyLimit.toFloat())
+                                    
                                 viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -222,7 +221,6 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         )
                         IconButton(
                             onClick = {
-// Remove the spending category from the list
                                 viewModel.RemoveSpendingsCategoriesItem(it)
                             }
                         ) {
@@ -497,8 +495,8 @@ fun RewardsInfo(viewModel: AppViewModel) {
     var manipulatedAmountText by remember { mutableStateOf("") }
 
     // Calculate the total sum of amounts
-    var totalAmount by remember { mutableStateOf(0.0) }
-    totalAmount = uiState.rewardsList.map { it.amount.toDoubleOrNull() ?: 0.0 }.sum()
+    var totalAmount by remember { mutableDoubleStateOf(0.0) }
+    totalAmount = uiState.rewardsList.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
@@ -643,7 +641,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                uiState.rewardsList.map { it ->
+                uiState.rewardsList.map {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {

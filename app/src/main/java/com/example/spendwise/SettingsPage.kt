@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.spendwise.ui.theme.AppViewModel
 
 
@@ -70,7 +71,6 @@ fun SettingPage(
         )
 
         Spacer(modifier = Modifier.width(15.dp))
-
 
         Column(
             modifier = Modifier
@@ -168,4 +168,13 @@ fun SettingPage(
                 }
         }
     }
+}
+
+@Preview
+@Composable
+fun ShowSeetingsPage(){
+    SettingPage(
+        AppViewModel(),
+        {}
+    )
 }

@@ -103,7 +103,7 @@ class AppViewModel: ViewModel(){
         val info: Map<String,Float> = mapOf(
             Pair("Income", _uiState.value.income),
             Pair("Budget", _uiState.value.monthlyBudget),
-            Pair("Spendings", GetTotalSpendings()),
+            Pair("Spendings", GetTotalSpendingsMounth()),
         )
         return info
     }
