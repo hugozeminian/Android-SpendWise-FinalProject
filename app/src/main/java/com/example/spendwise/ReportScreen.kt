@@ -74,19 +74,19 @@ fun WeeklyReport(
             stringResource(id = R.string.report_screen_title),
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 32.sp,
+                fontSize = 25.sp,
             ),
             modifier = Modifier.padding(16.dp))
         VerticalBarsChart(dataSorted)
         Spacer(modifier = Modifier.height(10.dp))
         Text(stringResource(id = R.string.spent_week), style = TextStyle(
             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-            fontSize = 25.sp,
+            fontSize = 20.sp,
         ))
         Text("$${String.format("%.1f", totalSpendings)}/$${uiState.weeklyBudget}",
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 25.sp,
+                fontSize = 20.sp,
             )
         )
         Spacer(modifier = Modifier.height(10.dp))
@@ -115,28 +115,36 @@ fun MonthProjectionReport(
     Spacer(modifier = Modifier.height(25.dp))
     Text(stringResource(id = R.string.spent_month2), style = TextStyle(
           fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-          fontSize = 25.sp)
+          fontSize = 20.sp)
         )
     Text("$${String.format("%.1f", totalSpendings)}/$${uiState.monthlyBudget}",
         style = TextStyle(
             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-            fontSize = 25.sp,
+            fontSize = 20.sp,
           )
     )
-    Text(stringResource(id = R.string.spent_month_budget))
+    Text(stringResource(id = R.string.spent_month_budget),
+        style = TextStyle(
+            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+            fontSize = 16.sp,
+        ))
     Spacer(modifier = Modifier.height(8.dp))
-    Text(stringResource(id = R.string.saved_percentage))
+    Text(stringResource(id = R.string.saved_percentage),
+        style = TextStyle(
+        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+        fontSize = 16.sp,
+    ))
     Text(text = "${String.format("%.1f", (100 - totalPercentage))}%",
         style = TextStyle(
             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-            fontSize = 25.sp,
+            fontSize = 20.sp,
         ),
         color = MaterialTheme.colorScheme.primary,
         fontWeight = FontWeight.SemiBold
     )
     Text(stringResource(id = R.string.saved_from_income), style = TextStyle(
         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-        fontSize = 25.sp,
+        fontSize = 16.sp,
     ))
     Spacer(modifier = Modifier.height(50.dp))
 }

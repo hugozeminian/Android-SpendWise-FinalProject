@@ -55,8 +55,7 @@ fun SettingPage(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 26.dp)
-            .wrapContentHeight(align = Alignment.CenterVertically),
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -89,6 +88,7 @@ fun SettingPage(
 
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 TextField(
@@ -126,7 +126,6 @@ fun SettingPage(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Spacer(modifier = Modifier.width(8.dp))
                 Text(
                     text = stringResource(id = R.string.edit_darkMode),
                     style = TextStyle(
@@ -172,7 +171,7 @@ fun SettingPage(
 
 @Preview
 @Composable
-fun ShowSeetingsPage(){
+fun ShowSettingsPage(){
     SettingPage(
         AppViewModel(),
         {}

@@ -62,6 +62,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
 import com.example.spendwise.data.checkEmptyOrNullOrNegative
 import com.example.spendwise.model.RewardItem
@@ -93,7 +94,7 @@ fun SpendingsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(dimensionResource(id = R.dimen.padding_medium))
             .verticalScroll(rememberScrollState())
     ) {
         Text(
