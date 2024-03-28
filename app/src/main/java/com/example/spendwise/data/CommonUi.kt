@@ -40,6 +40,9 @@ fun CustomDropdownMenu(
         onExpandedChange = { isExpanded = !isExpanded}
     ) {
         TextField(
+            textStyle = TextStyle(
+                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                fontSize = 16.sp),
             modifier = Modifier
                 .menuAnchor()
                 .width(180.dp),

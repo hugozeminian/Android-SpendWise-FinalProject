@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -71,7 +72,7 @@ fun HomePage(viewModel: AppViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp)
+            .padding(dimensionResource(id = R.dimen.padding_medium))
             .verticalScroll(rememberScrollState())
     ) {
         Text(
@@ -81,7 +82,7 @@ fun HomePage(viewModel: AppViewModel) {
                 fontSize = 32.sp,
                 textDecoration = TextDecoration.Underline
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
         Text(
             text = stringResource(id = R.string.wp_you_spent),
@@ -90,7 +91,7 @@ fun HomePage(viewModel: AppViewModel) {
                 fontSize = 16.sp,
 
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
         Text(
             text = stringResource(id = R.string.app_money_icon) +
@@ -102,7 +103,7 @@ fun HomePage(viewModel: AppViewModel) {
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 32.sp,
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
         Text(
             text = stringResource(id = R.string.wp_weekly_budget),
@@ -110,7 +111,7 @@ fun HomePage(viewModel: AppViewModel) {
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
 
         Divider()
@@ -121,7 +122,9 @@ fun HomePage(viewModel: AppViewModel) {
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
             ),
-            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+            modifier = Modifier.padding(
+                top = dimensionResource(id = R.dimen.padding_small),
+                bottom = dimensionResource(id = R.dimen.padding_small))
         )
         Text(
             text = stringResource(id = R.string.app_money_icon) +
@@ -133,7 +136,7 @@ fun HomePage(viewModel: AppViewModel) {
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 32.sp,
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
         Text(
             text = stringResource(id = R.string.wp_monthly_budget),
@@ -141,13 +144,16 @@ fun HomePage(viewModel: AppViewModel) {
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
             ),
-            modifier = Modifier.padding(bottom = 8.dp)
+            modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_small))
         )
 
         Divider()
 
         Card(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(0.9f).align(Alignment.CenterHorizontally)
+            modifier = Modifier
+                .padding(top = 16.dp)
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally)
             ,
             colors = cardColorsWeek,
         ) {
@@ -164,18 +170,20 @@ fun HomePage(viewModel: AppViewModel) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 32.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
         }
 
         Card(
-            modifier = Modifier.padding(top = 16.dp).fillMaxWidth(0.9f).align(Alignment.CenterHorizontally),
+            modifier = Modifier
+                .padding(top = dimensionResource(id = R.dimen.padding_medium))
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
             colors = cardColorsMonth,
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
             ) {
                 Text(
                     text = stringResource(id = R.string.wp_you_spent) +
@@ -186,7 +194,6 @@ fun HomePage(viewModel: AppViewModel) {
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                         fontSize = 32.sp,
                     ),
-                    modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
         }
@@ -200,85 +207,84 @@ fun PreviewHomePage() {
     HomePage(viewModel)
 }
 
-@Composable
-fun SpendingList(viewModel: AppViewModel, uiState: AppUiState) {
-    var ascending by remember { mutableStateOf(true) }
-    val sortedList = viewModel.getSortedSpendingList(ascending, uiState)
+//@Composable
+//fun SpendingList(viewModel: AppViewModel, uiState: AppUiState) {
+//    var ascending by remember { mutableStateOf(true) }
+//    val sortedList = viewModel.getSortedSpendingList(ascending, uiState)
+//
+//    Card(modifier = Modifier.padding(top = 8.dp)) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+//                Switch(checked = ascending, onCheckedChange = { ascending = it })
+//            }
+//            LazyColumn {
+//                items(sortedList) { spending ->
+//                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+//                }
+//            }
+//        }
+//    }
+//}
 
-    Card(modifier = Modifier.padding(top = 8.dp)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
-                Switch(checked = ascending, onCheckedChange = { ascending = it })
-            }
-            LazyColumn {
-                items(sortedList) { spending ->
-                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
-                }
-            }
-        }
-    }
+//@Composable
+//fun SpendingListForCurrentMonth(viewModel: AppViewModel, uiState: AppUiState) {
+//    var ascending by remember { mutableStateOf(true) }
+//    val currentMonth = Spending.getCurrentMonth()
+//    val spendingsForCurrentMonth = viewModel.getSortedSpendingsForMonth(currentMonth, ascending, uiState)
+//
+//    Card(modifier = Modifier.padding(top = 8.dp)) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+//                Switch(checked = ascending, onCheckedChange = { ascending = it })
+//            }
+//            Text("Spending for Current Month", modifier = Modifier.padding(bottom = 8.dp))
+//            LazyColumn {
+//                items(spendingsForCurrentMonth) { spending ->
+//                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
-}
-
-@Composable
-fun SpendingListForCurrentMonth(viewModel: AppViewModel, uiState: AppUiState) {
-    var ascending by remember { mutableStateOf(true) }
-    val currentMonth = Spending.getCurrentMonth()
-    val spendingsForCurrentMonth = viewModel.getSortedSpendingsForMonth(currentMonth, ascending, uiState)
-
-    Card(modifier = Modifier.padding(top = 8.dp)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
-                Switch(checked = ascending, onCheckedChange = { ascending = it })
-            }
-            Text("Spending for Current Month", modifier = Modifier.padding(bottom = 8.dp))
-            LazyColumn {
-                items(spendingsForCurrentMonth) { spending ->
-                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
-                }
-            }
-        }
-    }
-
-}
-
-@Composable
-fun SpendingListForCurrentWeek(viewModel: AppViewModel, uiState: AppUiState) {
-    var ascending by remember { mutableStateOf(true) }
-    val calendar = Calendar.getInstance()
-    val weekDays = Spending.getWeekDays(calendar)
-    val spendingsForCurrentWeek = viewModel.getSortedSpendingsForWeek(weekDays, calendar, ascending, uiState)
-
-    Card(modifier = Modifier.padding(top = 8.dp)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
-                Switch(checked = ascending, onCheckedChange = { ascending = it })
-            }
-            Text("Spending for Current Week", modifier = Modifier.padding(bottom = 8.dp))
-            LazyColumn {
-                items(spendingsForCurrentWeek) { spending ->
-                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
-                }
-            }
-        }
-    }
-
-}
+//@Composable
+//fun SpendingListForCurrentWeek(viewModel: AppViewModel, uiState: AppUiState) {
+//    var ascending by remember { mutableStateOf(true) }
+//    val calendar = Calendar.getInstance()
+//    val weekDays = Spending.getWeekDays(calendar)
+//    val spendingsForCurrentWeek = viewModel.getSortedSpendingsForWeek(weekDays, calendar, ascending, uiState)
+//
+//    Card(modifier = Modifier.padding(top = 8.dp)) {
+//        Column(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(16.dp)
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Text("Sort by Date:", modifier = Modifier.padding(end = 8.dp))
+//                Switch(checked = ascending, onCheckedChange = { ascending = it })
+//            }
+//            Text("Spending for Current Week", modifier = Modifier.padding(bottom = 8.dp))
+//            LazyColumn {
+//                items(spendingsForCurrentWeek) { spending ->
+//                    Text("${spending.category} - ${spending.date} - ${spending.amount}")
+//                }
+//            }
+//        }
+//    }
+//
+//}
 
 @Composable
 fun getCardColors(

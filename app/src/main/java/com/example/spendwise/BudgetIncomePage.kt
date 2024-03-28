@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -19,6 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.TextStyle
@@ -55,11 +57,9 @@ fun SpendingsCategories(viewModel: AppViewModel) {
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
-    Card(
-        modifier = Modifier.padding(8.dp)
-    ) {
+    Card(){
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Text(
                 text = stringResource(id = R.string.bp_spendings_categories),
@@ -77,7 +77,9 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 TextField(
                     value = categoryName,
                     onValueChange = { categoryName = it },
-                    label = { Text(text = "Name") },
+                    label = { Text(text = "Name",style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp)) },
                     keyboardOptions = KeyboardOptions.Default.copy(
                         imeAction = ImeAction.Next,
                         keyboardType = KeyboardType.Text
@@ -85,7 +87,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     modifier = Modifier.weight(1f)
                 )
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_medium)))
 
                 TextField(                   
                     value = manipulatedWeeklyLimit,
@@ -126,12 +128,15 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             }
                         }
                     ),
-                    label = { Text(stringResource(id = R.string.bp_cat_weekly_limit)) },
+                    label = { Text(stringResource(id = R.string.bp_cat_weekly_limit),
+                        style = TextStyle(
+                        fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                        fontSize = 16.sp)) },
                     modifier = Modifier.weight(1f)
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
 
             // Clear All and Add Buttons
             Row(
@@ -152,7 +157,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                     ))
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_medium)))
 
                 // Add Button
                 Button(
@@ -191,7 +196,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 NumericAlertMessage(showAlertMessage)
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
 
             // Display list of spendings categories.
             Column(
@@ -201,7 +206,9 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 spendingCategories.map {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(50.dp)
                     ) {
                         Text(
                             text = it.name,
@@ -219,16 +226,14 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             ),
                             modifier = Modifier.weight(1f)
                         )
-                        IconButton(
-                            onClick = {
+                        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
+                        Icon(
+                            imageVector = Icons.Default.Delete,
+                            contentDescription = "Delete",
+                            modifier = Modifier.clickable {
                                 viewModel.RemoveSpendingsCategoriesItem(it)
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
-                            )
-                        }
+                        )
                     }
                     Divider( thickness = 1.dp,
                         color = Color.Black)
@@ -255,15 +260,17 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
     var showAlertMessage by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_medium))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_monthly_budget),
@@ -275,27 +282,27 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                 )
 
                 if (editing) {
-                    TextField(
-                        value = manipulatedMonthlyBudget,
-                        onValueChange = { newValue ->
-                            if (containsOnlyNumbers(newValue)) {
-                                // Only allow numeric input and limit to two decimal places
-                                val validatedText =
-                                    newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
-                                        ?: manipulatedMonthlyBudget
-                                manipulatedMonthlyBudget = validatedText
-                                showAlertMessage = false
-                            }else {
-                                showAlertMessage = true
-                            }
-                        },
-                        keyboardOptions = KeyboardOptions.Default.copy(
-                            imeAction = ImeAction.Next,
-                            keyboardType = KeyboardType.Number
-                        ),
-                        label = { Text(text = "") },
-                        modifier = Modifier.align(Alignment.CenterVertically)
-                    )
+                        TextField(
+                            value = manipulatedMonthlyBudget,
+                            onValueChange = { newValue ->
+                                if (containsOnlyNumbers(newValue)) {
+                                    // Only allow numeric input and limit to two decimal places
+                                    val validatedText =
+                                        newValue.takeIf { text -> text.matches(Regex("^\\d*\\.?\\d{0,2}$")) }
+                                            ?: manipulatedMonthlyBudget
+                                    manipulatedMonthlyBudget = validatedText
+                                    showAlertMessage = false
+                                } else {
+                                    showAlertMessage = true
+                                }
+                            },
+                            keyboardOptions = KeyboardOptions.Default.copy(
+                                imeAction = ImeAction.Next,
+                                keyboardType = KeyboardType.Number
+                            ),
+                            label = { Text(text = "",) },
+                            modifier = Modifier.align(Alignment.CenterVertically)
+                        )
                 } else {
                     Text(
                         text = "$$monthlyBudget",
@@ -311,7 +318,9 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_weekly_budget),
@@ -359,7 +368,9 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().height(50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.bp_budget_alert),
@@ -421,7 +432,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                     )
                 } else {
                     Text(
-                        text = "%$budgetAlert",
+                        text = "$budgetAlert%",
                         style = TextStyle(
                             fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                             fontSize = 16.sp,
@@ -435,7 +446,7 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                 Text(
                     text = "Error, Your monthly budget and/or weekly budget exceeds your current income!",
                     color = Color.Red,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                    modifier = Modifier.padding(vertical = dimensionResource(id = R.dimen.padding_small))
                 )
             }
 
@@ -503,10 +514,10 @@ fun RewardsInfo(viewModel: AppViewModel) {
     var showAlertMessage by remember { mutableStateOf(false) }
 
     Card(
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_medium))
     ) {
         Column(
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
         ) {
             Text(
                 text = "Rewards Balance: $${"%.2f".format(totalAmount)}",
@@ -537,7 +548,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     ),
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(end = dimensionResource(id = R.dimen.padding_small)),
                     singleLine = true
                 )
 
@@ -576,13 +587,12 @@ fun RewardsInfo(viewModel: AppViewModel) {
                         }
                     ),
                     modifier = Modifier
-                        .weight(1f)
-                        .padding(end = 8.dp),
+                        .weight(1f),
                     singleLine = true,
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_small)))
 
             // Clear All and Add Buttons Row
             Row(
@@ -598,7 +608,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     shape = Shapes.extraSmall,
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp)
+                        .padding(end = dimensionResource(id = R.dimen.padding_small))
                 ) {
                     Text(stringResource(id = R.string.bp_button_clear_all), style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
@@ -644,54 +654,53 @@ fun RewardsInfo(viewModel: AppViewModel) {
                     .fillMaxSize()
             ) {
                 uiState.rewardsList.map {
+
                     Row(
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(40.dp)
                     ) {
                         Text(
                             text = it.description,
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
-                            ),
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(bottom = 12.dp, top = 16.dp)
-
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(
-                            text = "$${"%.2f".format(it.amount.toDoubleOrNull() ?: 0.0)}",
-                            style = TextStyle(
-                                fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                                fontSize = 13.sp,
-                            ),
-                            modifier = Modifier
-                                .weight(0.2f)
-                                .padding(bottom = 16.dp),
-
                             )
-                        IconButton(
-                            onClick = {
-                                viewModel.RemoveRewardItem(it)
-                            },
-                            modifier = Modifier.size(40.dp)
-                                .padding(bottom = 16.dp)
+                        )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.End
                         ) {
+                            Text(
+                                text = "$${"%.2f".format(it.amount.toDoubleOrNull() ?: 0.0)}",
+                                style = TextStyle(
+                                    fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                                    fontSize = 13.sp,
+                                )
+                            )
+                            Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.padding_small)))
                             Icon(
                                 imageVector = Icons.Default.Delete,
-                                contentDescription = "Delete"
+                                contentDescription = "Delete",
+                                modifier = Modifier.clickable {
+                                    viewModel.RemoveRewardItem(it)
+                                }
                             )
                         }
                     }
-                    Divider( thickness = 1.dp,
-                        color = Color.Black)
+                    Divider(
+                        thickness = 1.dp,
+                        color = Color.Black
+                    )
                 }
             }
         }
     }
-
-
 }
+
+
 
 
 @Composable
@@ -707,14 +716,14 @@ fun BudgetInformation(viewModel: AppViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
         item {
             Card(
-                modifier = Modifier.padding(8.dp)
+                modifier = Modifier.padding(bottom = dimensionResource(id = R.dimen.padding_medium))
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_medium))
                 ) {
                     Text(text = stringResource(id = R.string.bp_monthly_income), style = TextStyle(
                         fontFamily = FontFamily(Font(R.font.montserrat_regular)),
@@ -751,9 +760,12 @@ fun BudgetInformation(viewModel: AppViewModel) {
                             modifier = Modifier.padding(vertical = 4.dp)
                         )
                     } else {
-                        Text(text = "$$incomeText", style = MaterialTheme.typography.bodyLarge)
+                        Text(text = "$$incomeText", style = TextStyle(
+                            fontFamily = FontFamily(Font(R.font.montserrat_regular)),
+                            fontSize = 16.sp,
+                        ))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(dimensionResource(id = R.dimen.padding_medium)))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center

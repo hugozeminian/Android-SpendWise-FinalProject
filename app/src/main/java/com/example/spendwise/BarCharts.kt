@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -57,9 +58,9 @@ fun VerticalBarsChart(
         Text(text = stringResource(id = R.string.weekly_graph_title),
             style = TextStyle(
                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                fontSize = 25.sp,
+                fontSize = 20.sp,
             ),
-            modifier = Modifier.padding(10.dp))
+            modifier = Modifier.padding(dimensionResource(id = R.dimen.padding_small)))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -160,7 +161,7 @@ fun HorizontalBarsChart(
             Text(text = stringResource(id = R.string.monthly_graph_title),
                 style = TextStyle(
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
-                    fontSize = 25.sp,
+                    fontSize = 20.sp,
                 ),
                 modifier = Modifier.padding(10.dp))
             Row{
@@ -198,7 +199,12 @@ fun HorizontalBarsChart(
                                             Toast
                                                 .makeText(
                                                     context,
-                                                    "${it.key}: \$${String.format("%.2f", it.value)}",
+                                                    "${it.key}: \$${
+                                                        String.format(
+                                                            "%.2f",
+                                                            it.value
+                                                        )
+                                                    }",
                                                     Toast.LENGTH_SHORT
                                                 )
                                                 .show()
