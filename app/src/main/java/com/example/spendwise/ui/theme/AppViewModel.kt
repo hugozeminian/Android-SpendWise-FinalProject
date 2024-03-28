@@ -103,7 +103,7 @@ class AppViewModel: ViewModel(){
         val info: Map<String,Float> = mapOf(
             Pair("Income", _uiState.value.income),
             Pair("Budget", _uiState.value.monthlyBudget),
-            Pair("Spendings", GetTotalSpendings()),
+            Pair("Spendings", GetTotalSpendingsMounth()),
         )
         return info
     }
@@ -261,10 +261,12 @@ class AppViewModel: ViewModel(){
         }
     }
 
-    fun RemoveSpendingsCategoriesItem(index: Int) {
+    fun RemoveSpendingsCategoriesItem(
+        index: SpendingsCategories
+    ) {
         _uiState.update { currentState ->
             val updatedList = currentState.spendingsCategoriesList.toMutableList()
-            updatedList.removeAt(index)
+            updatedList.remove(index)
             currentState.copy(spendingsCategoriesList = updatedList)
         }
     }

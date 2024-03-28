@@ -1,7 +1,6 @@
 package com.example.spendwise
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -13,20 +12,19 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -50,7 +48,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
     var manipulatedWeeklyLimit by remember { mutableStateOf("") }
 
     // Maintain state for the list of spending categories
-    var spendingCategories by remember { mutableStateOf(uiState.spendingsCategoriesList) }
+    val spendingCategories = uiState.spendingsCategoriesList
 
     // Manage scroll state
     val lazyListState = rememberLazyListState()
@@ -115,7 +113,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                                 val newCategory =
                                     SpendingsCategories(categoryName, weeklyLimit.toFloat())
 
-                                spendingCategories = uiState.spendingsCategoriesList + newCategory
+                                //spendingCategories = uiState.spendingsCategoriesList + newCategory
                                 viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -144,7 +142,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                 // Clear All Button
                 Button(
                     onClick = {
-                        spendingCategories = emptyList()
+                        //spendingCategories = emptyList()
                         viewModel.RemoveAllSpendingsCategoriesItem()
                     },
                     shape = Shapes.extraSmall,
@@ -167,7 +165,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             val newCategory =
                                 SpendingsCategories(categoryName, weeklyLimit.toFloat())
 
-                            spendingCategories = uiState.spendingsCategoriesList + newCategory
+                            //spendingCategories = uiState.spendingsCategoriesList + newCategory
                             viewModel.AddSpendingsCategoriesItem(newCategory)
 
 
@@ -200,20 +198,17 @@ fun SpendingsCategories(viewModel: AppViewModel) {
             Spacer(modifier = Modifier.height(8.dp))
 
             // Display list of spendings categories.
-            LazyColumn(
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 200.dp),  // Limit the height for scrolling
-                state = lazyListState
+                    .fillMaxWidth() // Limit the height for scrolling
             ) {
-                items(spendingCategories.size) { index ->
-                    val category = spendingCategories[index]
+                spendingCategories.map {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Text(
-                            text = category.name,
+                            text = it.name,
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
@@ -221,7 +216,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                             modifier = Modifier.weight(1f)
                         )
                         Text(
-                            text = stringResource(id = R.string.bp_cat_weekly_limit) + category.weeklyLimit,
+                            text = stringResource(id = R.string.bp_cat_weekly_limit) + it.weeklyLimit,
                             style = TextStyle(
                                 fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                                 fontSize = 13.sp,
@@ -231,9 +226,7 @@ fun SpendingsCategories(viewModel: AppViewModel) {
                         IconButton(
                             onClick = {
                                 // Remove the spending category from the list
-                                spendingCategories =
-                                    spendingCategories.filterIndexed { i, _ -> i != index }
-                                viewModel.RemoveSpendingsCategoriesItem(index)
+                                viewModel.RemoveSpendingsCategoriesItem(it)
                             }
                         ) {
                             Icon(
@@ -507,8 +500,8 @@ fun RewardsInfo(viewModel: AppViewModel) {
     var manipulatedAmountText by remember { mutableStateOf("") }
 
     // Calculate the total sum of amounts
-    var totalAmount by remember { mutableStateOf(0.0) }
-    totalAmount = uiState.rewardsList.map { it.amount.toDoubleOrNull() ?: 0.0 }.sum()
+    var totalAmount by remember { mutableDoubleStateOf(0.0) }
+    totalAmount = uiState.rewardsList.sumOf { it.amount.toDoubleOrNull() ?: 0.0 }
 
     var showAlertMessage by remember { mutableStateOf(false) }
 
@@ -653,7 +646,7 @@ fun RewardsInfo(viewModel: AppViewModel) {
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                uiState.rewardsList.map { it ->
+                uiState.rewardsList.map {
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {

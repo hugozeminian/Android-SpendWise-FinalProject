@@ -407,7 +407,7 @@ fun SpendingRecapItem(
                     modifier = Modifier.fillMaxWidth())
             }
             else if(uiState.spendingRecap == "Monthly"){
-                Text("$${category.second}",
+                Text("$${String.format("%.2f", category.second)}",
                     textAlign = TextAlign.End,
                     color = MaterialTheme.colorScheme.primary,
                      style = TextStyle(
@@ -426,11 +426,11 @@ fun SpendingRecapItem(
     )
 }
 
-//@Preview
-//@Composable
-//fun PreviewSpendingsScreen(){
-//    SpendingsScreen(viewModel = AppViewModel())
-//}
+@Preview
+@Composable
+fun PreviewSpendingsScreen(){
+    SpendingsScreen(viewModel = AppViewModel())
+}
 
 @Composable
 fun DateSelectionDialog(

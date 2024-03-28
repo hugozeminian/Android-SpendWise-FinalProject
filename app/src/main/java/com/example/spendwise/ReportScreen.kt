@@ -63,7 +63,7 @@ fun WeeklyReport(
 {
 
     val uiState by viewModel.uiState.collectAsState()
-    var totalSpendings = viewModel.GetTotalSpendings()
+    var totalSpendings = viewModel.GetTotalSpendingsWeek()
     var data = viewModel.FilterList("Weekly")
     val dataSorted = viewModel.SortByDescendingSpendings(data)
 
@@ -108,7 +108,7 @@ fun MonthProjectionReport(
 
     val uiState by viewModel.uiState.collectAsState()
 
-    var totalSpendings = viewModel.GetTotalSpendings()
+    var totalSpendings = viewModel.GetTotalSpendingsMounth()
     var totalPercentage = (totalSpendings * 100)/uiState.income
 
     HorizontalBarsChart(viewModel.GetMonthlyReport())
