@@ -31,14 +31,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+//Takes a map containing the category and its value and displays a vertical bars graph
 @Composable
 fun VerticalBarsChart(
     data: Map<String, Float>,
 ) {
 
     val context = LocalContext.current
-    var maxValue: Float
 
+    //All bars are based in the highest number bar
+    var maxValue: Float //Get the max value from map
+
+    //Checker to avoid program crashes with empty list
     if(data.isEmpty()){
         maxValue = 0F
     }
@@ -46,6 +50,7 @@ fun VerticalBarsChart(
         maxValue = data.values.max()
     }
 
+    //Padding surrounding all sides
     val globalPadding = 25.dp
 
     Column(
@@ -85,7 +90,7 @@ fun VerticalBarsChart(
                             Box(
                                 modifier = Modifier
                                     .width(25.dp)
-                                    .fillMaxHeight(it.value / maxValue.toFloat())
+                                    .fillMaxHeight(it.value / maxValue) //Bars' height are based on the highest number
                                     .background(color = MaterialTheme.colorScheme.primary)
                                     .clickable {
                                         Toast
@@ -123,7 +128,6 @@ fun VerticalBarsChart(
                 .background(MaterialTheme.colorScheme.onBackground)
         )
 
-        // Scale X-Axis
         Row(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -144,11 +148,14 @@ fun VerticalBarsChart(
 
 }
 
+//Takes a map containing the income, budget, and spending, and their values to display a horizontal bars graph
 @Composable
 fun HorizontalBarsChart(
     data: Map<String, Float>
 ){
     val context = LocalContext.current
+
+    //All bars are based in the highest number bar
     val maxValue = data.values.max()
 
     Column {
@@ -193,7 +200,7 @@ fun HorizontalBarsChart(
                                 Box(
                                     modifier = Modifier
                                         .height(20.dp)
-                                        .fillMaxWidth(it.value / maxValue)
+                                        .fillMaxWidth(it.value / maxValue) //All bars have their heights adjust according to the highest bar
                                         .background(color = MaterialTheme.colorScheme.primary)
                                         .clickable {
                                             Toast

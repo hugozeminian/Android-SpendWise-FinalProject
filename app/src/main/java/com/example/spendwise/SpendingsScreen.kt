@@ -68,26 +68,33 @@ import com.example.spendwise.data.checkEmptyOrNullOrNegative
 import com.example.spendwise.model.RewardItem
 
 
+//Composable to set the screen layout
 @Composable
 fun SpendingsScreen(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
+    //Gets the spending list sorted
     val sortedList = viewModel.getSortedSpendingList(false, uiState)
 
+    //Helper variable to tell the list which category to display
     var breakdownCategory by remember {
         mutableStateOf("")
     }
 
+    //Helper variable to set categories that will be displayed in the dropdown menu
     var categories by remember {
         mutableStateOf(listOf(""))
     }
 
+    //Helper variable to pass the spending recap list selection
     var monthOrWeek by remember {
         mutableStateOf("")
     }
 
+    //Gets current categories list
     categories = viewModel.GetCategories()
 
     Column(
@@ -114,14 +121,19 @@ fun SpendingsScreen(
                     fontFamily = FontFamily(Font(R.font.montserrat_regular)),
                 fontSize = 16.sp,
             ),)
+
+            //Gets the return from menu
             breakdownCategory = CustomDropdownMenu(categories)
 
         }
 
+        //Pass the item selected from menu to the breakdown list
         BreakDownList(breakdownCategory, sortedList, viewModel)
+
         Spacer(modifier = Modifier.height(40.dp))
 
         AddTransactionCard(viewModel)
+
         Spacer(modifier = Modifier.height(60.dp))
 
         Row(
@@ -144,7 +156,7 @@ fun SpendingsScreen(
     }
 }
 
-
+//Displays all spending in the category selected
 @Composable
 fun BreakDownList(
     category: String,
@@ -161,6 +173,7 @@ fun BreakDownList(
     }
 }
 
+//Composable to set the item format in the list
 @Composable
 fun ItemList(
     spending: Spending,
@@ -201,6 +214,7 @@ fun ItemList(
                 Spacer(modifier = Modifier.width(8.dp))
                 IconButton(
                     onClick = {
+                        //Remove clicked object from the list
                         viewModel.DeleteSpending(spending)
                     },
                     modifier = Modifier.size(24.dp)
@@ -221,12 +235,14 @@ fun ItemList(
     }
 }
 
+//Composable to set the add transaction card
 @Composable
 fun AddTransactionCard(
     viewModel: AppViewModel,
     modifier: Modifier = Modifier
 ) {
 
+    //Helper variables to set a new transaction to be added to the list
     var amount by remember { mutableStateOf("") }
     var manipulatedAmount by remember { mutableStateOf("") }
     var selectedFormattedDate by remember { mutableStateOf("") }
@@ -235,6 +251,7 @@ fun AddTransactionCard(
     var showAlertMessage by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(Calendar.getInstance()) }
 
+    //Gets the list of categories
     var categories = viewModel.GetCategories()
 
     Card {
@@ -332,6 +349,7 @@ fun AddTransactionCard(
     }
 }
 
+//Composable to set the spendings recap list
 @Composable
 fun SpendingRecapList(
     viewModel: AppViewModel,
@@ -339,14 +357,19 @@ fun SpendingRecapList(
 ) {
 
     val uiState by viewModel.uiState.collectAsState()
+
+    //Gets both weekly and monthly lists sorted
     val filteredList = viewModel.FilterList(uiState.spendingRecap)
 
     Column(
     ) {
         filteredList.forEach { item ->
 
-            val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key}
+            //Gets the weekly limit for the category in the iteration
+            val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key }
             if(findCategoryLimit != null){
+
+                //Pass all parameters to spending recap item to be displayed
                 SpendingRecapItem(
                     category = Pair(item.key, item.value), findCategoryLimit.weeklyLimit, viewModel)
             }
@@ -354,6 +377,7 @@ fun SpendingRecapList(
     }
 }
 
+//Composable to define the item layout of spending recap list
 @Composable
 fun SpendingRecapItem(
     category: Pair<String, Float>,
@@ -364,6 +388,7 @@ fun SpendingRecapItem(
 
     val uiState by viewModel.uiState.collectAsState()
 
+    //Sets the message displayed when a spending is over a weekly limit
     val displaValue: String =
             if(category.second < limit) "$${String.format("%.2f", category.second)}"
             else "($${String.format("%.2f", category.second - limit)} over limit) - $${String.format("%.2f", category.second)}"
@@ -385,6 +410,7 @@ fun SpendingRecapItem(
             verticalArrangement = Arrangement.Center
         ){
 
+            //If statement to define which list to display (weekly or monthly)
             if(uiState.spendingRecap == "Weekly"){
                 Text(displaValue,
                     textAlign = TextAlign.End,
@@ -429,6 +455,7 @@ fun PreviewSpendingsScreen(){
     SpendingsScreen(viewModel = AppViewModel())
 }
 
+//Composable responsible for displaying a calendar
 @Composable
 fun DateSelectionDialog(
     context: Context,

@@ -32,6 +32,7 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to add a new spending to the spending list
     fun AddNewTransaction(
         newSpending: Spending
     ){
@@ -41,12 +42,14 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to ser if the user is logged
     fun SetLoggedUser(user: User){
         _uiState.update { currentState ->
             currentState.copy(loggedUser = user)
         }
     }
 
+    //function to sort maps used byt report graphs
     fun SortByDescendingSpendings(
         list: Map<String, Float>
     ): Map<String, Float>{
@@ -54,6 +57,7 @@ class AppViewModel: ViewModel(){
         return list.sortByValue()
     }
 
+    //Converts the list of spending into a map used by report graphs
     fun FilterList(
         period: String
     ): Map<String, Float>{
@@ -99,6 +103,7 @@ class AppViewModel: ViewModel(){
         return sumByCategory
     }
 
+    //Returns a complete report used in report screen
     fun GetMonthlyReport(): Map<String, Float>{
         val info: Map<String,Float> = mapOf(
             Pair("Income", _uiState.value.income),
@@ -108,16 +113,7 @@ class AppViewModel: ViewModel(){
         return info
     }
 
-    fun GetTotalSpendings(): Float{
-
-        var sum: Float = 0F
-        for(spending in _uiState.value.breakDownListSample){
-            sum = sum + spending.amount
-        }
-
-        return sum
-    }
-
+    //Returns the total spent in the current month
     fun GetTotalSpendingsMounth(): Float{
         val spendings = _uiState.value
         val currentMonth = Spending.getCurrentMonth()
@@ -132,6 +128,7 @@ class AppViewModel: ViewModel(){
         return sum
     }
 
+    //Returns the total spent in the current week
     fun GetTotalSpendingsWeek(): Float{
         val calendar = Calendar.getInstance()
         val weekDays = Spending.getWeekDays(calendar)
@@ -153,17 +150,22 @@ class AppViewModel: ViewModel(){
         return toSortedMap(compareByDescending { this[it] })
     }
 
+    //Returns a list of only distinct categories
     fun GetCategories(): List<String>{
         return _uiState.value.spendingsCategoriesList.map { it.name }
     }
 
+    //Returns te user list
     fun GetUsers(): List<User>{
         return _uiState.value.userListSample
     }
+
+    //returns logged user
     fun GetLoggedUser(): User {
         return _uiState.value.loggedUser
     }
 
+    //Function to delete a spending from spending list
     fun DeleteSpending(
         item: Spending
     ){
@@ -174,12 +176,14 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to add a new user
     fun AddUser(user : User) {
         _uiState.update { currentState ->
             currentState.copy(userListSample = _uiState.value.userListSample + user)
         }
     }
 
+    //Function to change user name
     fun ChangeUserName(userName : String){
         val currentName = GetLoggedUser().username
 
@@ -196,37 +200,35 @@ class AppViewModel: ViewModel(){
         SetLoggedUser(GetLoggedUser().copy(username = userName))
     }
 
+    //Function to set if user is logged
     fun SetLoggedUser(isLogged: Boolean){
         _uiState.update { currentState ->
             currentState.copy(isLogged = isLogged)
         }
     }
 
+    //Function to set dark mode
     fun toggleDarkMode(darkMode: Boolean) {
         _uiState.update { currentState ->
             currentState.copy(isDarkMode = darkMode)
         }
     }
 
-    // Budget Page
+    //Function to set monthly income value
     fun SetMonthlyIncome(income: Float){
         _uiState.update { currentState ->
             currentState.copy(income = income)
         }
     }
 
-    fun SetMonthlySavingsGoalPercentage(savingsPercentage: Float){
-        _uiState.update { currentState ->
-            currentState.copy(savingsPercentage = savingsPercentage)
-        }
-    }
-
+    //Function to add a new reward item in the list of rewards
     fun AddRewardItem(rewardItem : RewardItem) {
         _uiState.update { currentState ->
             currentState.copy(rewardsList = _uiState.value.rewardsList + rewardItem)
         }
     }
 
+    //function to removed a reward form the list of rewards
     fun RemoveRewardItem(
         item: RewardItem
     ) {
@@ -237,30 +239,35 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to clear up rewards list
     fun RemoveAllRewardItems() {
         _uiState.update { currentState ->
             currentState.copy(rewardsList = emptyList())
         }
     }
 
+    //Sets the weekly budget value
     fun SetWeeklyBudget(weeklyBudget: Float){
         _uiState.update { currentState ->
             currentState.copy(weeklyBudget = weeklyBudget)
         }
     }
 
+    //Sets the budget alert
     fun SetBudgetAlert(budgetAlert: Float){
         _uiState.update { currentState ->
             currentState.copy(budgetAlert = budgetAlert)
         }
     }
 
+    //Function to add a new category to categories list
     fun AddSpendingsCategoriesItem(spendingsCategoriesItem : SpendingsCategories) {
         _uiState.update { currentState ->
             currentState.copy(spendingsCategoriesList = _uiState.value.spendingsCategoriesList + spendingsCategoriesItem)
         }
     }
 
+    //Function to remove a category from categories list
     fun RemoveSpendingsCategoriesItem(
         index: SpendingsCategories
     ) {
@@ -271,17 +278,21 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to clear up categories list
     fun RemoveAllSpendingsCategoriesItem() {
         _uiState.update { currentState ->
             currentState.copy(spendingsCategoriesList = emptyList())
         }
     }
+
+    //Function to set monthly budget
     fun SetMonthlyBudget(monthlyBudget: Float) {
         _uiState.update { currentState ->
             currentState.copy(monthlyBudget = monthlyBudget)
         }
     }
 
+    //Function to set spending recap list
     fun SetSpendingRecap(
         set: String
     ){
@@ -296,6 +307,7 @@ class AppViewModel: ViewModel(){
         return Spending.sortByDate(originalList, ascending)
     }
 
+    //Function to sort and return list of spending in the current month
     fun getSortedSpendingsForMonth(currentMonth: Int, ascending: Boolean, uiState: AppUiState): List<Spending> {
         val spendings = getSortedSpendingList(ascending, uiState)
         return spendings.filter { spending ->
@@ -304,6 +316,7 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to sort and return list of spending in the current week
     fun getSortedSpendingsForWeek(weekDays: List<Int>, calendar: Calendar, ascending: Boolean, uiState: AppUiState): List<Spending> {
         val spendings = getSortedSpendingList(ascending, uiState)
         return spendings.filter { spending ->
@@ -323,6 +336,7 @@ class AppViewModel: ViewModel(){
         }
     }
 
+    //Function to format dates
     private fun getMonthAbbreviation(month: Int): String {
         return SimpleDateFormat("MMM", Locale.ENGLISH).format(Calendar.getInstance().apply { set(Calendar.MONTH, month - 1) }.time).toUpperCase()
     }

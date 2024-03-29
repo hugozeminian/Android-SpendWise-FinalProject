@@ -38,12 +38,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.ui.theme.AppViewModel
 
+//Composable to return the complete screen layout
 @Composable
 fun ReportScreen(
-    viewModel: AppViewModel
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier
 ){
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
@@ -52,19 +53,27 @@ fun ReportScreen(
     ) {
         WeeklyReport(screenWidth, viewModel)
         Spacer(modifier = Modifier.height(25.dp))
-        MonthProjectionReport(screenWidth, viewModel)
+        MonthProjectionReport(viewModel)
     }
 }
 
+//Composable to define weekly report layout
 @Composable
 fun WeeklyReport(
     screenWidth: Dp,
-    viewModel: AppViewModel)
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier)
 {
 
     val uiState by viewModel.uiState.collectAsState()
+
+    //Gets the total amount spent in the current week
     var totalSpendings = viewModel.GetTotalSpendingsWeek()
+
+    //Gets the list of spending in the current week
     var data = viewModel.FilterList("Weekly")
+
+    //Sorts the list
     val dataSorted = viewModel.SortByDescendingSpendings(data)
 
     Column(
@@ -101,14 +110,18 @@ fun WeeklyReport(
     }
 }
 
+//Composable to define month's projection layout
 @Composable
 fun MonthProjectionReport(
-    screenWidth: Dp,
-    viewModel: AppViewModel){
+    viewModel: AppViewModel,
+    modifier: Modifier = Modifier){
 
     val uiState by viewModel.uiState.collectAsState()
 
+    //Gets the total amount spent in the current month
     var totalSpendings = viewModel.GetTotalSpendingsMounth()
+
+    //Gets the percentage spent compared to the income
     var totalPercentage = (totalSpendings * 100)/uiState.income
 
     HorizontalBarsChart(viewModel.GetMonthlyReport())

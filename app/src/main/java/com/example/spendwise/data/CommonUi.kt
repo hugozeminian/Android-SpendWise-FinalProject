@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import com.example.spendwise.R
 import com.example.spendwise.ui.theme.AppViewModel
 
+//Dropdown menu used across some pages
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomDropdownMenu(
