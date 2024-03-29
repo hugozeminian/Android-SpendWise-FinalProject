@@ -31,7 +31,7 @@ data class AppUiState(
     val loggedUser : User = User("","","",""),
 
     //Set if the user is successfully logged or not
-    val isLogged: Boolean = true,
+    val isLogged: Boolean = false,
 
     //Dark mode settings
     val isDarkMode: Boolean = false,
