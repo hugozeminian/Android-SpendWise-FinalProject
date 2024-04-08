@@ -818,14 +818,14 @@ fun BudgetInformation(viewModel: AppViewModel) {
     }
 }
 
-@Preview
-@Composable
-fun PreviewBudget() {
-    Column {
-        BudgetInformation(AppViewModel())
-        MonthlyWeeklyBudget(AppViewModel(), 3000.0F)
-        RewardsInfo(AppViewModel())
-        SpendingsCategories(AppViewModel())
-    }
-}
+//@Preview
+//@Composable
+//fun PreviewBudget() {
+//    Column {
+//        BudgetInformation(AppViewModel())
+//        MonthlyWeeklyBudget(AppViewModel(), 3000.0F)
+//        RewardsInfo(AppViewModel())
+//        SpendingsCategories(AppViewModel())
+//    }
+//}
 

@@ -1,15 +1,20 @@
 package com.example.spendwise.ui.theme
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.spendwise.SpendWiseApplication
 import com.example.spendwise.data.AppUiState
+import com.example.spendwise.data.SpendWiseRepository
 import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.Spending
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
 import com.example.spendwise.network.BudgetUpdate
 import com.example.spendwise.network.IncomeUpdate
-import com.example.spendwise.network.SpendWiseApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +26,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
-class AppViewModel: ViewModel(){
+class AppViewModel(
+    private val spendWiseRepository: SpendWiseRepository
+): ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
@@ -31,7 +38,7 @@ class AppViewModel: ViewModel(){
     fun getData() {
         viewModelScope.launch {
             try {
-                val dataResult = SpendWiseApi.retrofitService.getData()
+                val dataResult = spendWiseRepository.getData()
                 _uiState.update { currentState ->
                     currentState.copy(
                         income = dataResult[0].income,
@@ -46,6 +53,16 @@ class AppViewModel: ViewModel(){
 
             } catch (e: IOException) {
 
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as SpendWiseApplication)
+                val spendWiseRepository = application.container.spendWiseRepository
+                AppViewModel(spendWiseRepository = spendWiseRepository)
             }
         }
     }
@@ -245,7 +262,7 @@ class AppViewModel: ViewModel(){
     fun SetMonthlyIncome(income: Float){
         viewModelScope.launch {
             try{
-                val response = SpendWiseApi.retrofitService.updateIncome("test@email.com", IncomeUpdate(income))
+                val response = spendWiseRepository.updateIncome("test@email.com", IncomeUpdate(income))
                 _uiState.update { currentState ->
                     currentState.copy(income = income)
                 }
@@ -262,7 +279,7 @@ class AppViewModel: ViewModel(){
         alert: Float){
         viewModelScope.launch {
             try{
-                SpendWiseApi.retrofitService.updateBudget("test@email.com", BudgetUpdate(monthly, weekly, alert))
+                spendWiseRepository.updateBudget("test@email.com", BudgetUpdate(monthly, weekly, alert))
                 _uiState.update { currentState ->
                     currentState.copy(
                         monthlyBudget = monthly,
@@ -291,7 +308,7 @@ class AppViewModel: ViewModel(){
         val index = _uiState.value.rewardsList.indexOf(item)
 
         viewModelScope.launch{
-            SpendWiseApi.retrofitService.deleteReward("test@email.com", index)
+            spendWiseRepository.deleteReward("test@email.com", index)
             _uiState.update { currentState ->
                 val updatedList = currentState.rewardsList.toMutableList()
                 updatedList.remove(item)

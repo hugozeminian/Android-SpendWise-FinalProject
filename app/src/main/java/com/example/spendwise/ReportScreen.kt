@@ -162,8 +162,8 @@ fun MonthProjectionReport(
     Spacer(modifier = Modifier.height(50.dp))
 }
 
-@Preview
-@Composable
-fun ShowGraph() {
-    ReportScreen(AppViewModel())
-}
+//@Preview
+//@Composable
+//fun ShowGraph() {
+//    ReportScreen(AppViewModel())
+//}

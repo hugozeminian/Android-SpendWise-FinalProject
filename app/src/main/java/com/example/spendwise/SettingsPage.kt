@@ -192,12 +192,12 @@ fun OpenTestPage(
     }
 }
 
-@Preview
-@Composable
-fun ShowSettingsPage(){
-    SettingPage(
-        AppViewModel(),
-        {},
-        {}
-    )
-}
+//@Preview
+//@Composable
+//fun ShowSettingsPage(){
+//    SettingPage(
+//        AppViewModel(),
+//        {},
+//        {}
+//    )
+//}

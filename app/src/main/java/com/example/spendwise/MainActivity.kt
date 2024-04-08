@@ -33,13 +33,13 @@ import com.example.spendwise.ui.theme.TestPage
 
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: AppViewModel by viewModels()
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContent {
+
+            val viewModel: AppViewModel = viewModel(factory = AppViewModel.Factory)
+
             SpendWiseTheme(viewModel = viewModel) {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -170,16 +170,16 @@ fun MainScreen(
     }
 }
 
-@Preview
-@Composable
-fun MainScreenPreview() {
-    val viewModel = AppViewModel()
-    viewModel.toggleDarkMode(false)
-
-    SpendWiseTheme(viewModel = viewModel) {
-        MainScreen(
-            onLogin = {},
-            onLogout = {}
-        )
-    }
-}
+//@Preview
+//@Composable
+//fun MainScreenPreview() {
+//    val viewModel = AppViewModel()
+//    viewModel.toggleDarkMode(false)
+//
+//    SpendWiseTheme(viewModel = viewModel) {
+//        MainScreen(
+//            onLogin = {},
+//            onLogout = {}
+//        )
+//    }
+//}
