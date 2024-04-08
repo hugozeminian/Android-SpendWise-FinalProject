@@ -51,6 +51,7 @@ class AppViewModel(
                         income = dataResult[0].income,
                         monthlyBudget = dataResult[0].monthlyBudget,
                         weeklyBudget = dataResult[0].weeklyBudget,
+                        budgetAlert = dataResult[0].budgetAlert,
                         spendingsCategoriesList = dataResult[0].categories,
                         breakDownListSample = dataResult[0].spendings,
                         rewardsList = dataResult[0].rewards,
@@ -59,7 +60,14 @@ class AppViewModel(
                 }
 
             } catch (e: IOException) {
-
+//                _uiState.update { currentState ->
+//                    currentState.copy(
+//                        loggedUser = User("", "","",""),
+//                        income = 0.0F,
+//                        monthlyBudget = 0.0F,
+//                        weeklyBudget = 0.0F,
+//                    )
+//                }
             }
         }
     }

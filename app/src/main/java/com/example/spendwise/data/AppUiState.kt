@@ -16,7 +16,7 @@ data class AppUiState(
     //List of user's credentials
     val userListSample: List<User> = listOf(),
 
-    val loggedUser : User = User("","","",""),
+    val loggedUser: User = User("","","",""),
 
     //Set if the user is successfully logged or not
     val isLogged: Boolean = true,
