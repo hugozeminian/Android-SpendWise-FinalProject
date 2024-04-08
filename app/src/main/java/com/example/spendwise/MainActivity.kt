@@ -29,6 +29,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.navItems
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.SpendWiseTheme
+import com.example.spendwise.ui.theme.TestPage
 
 
 class MainActivity : ComponentActivity() {
@@ -129,6 +130,11 @@ fun MainScreen(
                     )
                 }
             }
+
+            composable("test") {
+                TestPage(viewModel)
+            }
+
             composable("home") {
                 HomePage(viewModel)
             }
@@ -157,7 +163,8 @@ fun MainScreen(
                         onLogout.invoke()
                         navController.navigate("Home")
                     },
-                    viewModel=viewModel)
+                    viewModel=viewModel,
+                    testPage = {navController.navigate("test")})
             }
         }
     }

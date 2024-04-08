@@ -4,9 +4,9 @@ import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.Spending
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
+import com.example.spendwise.network.Response
 
 data class AppUiState(
-
     //Navbar icons state
     val selectedIconIndex: Int = 0,
 
@@ -28,10 +28,11 @@ data class AppUiState(
         User("John Doe", "john.doe", "john@gmail.com", "12"),
         User("H C", "hc", "h@c.com", "hc"),
     ),
+
     val loggedUser : User = User("","","",""),
 
     //Set if the user is successfully logged or not
-    val isLogged: Boolean = false,
+    val isLogged: Boolean = true,
 
     //Dark mode settings
     val isDarkMode: Boolean = false,
@@ -65,4 +66,6 @@ data class AppUiState(
         RewardItem("Reward-2", "20"),
         RewardItem("Reward-3", "30"),
     ),
+
+    val response: List<Response> = listOf()
 )

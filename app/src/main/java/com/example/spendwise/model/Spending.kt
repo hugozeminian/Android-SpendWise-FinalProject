@@ -1,9 +1,11 @@
 package com.example.spendwise.model
 
+import kotlinx.serialization.Serializable
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@Serializable
 data class Spending(
     val category: String,
     val description: String,
@@ -61,6 +63,7 @@ data class User(
     val password: String
 )
 
+@Serializable
 data class SpendingsCategories(
     val name: String,
     val weeklyLimit: Float,

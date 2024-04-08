@@ -1,19 +1,21 @@
 package com.example.spendwise.ui.theme
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.spendwise.data.AppUiState
 import com.example.spendwise.model.RewardItem
 import com.example.spendwise.model.Spending
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
+import com.example.spendwise.network.BudgetUpdate
+import com.example.spendwise.network.IncomeUpdate
+import com.example.spendwise.network.SpendWiseApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -22,6 +24,31 @@ import java.util.Locale
 class AppViewModel: ViewModel(){
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
+
+    init{
+        getData()
+    }
+    fun getData() {
+        viewModelScope.launch {
+            try {
+                val dataResult = SpendWiseApi.retrofitService.getData()
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        income = dataResult[0].income,
+                        monthlyBudget = dataResult[0].monthlyBudget,
+                        weeklyBudget = dataResult[0].weeklyBudget,
+                        spendingsCategoriesList = dataResult[0].categories,
+                        breakDownListSample = dataResult[0].spendings,
+                        rewardsList = dataResult[0].rewards,
+                        response = dataResult
+                    )
+                }
+
+            } catch (e: IOException) {
+
+            }
+        }
+    }
 
     //Navbar icon set
     fun SetIconIndex(index: Int){
@@ -216,8 +243,37 @@ class AppViewModel: ViewModel(){
 
     //Function to set monthly income value
     fun SetMonthlyIncome(income: Float){
-        _uiState.update { currentState ->
-            currentState.copy(income = income)
+        viewModelScope.launch {
+            try{
+                val response = SpendWiseApi.retrofitService.updateIncome("test@email.com", IncomeUpdate(income))
+                _uiState.update { currentState ->
+                    currentState.copy(income = income)
+                }
+            }
+            catch (e: IOException) {
+
+            }
+        }
+    }
+
+    fun UpdateAllBudget(
+        monthly: Float,
+        weekly: Float,
+        alert: Float){
+        viewModelScope.launch {
+            try{
+                SpendWiseApi.retrofitService.updateBudget("test@email.com", BudgetUpdate(monthly, weekly, alert))
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        monthlyBudget = monthly,
+                        weeklyBudget = weekly,
+                        budgetAlert = alert
+                    )
+                }
+            }
+            catch (e: IOException) {
+
+            }
         }
     }
 
@@ -232,10 +288,15 @@ class AppViewModel: ViewModel(){
     fun RemoveRewardItem(
         item: RewardItem
     ) {
-        _uiState.update { currentState ->
-            val updatedList = currentState.rewardsList.toMutableList()
-            updatedList.remove(item)
-            currentState.copy(rewardsList = updatedList)
+        val index = _uiState.value.rewardsList.indexOf(item)
+
+        viewModelScope.launch{
+            SpendWiseApi.retrofitService.deleteReward("test@email.com", index)
+            _uiState.update { currentState ->
+                val updatedList = currentState.rewardsList.toMutableList()
+                updatedList.remove(item)
+                currentState.copy(rewardsList = updatedList)
+            }
         }
     }
 
@@ -341,6 +402,8 @@ class AppViewModel: ViewModel(){
         return SimpleDateFormat("MMM", Locale.ENGLISH).format(Calendar.getInstance().apply { set(Calendar.MONTH, month - 1) }.time).toUpperCase()
     }
 }
+
+
 
 
 
