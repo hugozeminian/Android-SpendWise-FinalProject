@@ -12,8 +12,6 @@ import retrofit2.http.GET
 import retrofit2.http.PUT
 import retrofit2.http.Path
 
-private const val BASE_URL = "http://192.168.1.70:3000"
-
 @Serializable
 data class IncomeUpdate(val income: Float)
 
@@ -23,11 +21,6 @@ data class BudgetUpdate(
     val weeklyBudget: Float,
     val budgetAlert: Float
 )
-
-private val retrofit = Retrofit.Builder()
-    .baseUrl(BASE_URL)
-    .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-    .build()
 
 interface SpendWiseApiService{
     @GET("data")
@@ -41,10 +34,4 @@ interface SpendWiseApiService{
 
     @PUT("updateBudget/{user}")
     suspend fun updateBudget(@Path("user") user: String, @Body newBudget: BudgetUpdate): ResponseBody
-}
-
-object SpendWiseApi{
-    val retrofitService: SpendWiseApiService by lazy {
-        retrofit.create(SpendWiseApiService::class.java)
-    }
 }

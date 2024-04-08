@@ -200,12 +200,12 @@ fun HomePage(viewModel: AppViewModel) {
     }
 }
 
-@Preview
-@Composable
-fun PreviewHomePage() {
-    val viewModel = AppViewModel()
-    HomePage(viewModel)
-}
+//@Preview
+//@Composable
+//fun PreviewHomePage() {
+//    val viewModel = AppViewModel()
+//    HomePage(viewModel)
+//}
 
 //@Composable
 //fun SpendingList(viewModel: AppViewModel, uiState: AppUiState) {

@@ -18,13 +18,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -42,30 +40,21 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spendwise.data.CustomDropdownMenu
 import com.example.spendwise.data.NumericAlertMessage
-import com.example.spendwise.data.containsOnlyNumbers
 import com.example.spendwise.model.Spending
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.Shapes
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.ImeAction
 import com.example.spendwise.data.checkEmptyOrNullOrNegative
-import com.example.spendwise.model.RewardItem
 
 
 //Composable to set the screen layout
@@ -449,11 +438,11 @@ fun SpendingRecapItem(
     )
 }
 
-@Preview
-@Composable
-fun PreviewSpendingsScreen(){
-    SpendingsScreen(viewModel = AppViewModel())
-}
+//@Preview
+//@Composable
+//fun PreviewSpendingsScreen(){
+//    SpendingsScreen(viewModel = AppViewModel())
+//}
 
 //Composable responsible for displaying a calendar
 @Composable
