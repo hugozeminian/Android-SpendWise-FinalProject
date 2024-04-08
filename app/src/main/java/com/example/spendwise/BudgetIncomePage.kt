@@ -461,15 +461,21 @@ fun MonthlyWeeklyBudget(viewModel: AppViewModel, monthlyIncome: Float) {
                         val weeklyBudgetValue = weeklyBudget.toDoubleOrNull() ?: 0.0
                         val monthlyBudgetLimit = weeklyBudgetValue * 4
 
-                        viewModel.SetMonthlyBudget(monthlyBudget.toFloat())
-                        viewModel.SetWeeklyBudget(weeklyBudget.toFloat())
-                        viewModel.SetBudgetAlert(budgetAlert.toFloat())
+//                        viewModel.SetMonthlyBudget(monthlyBudget.toFloat())
+//                        viewModel.SetWeeklyBudget(weeklyBudget.toFloat())
+//                        viewModel.SetBudgetAlert(budgetAlert.toFloat())
 
                         if (monthlyBudgetValue > monthlyIncome || monthlyBudgetValue < monthlyBudgetLimit) {
                             showAlert = true
                         } else {
                             showAlert = false
                             editing = false
+
+                            viewModel.UpdateAllBudget(
+                                monthlyBudget.toFloat(),
+                                weeklyBudget.toFloat(),
+                                budgetAlert.toFloat()
+                            )
 
                         }
                     } else {
@@ -774,7 +780,9 @@ fun BudgetInformation(viewModel: AppViewModel) {
                             onClick = {
                                 editing = !editing
                                 incomeText = checkEmptyOrNullOrNegative(manipulatedIncomeText)
-                                viewModel.SetMonthlyIncome(incomeText.toFloat())
+                                if(!editing){
+                                    viewModel.SetMonthlyIncome(incomeText.toFloat())
+                                }
                             },
                             shape = Shapes.extraSmall
                         ) {

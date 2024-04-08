@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.spendwise.ui.theme.AppViewModel
 
@@ -45,7 +46,8 @@ import com.example.spendwise.ui.theme.AppViewModel
 @Composable
 fun SettingPage(
     viewModel: AppViewModel,
-    onLogout: () -> Unit
+    onLogout: () -> Unit,
+    testPage: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var darkMode by remember { mutableStateOf(viewModel.uiState.value.isDarkMode) }
@@ -166,6 +168,27 @@ fun SettingPage(
                     )
                 }
         }
+
+        UpdateButton(viewModel = viewModel)
+        OpenTestPage(testPage)
+    }
+}
+
+@Composable
+fun UpdateButton(
+    viewModel: AppViewModel
+){
+    Button(onClick = { viewModel.getData() }) {
+        Text("Update")
+    }
+}
+
+@Composable
+fun OpenTestPage(
+    open: ()-> Unit
+){
+    Button(onClick = open) {
+        Text("Open test page")
     }
 }
 
@@ -174,6 +197,7 @@ fun SettingPage(
 fun ShowSettingsPage(){
     SettingPage(
         AppViewModel(),
+        {},
         {}
     )
 }

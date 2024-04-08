@@ -1,0 +1,46 @@
+[
+  {
+    "fullName": "Joaquim Weck",
+    "userName": "test",
+    "email": "test@email.com",
+    "password": "123",
+    "income": 3600,
+    "monthlyBudget": 2300,
+    "weeklyBudget": 500,
+    "budgetAlert": 92,
+    "categories": [
+      {
+        "name": "Groceries",
+        "weeklyLimit": 230
+      },
+      {
+        "name": "Utilities",
+        "weeklyLimit": 250
+      },
+      {
+        "name": "Entertainment",
+        "weeklyLimit": 200
+      }
+    ],
+    "spendings": [
+      {
+        "category": "Groceries",
+        "description": "Walmart",
+        "date": "Apr 07, 2024",
+        "amount": 100
+      },
+      {
+        "category": "Utilities",
+        "description": "Telus",
+        "date": "Apr 07, 2024",
+        "amount": 95.5
+      }
+    ],
+    "rewards": [
+      {
+        "description": "PC Optimum",
+        "amount": "12.30"
+      }
+    ]
+  }
+]
