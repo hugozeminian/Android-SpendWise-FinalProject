@@ -4,42 +4,54 @@
     "userName": "test",
     "email": "test@email.com",
     "password": "123",
-    "income": 3600,
-    "monthlyBudget": 2300,
+    "income": 4000,
+    "monthlyBudget": 2350,
     "weeklyBudget": 500,
-    "budgetAlert": 92,
+    "budgetAlert": 90,
     "categories": [
       {
         "name": "Groceries",
-        "weeklyLimit": 230
-      },
-      {
-        "name": "Utilities",
-        "weeklyLimit": 250
-      },
-      {
-        "name": "Entertainment",
         "weeklyLimit": 200
+      },
+      {
+        "name": "Pharmacy",
+        "weeklyLimit": 50
       }
     ],
     "spendings": [
       {
         "category": "Groceries",
         "description": "Walmart",
-        "date": "Apr 07, 2024",
-        "amount": 100
+        "date": "Apr 08, 2024",
+        "amount": 110
       },
       {
-        "category": "Utilities",
-        "description": "Telus",
+        "category": "Groceries",
+        "description": "Safeway",
         "date": "Apr 07, 2024",
-        "amount": 95.5
+        "amount": 12.75
+      },
+      {
+        "category": "Pharmacy",
+        "description": "Shoppers Drug",
+        "date": "Apr 07, 2024",
+        "amount": 14.99
+      },
+      {
+        "category": "Pharmacy",
+        "description": "Emergency",
+        "date": "Apr 08, 2024",
+        "amount": 177
       }
     ],
     "rewards": [
       {
-        "description": "PC Optimum",
-        "amount": "12.30"
+        "description": "Scene",
+        "amount": "5.9"
+      },
+      {
+        "description": "ScotiaBank",
+        "amount": "11.50"
       }
     ]
   }

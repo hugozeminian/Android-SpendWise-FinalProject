@@ -36,6 +36,129 @@ app.get('/data', (req, res) => {
   }
 });
 
+app.post('/addCategory/:email', (req, res) => {
+  const email = req.params.email;
+  const newCategory = req.body;
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Add the new category
+      jsonData[userIndex].categories.push(newCategory);
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Category added successfully');
+      });
+  });
+});
+
+app.delete('/deleteCategory/:email/:index', (req, res) => {
+  const email = req.params.email;
+  const index = parseInt(req.params.index); // Convert index to integer
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Check if index is valid
+      if (index < 0 || index >= jsonData[userIndex].categories.length) {
+          res.status(400).send('Invalid index');
+          return;
+      }
+
+      // Get the category to be deleted
+      const categoryToDelete = jsonData[userIndex].categories[index].name;
+
+      // Remove all spendings with the same category
+      jsonData[userIndex].spendings = jsonData[userIndex].spendings.filter(s => s.category !== categoryToDelete);
+
+      // Remove the category
+      jsonData[userIndex].categories.splice(index, 1);
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Category and associated spendings deleted successfully');
+      });
+  });
+});
+
+
+
+
+app.post('/addReward/:email', (req, res) => {
+  const email = req.params.email;
+  const newReward = req.body;
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Add the new reward
+      jsonData[userIndex].rewards.push(newReward);
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Reward added successfully');
+      });
+  });
+});
+
 app.delete('/deleteReward/:email/:index', (req, res) => {
   const email = req.params.email;
   const index = parseInt(req.params.index);
@@ -77,6 +200,160 @@ app.delete('/deleteReward/:email/:index', (req, res) => {
       });
   });
 });
+
+app.delete('/eraseRewards/:email', (req, res) => {
+  const email = req.params.email;
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Erase all rewards for the user
+      jsonData[userIndex].rewards = [];
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Rewards erased successfully');
+      });
+  });
+});
+
+
+app.post('/addSpending/:email', (req, res) => {
+  const email = req.params.email;
+  const newSpending = req.body;
+
+  console.log(newSpending);
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Add the new spending
+      jsonData[userIndex].spendings.push(newSpending);
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Spending added successfully');
+      });
+  });
+});
+
+app.delete('/deleteSpending/:email/:index', (req, res) => {
+  const email = req.params.email;
+  const index = parseInt(req.params.index); // Convert index to integer
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Check if index is valid
+      if (index < 0 || index >= jsonData[userIndex].spendings.length) {
+          res.status(400).send('Invalid index');
+          return;
+      }
+
+      // Remove the spending
+      jsonData[userIndex].spendings.splice(index, 1);
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Spending deleted successfully');
+      });
+  });
+});
+
+app.delete('/eraseCategories/:email', (req, res) => {
+  const email = req.params.email;
+
+  // Read the JSON file
+  fs.readFile(filePath, 'utf8', (err, data) => {
+      if (err) {
+          console.error(err);
+          res.status(500).send('Error reading file');
+          return;
+      }
+
+      let jsonData = JSON.parse(data);
+
+      // Find the user
+      const userIndex = jsonData.findIndex(item => item.email === email);
+      if (userIndex === -1) {
+          res.status(404).send('User not found');
+          return;
+      }
+
+      // Erase all categories and spendings for the user
+      jsonData[userIndex].categories = [];
+      jsonData[userIndex].spendings = [];
+
+      // Write the updated data back to file
+      fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+          if (err) {
+              console.error(err);
+              res.status(500).send('Error writing file');
+              return;
+          }
+          res.status(200).send('Data erased successfully');
+      });
+  });
+});
+
+
 
 app.put('/updateIncome/:email', (req, res) => {
 

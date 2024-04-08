@@ -32,6 +32,8 @@ class AppViewModel(
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
 
+    val user = _uiState.value.loggedUser.email
+
     init{
         getData()
     }
@@ -41,6 +43,11 @@ class AppViewModel(
                 val dataResult = spendWiseRepository.getData()
                 _uiState.update { currentState ->
                     currentState.copy(
+                        loggedUser = User(
+                            dataResult[0].fullName,
+                            dataResult[0].userName,
+                            dataResult[0].email,
+                            dataResult[0].password),
                         income = dataResult[0].income,
                         monthlyBudget = dataResult[0].monthlyBudget,
                         weeklyBudget = dataResult[0].weeklyBudget,
@@ -80,9 +87,18 @@ class AppViewModel(
     fun AddNewTransaction(
         newSpending: Spending
     ){
-        _uiState.update { currentState ->
-        currentState.copy(
-            breakDownListSample = uiState.value.breakDownListSample + newSpending)
+        viewModelScope.launch {
+            try{
+                val user = _uiState.value.loggedUser.email
+                spendWiseRepository.addSpending(user, newSpending)
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        breakDownListSample = uiState.value.breakDownListSample + newSpending)
+                }
+            }
+            catch(e: IOException){
+
+            }
         }
     }
 
@@ -213,10 +229,20 @@ class AppViewModel(
     fun DeleteSpending(
         item: Spending
     ){
-        _uiState.update { currentState ->
-            val updatedList = currentState.breakDownListSample.toMutableList()
-            updatedList.remove(item)
-            currentState.copy(breakDownListSample = updatedList)
+        viewModelScope.launch {
+            try{
+                val user = _uiState.value.loggedUser.email
+                val index = _uiState.value.breakDownListSample.indexOf(item)
+                val response = spendWiseRepository.deleteSpending(user, index)
+                _uiState.update { currentState ->
+                    val updatedList = currentState.breakDownListSample.toMutableList()
+                    updatedList.remove(item)
+                    currentState.copy(breakDownListSample = updatedList)
+                }
+            }
+            catch (e: IOException) {
+
+            }
         }
     }
 
@@ -262,7 +288,8 @@ class AppViewModel(
     fun SetMonthlyIncome(income: Float){
         viewModelScope.launch {
             try{
-                val response = spendWiseRepository.updateIncome("test@email.com", IncomeUpdate(income))
+                val user = _uiState.value.loggedUser.email
+                val response = spendWiseRepository.updateIncome(user, IncomeUpdate(income))
                 _uiState.update { currentState ->
                     currentState.copy(income = income)
                 }
@@ -279,7 +306,8 @@ class AppViewModel(
         alert: Float){
         viewModelScope.launch {
             try{
-                spendWiseRepository.updateBudget("test@email.com", BudgetUpdate(monthly, weekly, alert))
+                val user = _uiState.value.loggedUser.email
+                spendWiseRepository.updateBudget(user, BudgetUpdate(monthly, weekly, alert))
                 _uiState.update { currentState ->
                     currentState.copy(
                         monthlyBudget = monthly,
@@ -296,8 +324,13 @@ class AppViewModel(
 
     //Function to add a new reward item in the list of rewards
     fun AddRewardItem(rewardItem : RewardItem) {
-        _uiState.update { currentState ->
-            currentState.copy(rewardsList = _uiState.value.rewardsList + rewardItem)
+
+        viewModelScope.launch{
+            val user = _uiState.value.loggedUser.email
+            spendWiseRepository.addReward(user, rewardItem)
+            _uiState.update { currentState ->
+                currentState.copy(rewardsList = _uiState.value.rewardsList + rewardItem)
+            }
         }
     }
 
@@ -308,7 +341,8 @@ class AppViewModel(
         val index = _uiState.value.rewardsList.indexOf(item)
 
         viewModelScope.launch{
-            spendWiseRepository.deleteReward("test@email.com", index)
+            val user = _uiState.value.loggedUser.email
+            spendWiseRepository.deleteReward(user, index)
             _uiState.update { currentState ->
                 val updatedList = currentState.rewardsList.toMutableList()
                 updatedList.remove(item)
@@ -319,8 +353,18 @@ class AppViewModel(
 
     //Function to clear up rewards list
     fun RemoveAllRewardItems() {
-        _uiState.update { currentState ->
-            currentState.copy(rewardsList = emptyList())
+
+        viewModelScope.launch {
+            try{
+                val user = _uiState.value.loggedUser.email
+                spendWiseRepository.eraseRewards(user)
+                _uiState.update { currentState ->
+                    currentState.copy(rewardsList = emptyList())
+                }
+            }
+            catch (e: IOException) {
+
+            }
         }
     }
 
@@ -339,27 +383,48 @@ class AppViewModel(
     }
 
     //Function to add a new category to categories list
-    fun AddSpendingsCategoriesItem(spendingsCategoriesItem : SpendingsCategories) {
-        _uiState.update { currentState ->
-            currentState.copy(spendingsCategoriesList = _uiState.value.spendingsCategoriesList + spendingsCategoriesItem)
+    fun AddSpendingsCategoriesItem(category : SpendingsCategories) {
+
+        viewModelScope.launch {
+            val user = _uiState.value.loggedUser.email
+            spendWiseRepository.addCategory(user, category)
+            _uiState.update { currentState ->
+                currentState.copy(spendingsCategoriesList = _uiState.value.spendingsCategoriesList + category)
+            }
         }
+
     }
 
     //Function to remove a category from categories list
     fun RemoveSpendingsCategoriesItem(
-        index: SpendingsCategories
+        category: SpendingsCategories
     ) {
-        _uiState.update { currentState ->
-            val updatedList = currentState.spendingsCategoriesList.toMutableList()
-            updatedList.remove(index)
-            currentState.copy(spendingsCategoriesList = updatedList)
+        viewModelScope.launch {
+            val user = _uiState.value.loggedUser.email
+            val index = _uiState.value.spendingsCategoriesList.indexOf(category)
+            spendWiseRepository.deleteCategory(user, index)
+            _uiState.update { currentState ->
+                val updatedList = currentState.spendingsCategoriesList.toMutableList()
+                updatedList.remove(category)
+                currentState.copy(spendingsCategoriesList = updatedList)
+            }
         }
     }
 
     //Function to clear up categories list
     fun RemoveAllSpendingsCategoriesItem() {
-        _uiState.update { currentState ->
-            currentState.copy(spendingsCategoriesList = emptyList())
+
+        viewModelScope.launch {
+            try{
+                val user = _uiState.value.loggedUser.email
+                spendWiseRepository.eraseCategories(user)
+                _uiState.update { currentState ->
+                    currentState.copy(spendingsCategoriesList = emptyList())
+                }
+            }
+            catch (e: IOException) {
+
+            }
         }
     }
 
