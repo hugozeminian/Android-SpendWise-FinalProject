@@ -1,5 +1,6 @@
 package com.example.spendwise.ui.theme
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,16 +16,22 @@ import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.model.User
 import com.example.spendwise.network.BudgetUpdate
 import com.example.spendwise.network.IncomeUpdate
+import com.example.spendwise.network.NewUserName
+import com.example.spendwise.network.Response
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class AppViewModel(
     private val spendWiseRepository: SpendWiseRepository
@@ -34,40 +41,51 @@ class AppViewModel(
 
     val user = _uiState.value.loggedUser.email
 
-    init{
-        getData()
+    suspend fun login(email: String, password: String): Boolean = suspendCoroutine { continuation ->
+        viewModelScope.launch {
+            try {
+                val response = spendWiseRepository.login(email, password)
+                if (response.message == "Login successful") {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            isLogged = true,
+                            loggedUser = User("", "", email, ""))
+                    }
+                    continuation.resume(true)
+                } else {
+                    continuation.resume(false)
+                }
+            } catch (e: HttpException) {
+                    continuation.resume(false)
+            } catch (e: Exception) {
+                // Handle other exceptions
+                continuation.resumeWithException(e)
+            }
+        }
     }
     fun getData() {
         viewModelScope.launch {
             try {
-                val dataResult = spendWiseRepository.getData()
+                val dataResult = spendWiseRepository.getData(uiState.value.loggedUser.email)
                 _uiState.update { currentState ->
                     currentState.copy(
                         loggedUser = User(
-                            dataResult[0].fullName,
-                            dataResult[0].userName,
-                            dataResult[0].email,
-                            dataResult[0].password),
-                        income = dataResult[0].income,
-                        monthlyBudget = dataResult[0].monthlyBudget,
-                        weeklyBudget = dataResult[0].weeklyBudget,
-                        budgetAlert = dataResult[0].budgetAlert,
-                        spendingsCategoriesList = dataResult[0].categories,
-                        breakDownListSample = dataResult[0].spendings,
-                        rewardsList = dataResult[0].rewards,
+                            dataResult.fullName,
+                            dataResult.userName,
+                            dataResult.email,
+                            dataResult.password),
+                        income = dataResult.income,
+                        monthlyBudget = dataResult.monthlyBudget,
+                        weeklyBudget = dataResult.weeklyBudget,
+                        budgetAlert = dataResult.budgetAlert,
+                        spendingsCategoriesList = dataResult.categories,
+                        breakDownListSample = dataResult.spendings,
+                        rewardsList = dataResult.rewards,
                         response = dataResult
                     )
                 }
 
             } catch (e: IOException) {
-//                _uiState.update { currentState ->
-//                    currentState.copy(
-//                        loggedUser = User("", "","",""),
-//                        income = 0.0F,
-//                        monthlyBudget = 0.0F,
-//                        weeklyBudget = 0.0F,
-//                    )
-//                }
             }
         }
     }
@@ -220,12 +238,15 @@ class AppViewModel(
 
     //Returns a list of only distinct categories
     fun GetCategories(): List<String>{
-        return _uiState.value.spendingsCategoriesList.map { it.name }
-    }
 
-    //Returns te user list
-    fun GetUsers(): List<User>{
-        return _uiState.value.userListSample
+        val categories = _uiState.value.spendingsCategoriesList.map { it.name }
+        if(categories.isEmpty())
+        {
+            return listOf("")
+        }
+        else{
+            return categories
+        }
     }
 
     //returns logged user
@@ -255,27 +276,69 @@ class AppViewModel(
     }
 
     //Function to add a new user
-    fun AddUser(user : User) {
-        _uiState.update { currentState ->
-            currentState.copy(userListSample = _uiState.value.userListSample + user)
+    suspend fun AddUser(user : User): Boolean = suspendCoroutine { continuation ->
+        viewModelScope.launch {
+            try {
+                val newUser = Response(
+                    fullName = user.fullName,
+                    userName = user.username,
+                    email = user.email,
+                    password = user.password,
+                    income = 0F,
+                    monthlyBudget = 0F,
+                    weeklyBudget = 0F,
+                    budgetAlert = 90F,
+                    categories = listOf(),
+                    spendings = listOf(),
+                    rewards = listOf()
+                )
+
+                val response = spendWiseRepository.createUser(newUser)
+
+                if (response.message == "User created successfully") {
+                    continuation.resume(true)
+                } else {
+                    continuation.resume(false)
+                }
+            } catch (e: HttpException) {
+                continuation.resume(false)
+            } catch (e: IOException) {
+                // Handle other exceptions
+                continuation.resumeWithException(e)
+            }
         }
     }
 
     //Function to change user name
-    fun ChangeUserName(userName : String){
-        val currentName = GetLoggedUser().username
+    suspend fun ChangeUserName(userName : String) = suspendCoroutine { continuation ->
 
-        _uiState.update { currentState ->
-            currentState.copy(userListSample =
-            _uiState.value.userListSample.map {
-                if(it.username == currentName){
-                    it.copy(username = userName)
-                }else{
-                    it
+        viewModelScope.launch {
+            try {
+                val user = _uiState.value.loggedUser.email
+                val newUserName = NewUserName(userName)
+                spendWiseRepository.changeUserName(user, newUserName)
+
+                val currentName = GetLoggedUser().username
+                _uiState.update { currentState ->
+                    currentState.copy(userListSample =
+                    _uiState.value.userListSample.map {
+                        if(it.username == currentName){
+                            it.copy(username = userName)
+                        }else{
+                            it
+                        }
+                    })
                 }
-            })
+                SetLoggedUser(GetLoggedUser().copy(username = userName))
+
+                continuation.resume(true)
+            } catch (e: HttpException) {
+                continuation.resume(false)
+            } catch (e: IOException) {
+                // Handle other exceptions
+                continuation.resumeWithException(e)
+            }
         }
-        SetLoggedUser(GetLoggedUser().copy(username = userName))
     }
 
     //Function to set if user is logged

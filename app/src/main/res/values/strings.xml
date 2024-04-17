@@ -23,6 +23,7 @@
     <string name="text_register">Not a member? Register Here!</string>
     <string name="login_success">Login Successful</string>
     <string name="login_fail">Invalid Credentials</string>
+    <string name="login_error">Unable to connect</string>
 
     <!-- Create Account Page -->
     <string name="register_Fullname">Full Name</string>

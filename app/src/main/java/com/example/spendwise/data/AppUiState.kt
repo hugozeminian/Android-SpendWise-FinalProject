@@ -19,7 +19,7 @@ data class AppUiState(
     val loggedUser: User = User("","","",""),
 
     //Set if the user is successfully logged or not
-    val isLogged: Boolean = true,
+    val isLogged: Boolean = false,
 
     //Dark mode settings
     val isDarkMode: Boolean = false,
@@ -48,5 +48,5 @@ data class AppUiState(
     val rewardsBalance: Float = 0F,
     val rewardsList: List<RewardItem> = listOf(),
 
-    val response: List<Response> = listOf()
+    val response: Response = Response()
 )

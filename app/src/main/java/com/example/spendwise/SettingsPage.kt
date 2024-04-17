@@ -37,14 +37,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spendwise.data.SpendWiseRepository
 import com.example.spendwise.ui.theme.AppViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 @Composable
 fun SettingPage(
     viewModel: AppViewModel,
     onLogout: () -> Unit,
-    testPage: () -> Unit
 ) {
     var username by remember { mutableStateOf("") }
     var darkMode by remember { mutableStateOf(viewModel.uiState.value.isDarkMode) }
@@ -104,14 +110,27 @@ fun SettingPage(
                 Spacer(modifier = Modifier.width(8.dp))
 
                 IconButton(onClick = {
+                    val coroutineScope = CoroutineScope(Dispatchers.Main)
+                    coroutineScope.launch {
                     if (username.isNotEmpty()) {
-                        viewModel.ChangeUserName(username)
-                        Toast.makeText(context, context.getString(R.string.edit_username), Toast.LENGTH_SHORT).show()
-                        username = ""
+
+                        try{
+                            viewModel.ChangeUserName(username)
+                            Toast.makeText(context, context.getString(R.string.edit_username), Toast.LENGTH_SHORT).show()
+                            username = ""
+                        }
+                        catch(e: Exception)
+                        {
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.login_error),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     } else {
                         Toast.makeText(context, context.getString(R.string.edit_warning), Toast.LENGTH_SHORT).show()
                     }
-                }) {
+                }}) {
                     Icon(
                         Icons.Default.FavoriteBorder,
                         tint = Color(0xFF006A68),
@@ -168,30 +187,12 @@ fun SettingPage(
     }
 }
 
+@Preview
 @Composable
-fun UpdateButton(
-    viewModel: AppViewModel
-){
-    Button(onClick = { viewModel.getData() }) {
-        Text("Update")
-    }
-}
+fun ShowSettingsPage(){
 
-@Composable
-fun OpenTestPage(
-    open: ()-> Unit
-){
-    Button(onClick = open) {
-        Text("Open test page")
-    }
+    SettingPage(
+        AppViewModel(viewModel(factory = AppViewModel.Factory)),
+        {},
+    )
 }
-
-//@Preview
-//@Composable
-//fun ShowSettingsPage(){
-//    SettingPage(
-//        AppViewModel(),
-//        {},
-//        {}
-//    )
-//}

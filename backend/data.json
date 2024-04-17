@@ -1,10 +1,10 @@
 [
   {
     "fullName": "Joaquim Weck",
-    "userName": "test",
-    "email": "test@email.com",
+    "userName": "Joaquim",
+    "email": "joaquim@email.com",
     "password": "123",
-    "income": 4000,
+    "income": 4100,
     "monthlyBudget": 2350,
     "weeklyBudget": 500,
     "budgetAlert": 90,
@@ -14,34 +14,22 @@
         "weeklyLimit": 200
       },
       {
-        "name": "Pharmacy",
-        "weeklyLimit": 50
+        "name": "Utilities",
+        "weeklyLimit": 250
       }
     ],
     "spendings": [
       {
-        "category": "Groceries",
-        "description": "Walmart",
-        "date": "Apr 08, 2024",
-        "amount": 110
+        "category": "Utilities",
+        "description": "Telus - internet",
+        "date": "Apr 15, 2024",
+        "amount": 89.99
       },
       {
         "category": "Groceries",
-        "description": "Safeway",
-        "date": "Apr 07, 2024",
-        "amount": 12.75
-      },
-      {
-        "category": "Pharmacy",
-        "description": "Shoppers Drug",
-        "date": "Apr 07, 2024",
-        "amount": 14.99
-      },
-      {
-        "category": "Pharmacy",
-        "description": "Emergency",
-        "date": "Apr 08, 2024",
-        "amount": 177
+        "description": "test",
+        "date": "Apr 17, 2024",
+        "amount": 25
       }
     ],
     "rewards": [
@@ -52,6 +40,65 @@
       {
         "description": "ScotiaBank",
         "amount": "11.50"
+      }
+    ]
+  },
+  {
+    "fullName": "Fabio Weck",
+    "userName": "fweck",
+    "email": "fabio@email.com",
+    "password": "123",
+    "income": 4000,
+    "monthlyBudget": 2350,
+    "weeklyBudget": 500,
+    "budgetAlert": 90,
+    "categories": [],
+    "spendings": [],
+    "rewards": []
+  },
+  {
+    "fullName": "test",
+    "userName": "test",
+    "email": "test@email.com",
+    "password": "123",
+    "income": 2000,
+    "monthlyBudget": 1500,
+    "weeklyBudget": 300,
+    "budgetAlert": 90,
+    "categories": [
+      {
+        "name": "Groceries",
+        "weeklyLimit": 200
+      },
+      {
+        "name": "Utilities",
+        "weeklyLimit": 250
+      }
+    ],
+    "spendings": [
+      {
+        "category": "Groceries",
+        "description": "Walmart",
+        "date": "Apr 08, 2024",
+        "amount": 150
+      },
+      {
+        "category": "Groceries",
+        "description": "Costco",
+        "date": "Apr 16, 2024",
+        "amount": 60
+      },
+      {
+        "category": "Utilities",
+        "description": "Telus",
+        "date": "Apr 16, 2024",
+        "amount": 240
+      }
+    ],
+    "rewards": [
+      {
+        "description": "Scene",
+        "amount": "12"
       }
     ]
   }

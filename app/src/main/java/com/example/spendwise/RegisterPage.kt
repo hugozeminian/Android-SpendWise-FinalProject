@@ -44,6 +44,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spendwise.model.User
 import com.example.spendwise.ui.theme.AppViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.IOException
 
 @Composable
 fun RegisterPage(onCreatingAccount: () -> Unit, viewModel: AppViewModel) {
@@ -194,13 +198,19 @@ fun RegisterPage(onCreatingAccount: () -> Unit, viewModel: AppViewModel) {
                 )
                 Button(
                     onClick = {
-                        val errorMessage = authenticate(username, password, confirmPassword, email)
-                        if (errorMessage == null) {
-                            viewModel.AddUser(User(fullName, username, email, password));
-                            onCreatingAccount()
-                            Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
-                        } else {
-                            Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show()
+                        val coroutineScope = CoroutineScope(Dispatchers.Main)
+                        coroutineScope.launch {
+                            try {
+                                val response = viewModel.AddUser(User(fullName, username, email, password))
+                                if (response) {
+                                    onCreatingAccount()
+                                    Toast.makeText(context, "Account created successfully", Toast.LENGTH_SHORT).show()
+                                } else {
+                                    Toast.makeText(context, "Unable to create account", Toast.LENGTH_SHORT).show()
+                                }
+                            } catch (e: IOException) {
+                                Toast.makeText(context, "Unable to connect", Toast.LENGTH_SHORT).show()
+                            }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(Color(0xFF006A68)),

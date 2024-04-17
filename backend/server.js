@@ -3,7 +3,6 @@ import fs from 'fs';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import cors from 'cors';
-import bodyParser from 'body-parser';
 
 const app = express();
 const port = 3000;
@@ -27,13 +26,138 @@ app.get('/', (req, res) => {
 });
 // Route to get data
 app.get('/data', (req, res) => {
-  try {
-    const data = fs.readFileSync(filePath, 'utf8');
-    res.json(JSON.parse(data));
-  } catch (error) {
-    console.error('Error reading data from file:', error);
-    res.status(500).json({ error: 'Failed to read data' });
-  }
+
+    try {
+      const data = fs.readFileSync(filePath, 'utf8');
+      const jsonData = JSON.parse(data);
+      
+      // Assuming the user's email is provided in the request query parameter
+      const userEmail = req.query.email;
+      
+      // Find the user with the provided email
+      const user = jsonData.find(user => user.email === userEmail);
+      if (!user) {
+        res.status(404).json({ error: 'User not found' });
+        return;
+      }
+      
+      // Return only the user's data
+      res.json(user);
+    } catch (error) {
+      console.error('Error reading data from file:', error);
+      res.status(500).json({ error: 'Failed to read data' });
+    }
+  });
+
+// Endpoint to create a new user
+app.post('/createUser', (req, res) => {
+    const newUser = {
+        fullName: req.body.fullName,
+        userName: req.body.userName,
+        email: req.body.email,
+        password: req.body.password,
+        income: 0,
+        monthlyBudget: 0,
+        weeklyBudget: 0,
+        budgetAlert: 90,
+        categories: [],
+        spendings: [],
+        rewards: []
+    };
+
+    // Read the JSON file
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading file');
+            return;
+        }
+
+        let jsonData = JSON.parse(data);
+
+        // Check if the email already exists
+        const existingUser = jsonData.find(item => item.email === newUser.email);
+        if (existingUser) {
+            res.status(400).send('User already exists');
+            return;
+        }
+
+        // Add the new user
+        jsonData.push(newUser);
+
+        // Write the updated data back to file
+        fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).json({message: 'Error writing file'});
+                return;
+            }
+            res.status(200).send({message: 'User created successfully'});
+        });
+    });
+});
+
+// Endpoint to log in
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    // Read the JSON file
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading file');
+            return;
+        }
+
+        const jsonData = JSON.parse(data);
+
+        // Check if the user exists and the password is correct
+        const user = jsonData.find(item => item.email === email && item.password === password);
+        if (user) {
+            res.status(200).json({ message: 'Login successful'});
+        } else {
+            res.status(401).send({ message: 'Invalid email or password' });
+        }
+    });
+});
+
+app.put('/changeUserName/:email', (req, res) => {
+
+    
+
+    const email = req.params.email;
+    const newUserName = req.body.newUserName;
+
+    // Read the JSON file
+    fs.readFile(filePath, 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Error reading file');
+            return;
+        }
+
+        let jsonData = JSON.parse(data);
+
+        // Find the user
+        const userIndex = jsonData.findIndex(item => item.email === email);
+        if (userIndex === -1) {
+            res.status(404).send('User not found');
+            return;
+        }
+
+        // Update the userName
+        jsonData[userIndex].userName = newUserName;
+
+        // Write the updated data back to file
+        fs.writeFile(filePath, JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Error writing file');
+                return;
+            }
+            res.status(200).send('User name updated successfully');
+        });
+    });
 });
 
 app.post('/addCategory/:email', (req, res) => {
