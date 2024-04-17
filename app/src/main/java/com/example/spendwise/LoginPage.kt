@@ -25,6 +25,8 @@ import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +48,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 import com.example.spendwise.ui.theme.AppViewModel
-import com.example.spendwise.ui.theme.Shapes
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 @Composable
 fun LoginPage(
@@ -57,6 +64,9 @@ fun LoginPage(
     var userEmail by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val context = LocalContext.current.applicationContext
+
+    val uiState by viewModel.uiState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,7 +82,7 @@ fun LoginPage(
                 .fillMaxWidth()
                 .height(200.dp)
                 .padding(bottom = 5.dp)
-                .clip(shape=  RoundedCornerShape(20.dp))
+                .clip(shape = RoundedCornerShape(20.dp))
 
         )
 
@@ -141,21 +151,34 @@ fun LoginPage(
                 )
                 Button(
                     onClick = {
-                        if (authenticate(userEmail, password, viewModel)) {
-                            onLoginSuccess()
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.login_success),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        } else {
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.login_fail),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
+                        val coroutineScope = CoroutineScope(Dispatchers.Main)
+                        coroutineScope.launch {
+                            try {
+                                val isAuthenticated = authenticate(userEmail, password, viewModel)
+                                if (isAuthenticated) {
+                                    onLoginSuccess()
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.login_success),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.login_fail),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            }
+                            catch(e: Exception)
+                            {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.login_error),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }},
                     colors = ButtonDefaults.buttonColors(Color(0xFF006A68)),
                     contentPadding = PaddingValues(
                         start = 60.dp,
@@ -192,11 +215,7 @@ fun LoginPage(
         )
     }
 }
-private fun authenticate(userEmail: String, password: String, viewModel: AppViewModel): Boolean {
-    val user = viewModel.GetUsers().find { u -> u.email == userEmail && u.password == password }
-    if(user != null){
-        viewModel.SetLoggedUser(user)
-        return true
-    }
-    return false
+private suspend fun authenticate(userEmail: String, password: String, viewModel: AppViewModel): Boolean {
+    val response = viewModel.login(userEmail, password)
+    return response
 }

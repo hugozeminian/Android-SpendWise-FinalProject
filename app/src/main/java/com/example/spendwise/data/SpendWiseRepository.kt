@@ -5,12 +5,19 @@ import com.example.spendwise.model.Spending
 import com.example.spendwise.model.SpendingsCategories
 import com.example.spendwise.network.BudgetUpdate
 import com.example.spendwise.network.IncomeUpdate
+import com.example.spendwise.network.LoginRequest
+import com.example.spendwise.network.LoginResponse
+import com.example.spendwise.network.NewUserName
 import com.example.spendwise.network.Response
 import com.example.spendwise.network.SpendWiseApiService
 import okhttp3.ResponseBody
 
 interface SpendWiseRepository {
-    suspend fun getData(): List<Response>
+    suspend fun getData(email: String): Response
+    suspend fun createUser(user: Response): LoginResponse
+    suspend fun login(email: String, password: String): LoginResponse
+
+    suspend fun changeUserName(email: String, userName: NewUserName)
 
     suspend fun addReward(user: String, rewardItem: RewardItem): ResponseBody
     suspend fun deleteReward(user: String, index: Int)
@@ -31,7 +38,22 @@ class NetworkSpendWiseRepository(
     private val spendWiseApiService: SpendWiseApiService
 ): SpendWiseRepository {
 
-    override suspend fun getData(): List<Response> = spendWiseApiService.getData()
+    override suspend fun getData(email: String): Response{
+        return spendWiseApiService.getData(email)
+    }
+
+    override suspend fun createUser(user: Response): LoginResponse {
+        return spendWiseApiService.createUser(user)
+    }
+
+    override suspend fun login(email: String, password: String): LoginResponse {
+        val request = LoginRequest(email, password)
+        return spendWiseApiService.login(request)
+    }
+
+    override suspend fun changeUserName(email: String, userName: NewUserName) {
+        spendWiseApiService.changeUserName(email, userName)
+    }
     override suspend fun deleteReward(user: String, index: Int) = spendWiseApiService.deleteReward(user, index)
     override suspend fun updateIncome(user: String, income: IncomeUpdate): ResponseBody {
         return spendWiseApiService.updateIncome(user, income)

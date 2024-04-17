@@ -1,5 +1,6 @@
 package com.example.spendwise
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -41,9 +42,11 @@ import com.example.spendwise.ui.theme.darkThemeColorAlert
 import com.example.spendwise.ui.theme.lightThemeColorAlert
 import java.text.DecimalFormat
 import java.util.Calendar
+import kotlin.Double.Companion.NaN
 
 @Composable
 fun HomePage(viewModel: AppViewModel) {
+
     val uiState by viewModel.uiState.collectAsState()
     val budget = uiState.monthlyBudget
     val weeklyBudget = uiState.weeklyBudget
@@ -58,8 +61,21 @@ fun HomePage(viewModel: AppViewModel) {
     val formatedTotalOfSpendingWeek = decimalFormat.format(totalOfSpendingWeek)
 
     var formatedSpentPercentageOfBudget = decimalFormat.format((totalOfSpendingMounth * 100 / budget))
+
+    var number = formatedSpentPercentageOfBudget.toDoubleOrNull()
+
+    if (number == null || number.isNaN()) {
+        formatedSpentPercentageOfBudget = "0"
+    }
+
     var formatedSpentPercentageOfBudgetWeek =
         decimalFormat.format((totalOfSpendingWeek * 100 / weeklyBudget))
+
+    number = formatedSpentPercentageOfBudgetWeek.toDoubleOrNull()
+
+    if (number == null || number.isNaN()) {
+        formatedSpentPercentageOfBudgetWeek = "0"
+    }
 
     val isDarkColor = uiState.isDarkMode
     val customColor = if (isDarkColor) darkThemeColorAlert else lightThemeColorAlert
@@ -68,6 +84,7 @@ fun HomePage(viewModel: AppViewModel) {
     val cardColorsMonth = getCardColors(totalOfSpendingMounth, budget, budgetAlert, customColor)
     val cardColorsWeek = getCardColors(totalOfSpendingWeek, weeklyBudget, budgetAlert, customColor)
 
+    viewModel.getData()
 
     Column(
         modifier = Modifier

@@ -15,6 +15,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 @Serializable
 data class IncomeUpdate(val income: Float)
@@ -26,9 +27,29 @@ data class BudgetUpdate(
     val budgetAlert: Float
 )
 
+@Serializable
+data class LoginRequest(
+    val email: String,
+    val password: String
+)
+
+@Serializable
+data class NewUserName(
+    val newUserName: String
+)
+
 interface SpendWiseApiService{
-    @GET("data")
-    suspend fun getData(): List<Response>
+    @GET("/data")
+    suspend fun getData(@Query("email") email: String): Response
+
+    @POST("/createUser")
+    suspend fun createUser(@Body user: Response): LoginResponse
+
+    @POST("/login")
+    suspend fun login(@Body request: LoginRequest): LoginResponse
+
+    @PUT("changeUserName/{email}")
+    suspend fun changeUserName(@Path("email") email: String, @Body newUserName: NewUserName)
 
     @POST("/addReward/{user}")
     suspend fun addReward(@Path("user") user: String, @Body reward: RewardItem): ResponseBody

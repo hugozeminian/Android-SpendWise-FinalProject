@@ -111,7 +111,6 @@ fun SpendingsScreen(
                 fontSize = 16.sp,
             ),)
 
-            //Gets the return from menu
             breakdownCategory = CustomDropdownMenu(categories)
 
         }
@@ -353,7 +352,6 @@ fun SpendingRecapList(
     Column(
     ) {
         filteredList.forEach { item ->
-
             //Gets the weekly limit for the category in the iteration
             val findCategoryLimit = uiState.spendingsCategoriesList.find{ it.name == item.key }
             if(findCategoryLimit != null){

@@ -19,3 +19,8 @@ data class Response(
     val spendings: List<Spending> = listOf(),
     val rewards: List<RewardItem> = listOf()
 )
+
+@Serializable
+data class LoginResponse(
+    val message: String
+)

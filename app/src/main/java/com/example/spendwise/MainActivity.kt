@@ -1,6 +1,7 @@
 package com.example.spendwise
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -29,7 +30,6 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spendwise.data.navItems
 import com.example.spendwise.ui.theme.AppViewModel
 import com.example.spendwise.ui.theme.SpendWiseTheme
-import com.example.spendwise.ui.theme.TestPage
 
 
 class MainActivity : ComponentActivity() {
@@ -119,7 +119,8 @@ fun MainScreen(
             //====== Each composable will call the functions inside its scope base on the route given ======
             if (!uiState.isLogged) {
                 composable(route = "Home") {
-                    LoginPage(onLoginSuccess = {
+                    LoginPage(
+                        onLoginSuccess = {
                         onLogin.invoke()
                         navController.navigate("home")
                     },
@@ -129,10 +130,6 @@ fun MainScreen(
                         viewModel=viewModel
                     )
                 }
-            }
-
-            composable("test") {
-                TestPage(viewModel)
             }
 
             composable("home") {
@@ -163,8 +160,8 @@ fun MainScreen(
                         onLogout.invoke()
                         navController.navigate("Home")
                     },
-                    viewModel=viewModel,
-                    testPage = {navController.navigate("test")})
+                    viewModel=viewModel
+                    )
             }
         }
     }
